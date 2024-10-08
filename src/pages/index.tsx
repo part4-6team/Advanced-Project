@@ -1,8 +1,9 @@
 import Image from 'next/image';
 import localFont from 'next/font/local';
+import Dropdown from '@components/@shared/Dropdown';
 
 const pretendard = localFont({
-  src: './fonts/PretendardVariable.woff',
+  src: './fonts/PretendardVariable.woff2',
   variable: '--font-Pretendard',
   weight: '100 900',
 });
@@ -34,7 +35,7 @@ export default function Home() {
 
         <div className="flex flex-col items-center gap-4 sm:flex-row">
           <a
-            className="flex h-10 items-center justify-center gap-2 rounded-full border border-solid border-transparent bg-foreground px-4 text-sm text-background transition-colors hover:bg-[#383838] sm:h-12 sm:px-5 sm:text-base dark:hover:bg-[#ccc]"
+            className="bg-foreground text-background flex h-10  items-center justify-center gap-2 rounded-full border border-solid border-transparent px-4 text-sm transition-colors hover:bg-[#383838] sm:h-12 sm:px-5 sm:text-base dark:hover:bg-[#ccc]"
             href="https://vercel.com/new?utm_source=create-next-app&utm_medium=default-template-tw&utm_campaign=create-next-app"
             target="_blank"
             rel="noopener noreferrer"
@@ -56,6 +57,9 @@ export default function Home() {
           >
             Read our docs
           </a>
+        </div>
+        <div className="h-[300px] w-[300px] bg-background-primary">
+          <Dropdown />
         </div>
       </main>
       <footer className="row-start-3 flex flex-wrap items-center justify-center gap-6">
