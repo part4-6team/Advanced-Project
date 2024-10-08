@@ -9,6 +9,9 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      screens: {
+        tablet: '1024px',
+      },
       fontFamily: {
         sans: ['Pretendard', 'sans-serif'],
       },
