@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import localFont from 'next/font/local';
-import Dropdown from '@components/@shared/Dropdown';
 
 const pretendard = localFont({
   src: './fonts/PretendardVariable.woff2',
@@ -57,9 +56,6 @@ export default function Home() {
           >
             Read our docs
           </a>
-        </div>
-        <div className="h-[300px] w-[300px] bg-background-primary">
-          <Dropdown />
         </div>
       </main>
       <footer className="row-start-3 flex flex-wrap items-center justify-center gap-6">
