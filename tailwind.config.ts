@@ -11,6 +11,7 @@ const config: Config = {
     extend: {
       screens: {
         tablet: '1024px',
+      },
       backgroundImage: {
         'brand-gradient': 'linear-gradient(#10B981, #A3E635)', // brand.gradient 정의된 값
       },
@@ -97,5 +98,4 @@ const config: Config = {
   },
   plugins: [],
 };
-
 export default config;
