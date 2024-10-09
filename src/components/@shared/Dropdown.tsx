@@ -13,6 +13,13 @@ interface DropdownProps {
   childType?: 'menu' | 'team';
 }
 
+/**
+ * Dropdown 공통 컴포넌트
+ * @param buttonChildren 드롭다운을 펼치는 버튼 디자인 컴포넌트를 넣어주시면 됩니다.
+ * @param children 드롭다운이 펼쳐질 때 리스트업 할 디자인 컴포넌트를 넣어주시면 됩니다.
+ * @param width 리스트업 할 컴포넌트들을 감싸는 ul태그의 넓이를 지정합니다
+ * @param childType 네비게이션 바의 팀(이름)목록: team, 나머지는 menu로 지정해주세요.
+ */
 export default function Dropdown({
   buttonChildren,
   children,
