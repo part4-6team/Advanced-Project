@@ -1,5 +1,12 @@
+import { useState } from 'react';
 import Button from '@pages/components/@shared/Button';
-import { Input, IconInput, SearchInput } from '../components/@shared/Input';
+import {
+  Input,
+  IconInput,
+  SearchInput,
+  ScrollTextArea,
+  AutoTextArea,
+} from '../components/@shared/Input';
 
 export default function Test() {
   const NonVisibleIcon = (
@@ -11,6 +18,18 @@ export default function Test() {
       변경하기
     </Button>
   );
+
+  const [text, setText] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('댓글 등록!:', text);
+    setText('');
+  };
 
   return (
     <div className="m-auto grid grid-cols-3 place-items-center gap-4 p-4">
@@ -73,6 +92,13 @@ export default function Test() {
         actionIcon={ChangePwButton}
       />
       <SearchInput placeholder="검색어를 입력해주세요" />
+      <ScrollTextArea label="댓글" placeholder="댓글을 입력해주세요" />
+      <AutoTextArea
+        value={text}
+        onChange={handleChange}
+        placeholder="댓글을 달아주세요"
+        onSubmit={handleSubmit}
+      />
     </div>
   );
 }
