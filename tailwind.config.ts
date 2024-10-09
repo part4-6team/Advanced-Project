@@ -4,6 +4,11 @@ const config: Config = {
   content: ['./src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme: {
     extend: {
+      screens: {
+        tablet: '1024px',
+      backgroundImage: {
+        'brand-gradient': 'linear-gradient(#10B981, #A3E635)', // brand.gradient 정의된 값
+      },
       fontFamily: {
         sans: ['Pretendard', 'sans-serif'],
       },
@@ -41,7 +46,6 @@ const config: Config = {
           primary: '#10B981',
           secondary: '#34D399',
           tertiary: '#A3E635',
-          gradient: 'linear-gradient(#10B981, #A3E635)',
         },
         point: {
           purple: '#A855F7',
