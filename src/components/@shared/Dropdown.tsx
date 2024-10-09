@@ -1,14 +1,26 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, {
+  ReactNode,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
-const MENU_LIST = [
-  // 테스트용
-  { id: 1, value: '경영관리팀' },
-  { id: 2, value: '프로덕트팀' },
-  { id: 3, value: '마케팅팀' },
-];
+interface DropdownProps {
+  buttonChildren: ReactNode;
+  children: ReactNode;
+  width: string;
+  childType?: 'menu' | 'team';
+}
 
-export default function Dropdown() {
+export default function Dropdown({
+  buttonChildren,
+  children,
+  width,
+  childType = 'menu',
+}: DropdownProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const dropdownRef = useRef<HTMLUListElement | null>(null);
 
   const handleButtonClick = useCallback(
     (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -30,25 +42,45 @@ export default function Dropdown() {
     };
   }, [isMenuOpen]);
 
+  // 드롭다운이 화면 밖으로 나갈 때 위치 조정
+  useEffect(() => {
+    if (isMenuOpen && dropdownRef.current) {
+      const dropdownRect = dropdownRef.current.getBoundingClientRect();
+      const overflowRight = dropdownRect.right > window.innerWidth;
+
+      if (overflowRight) {
+        dropdownRef.current.style.left = 'auto';
+        dropdownRef.current.style.right = '0'; // 우측 정렬
+      }
+    }
+  }, [isMenuOpen, childType]);
+
   return (
     <div className="relative">
       <button
         type="button"
         onClick={handleButtonClick}
-        className="bg-background-secondary text-text-primary"
+        className="text-text-primary"
       >
-        드롭다운
+        {buttonChildren}
       </button>
       {isMenuOpen && (
-        <ul className="rounded-[12px]  border border-border-primary border-opacity-10 bg-background-secondary text-text-primary">
-          {MENU_LIST.map((menu) => (
-            <li
-              key={menu.id}
-              className="list-none hover:bg-background-tertiary"
-            >
-              {menu.value}
-            </li>
-          ))}
+        <ul
+          ref={dropdownRef}
+          className={`absolute z-10 flex flex-col items-center justify-center rounded-[12px] border border-background-tertiary bg-background-secondary text-text-primary ${width} ${childType === 'team' ? 'border-none p-[16px]' : ''}`}
+        >
+          {React.Children.map(children, (child) => {
+            if (React.isValidElement(child)) {
+              return (
+                <li
+                  className={`flex h-full w-full rounded-[12px] hover:bg-background-tertiary
+                    ${childType === 'team' ? 'rounded-[8px]' : ''}`}
+                >
+                  {child}
+                </li>
+              );
+            }
+          })}
         </ul>
       )}
     </div>
