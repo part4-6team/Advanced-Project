@@ -1,6 +1,6 @@
-import profileIcon from '@icons/profile_small.png';
-import xIcon from '@icons/x.png';
-import alertIcon from '@icons/alert.png';
+import profileIcon from '@icons/profile_small.svg';
+import xIcon from '@icons/x.svg';
+import alertIcon from '@icons/alert.svg';
 
 export const iconPaths = {
   profile: profileIcon,

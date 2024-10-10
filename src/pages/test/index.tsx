@@ -1,24 +1,13 @@
 import { Modal } from '@components/@shared/Modal';
 import { useModal } from '@hooks/useModal';
+import Button from '@pages/components/@shared/Button';
 
 export default function Test() {
   const { isOpen, openModal, closeModal } = useModal();
 
   return (
-    <div className="grid grid-cols-3 gap-4 p-4">
-      <button className="bg-red-100 text-red-500" type="button">
-        버튼1
-      </button>
-      <button className="bg-blue-100 text-blue-500" type="button">
-        버튼2
-      </button>
-      <button type="button">버튼3</button>
-      <button type="button">버튼4</button>
-      <button type="button">버튼5</button>
-      <button type="button">버튼6</button>
-      <button type="button">버튼7</button>
-
-      {/* 공통 컴포넌트 적용 전 */}
+    <div className="m-auto grid grid-cols-3 place-items-center gap-4 p-4">
+      {/* 모달 테스트, 공통 버튼 적용 전 */}
       <button
         type="button"
         onClick={openModal}
@@ -26,7 +15,6 @@ export default function Test() {
       >
         모달 열기
       </button>
-
       <Modal
         isOpen={isOpen}
         isXButton
@@ -47,7 +35,7 @@ export default function Test() {
           </Modal.Content>
         </Modal.Wrapper>
         <Modal.Footer>
-          {/* 공통 컴포넌트 적용 전 */}
+          {/* 공통 버튼 적용 전 */}
           <button
             type="button"
             onClick={closeModal}
@@ -57,6 +45,43 @@ export default function Test() {
           </button>
         </Modal.Footer>
       </Modal>
+
+      <Button bgColor="gradient" fontSize="14" size="full" height={50}>
+        버튼3
+      </Button>
+      <Button
+        bgColor="transparent"
+        fontColor="green"
+        fontSize="16"
+        width={100}
+        height={50}
+        border="green"
+      >
+        버튼4
+      </Button>
+      <Button
+        bgColor="transparent"
+        fontColor="white"
+        fontSize="16"
+        width={100}
+        height={50}
+        border="white"
+      >
+        버튼5
+      </Button>
+      <Button
+        bgColor="white"
+        fontColor="gray"
+        fontSize="16"
+        width={100}
+        height={50}
+        border="gray"
+      >
+        버튼6
+      </Button>
+      <Button fontSize="14" shape="round" width={100} height={30}>
+        버튼7
+      </Button>
     </div>
   );
 }
