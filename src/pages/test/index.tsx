@@ -1,6 +1,8 @@
 import { Modal } from '@components/@shared/Modal';
 import { useModal } from '@hooks/useModal';
 import Button from '@pages/components/@shared/Button';
+import Dropdown from '@components/@shared/Dropdown';
+import Image from 'next/image';
 
 export default function Test() {
   const { isOpen, openModal, closeModal } = useModal();
