@@ -2,6 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .bg-background-primary {
+    @apply bg-[#0F172A]; /* tailwind.config.js에 정의된 색상과 맞추기 */
+  }
+}
+
 body {
   @apply bg-background-primary font-sans text-gray-800;
 }
