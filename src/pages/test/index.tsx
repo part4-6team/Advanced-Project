@@ -34,6 +34,7 @@ export default function Test() {
   };
 
   return (
+    <>
     <div className="m-auto grid grid-cols-3 place-items-center gap-4 p-4">
       <Button>버튼1</Button>
       <Button bgColor="red" fontSize="14" width={150} height={40}>
