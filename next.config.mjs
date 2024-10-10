@@ -2,7 +2,7 @@
 const nextConfig = {
   reactStrictMode: true,
   webpack: (config) => {
-    config.module.rules.push({
+    config.module.rules.unshift({
       test: /\.svg$/,
       use: ['@svgr/webpack'],
     });
