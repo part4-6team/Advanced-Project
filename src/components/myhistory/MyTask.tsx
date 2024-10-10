@@ -1,3 +1,4 @@
+import Dropdown from '@components/@shared/Dropdown';
 import CheckBoxIconActiveIcon from 'public/icons/checkbox_active.svg';
 import KebabIcon from 'public/icons/kebab_small.svg';
 
@@ -9,7 +10,19 @@ export default function MyTask() {
           <CheckBoxIconActiveIcon />
           <span className="line-through">법인 설립 안내 드리기</span>
         </div>
-        <KebabIcon />
+
+        <Dropdown
+          buttonChildren={<KebabIcon />}
+          width="w-[120px]"
+          childType="menu"
+        >
+          <button className="flex w-full items-center justify-center px-[24px] py-[14px] text-center text-md-regular">
+            수정하기
+          </button>
+          <button className="flex w-full items-center justify-center px-[24px] py-[14px] text-center text-md-regular">
+            삭제하기
+          </button>
+        </Dropdown>
       </div>
     </div>
   );
