@@ -25,7 +25,7 @@ export const getModalClass = ({
 }: ModalClassProps) => {
   return clsx(className, {
     'pt-12': isXButton,
-    'px-9 pb-8 pt-10 md:px-11': padding === 'default',
+    'px-11 pb-8 pt-10': padding === 'default',
     'px-4 pb-8': padding === 'datePicker',
     'flex flex-col': array === 'column',
     'flex flex-row': array === 'row',
