@@ -3,7 +3,6 @@ import { createPortal } from 'react-dom';
 import Image from 'next/image';
 import clsx from 'clsx';
 
-import { iconPaths } from '@utils/iconPaths';
 import { getModalClass, ModalClassProps } from '@utils/getModalClass';
 
 interface ModalProps extends ModalClassProps {
@@ -34,7 +33,7 @@ export function Modal({
       >
         {isProfile && (
           <Image
-            src={iconPaths.profile}
+            src="@icons/profile_small.svg"
             alt="프로필 아이콘"
             width={24}
             height={24}
@@ -43,7 +42,7 @@ export function Modal({
         )}
         {isDanger && (
           <Image
-            src={iconPaths.alert}
+            src="@icons/alert.svg"
             alt="경고 아이콘"
             width={24}
             height={24}
@@ -56,7 +55,12 @@ export function Modal({
             className="absolute right-4 top-4 flex justify-end"
             onClick={onClose}
           >
-            <Image src={iconPaths.x} alt="닫기 아이콘" width={24} height={24} />
+            <Image
+              src="@icons/x.svg"
+              alt="닫기 아이콘"
+              width={24}
+              height={24}
+            />
           </button>
         )}
         {children}
