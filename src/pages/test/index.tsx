@@ -1,4 +1,9 @@
+import { Modal } from '@components/@shared/Modal';
+import { useModal } from '@hooks/useModal';
+import { useState } from 'react';
 import Button from '@pages/components/@shared/Button';
+import Dropdown from '@components/@shared/Dropdown';
+import Image from 'next/image';
 import {
   Input,
   IconInput,
@@ -6,10 +11,32 @@ import {
   ScrollTextArea,
   AutoTextArea,
 } from '../components/@shared/Input';
-import Dropdown from '@components/@shared/Dropdown';
-import Image from 'next/image';
 
 export default function Test() {
+  const { isOpen, openModal, closeModal } = useModal();
+
+  const NonVisibleIcon = (
+    <img src="/icons/visibility_off.svg" alt="Action Icon" />
+  );
+
+  const ChangePwButton = (
+    <Button fontSize="14" width={70} height={20}>
+      변경하기
+    </Button>
+  );
+
+  const [text, setText] = useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setText(e.target.value);
+  };
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault();
+    console.log('댓글 등록!:', text);
+    setText('');
+  };
+
   return (
     <>
       <div className="m-auto grid grid-cols-3 place-items-center gap-4 p-4">
