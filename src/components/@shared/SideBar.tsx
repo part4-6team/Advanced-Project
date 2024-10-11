@@ -8,7 +8,8 @@ interface SideBarProps {
   children: ReactNode;
   trigger: (toggle: () => void) => ReactNode;
   position: 'left' | 'right';
-  clickEvent: () => void;
+  clickEvent?: () => void;
+
 }
 
 /**
@@ -54,42 +55,41 @@ export default function SideBar({
     };
   }, [isOpen]);
 
+
+  const classes = {
+    sidebar: clsx(
+      'fixed h-auto transform bg-gray-800 text-white transition-transform',
+      {
+        'inset-y-0 left-0 w-52': position === 'left',
+        'bottom-0 right-0 top-[66px] min-w-[375px] border border-border-primary border-opacity-50':
+          position === 'right',
+        'translate-x-0': isOpen,
+        '-translate-x-full': !isOpen && position === 'left',
+        'translate-x-full': !isOpen && position === 'right',
+      }
+    ),
+
+    closeButton: clsx('absolute top-4', {
+      'right-4': position === 'left',
+      'left-4': position === 'right',
+    }),
+
+    completeButtonWrapper: clsx({
+      'fixed bottom-6 right-6': position === 'right',
+      hidden: position === 'left',
+    }),
+  };
+
   return (
     <>
       {/* 메뉴를 여는 트리거 */}
       {trigger(toggleSideBar)}
-
-      <div
-        ref={sideBarRef}
-        className={clsx(
-          'fixed h-auto transform bg-gray-800 text-white transition-transform',
-          {
-            'inset-y-0 left-0 w-52': position === 'left',
-            'bottom-0 right-0 top-[66px] min-w-[375px] border border-border-primary border-opacity-50':
-              position === 'right',
-            'translate-x-0': isOpen,
-            '-translate-x-full': !isOpen && position === 'left',
-            'translate-x-full': !isOpen && position === 'right',
-          }
-        )}
-      >
-        <button
-          className={clsx('absolute top-4', {
-            'right-4': position === 'left',
-            'left-4': position === 'right',
-          })}
-          onClick={toggleSideBar}
-        >
+      <div ref={sideBarRef} className={classes.sidebar}>
+        <button className={classes.closeButton} onClick={toggleSideBar}>
           <XIcon />
         </button>
         <div className="mt-10">{children}</div>
-
-        <div
-          className={clsx({
-            'fixed bottom-6 right-6': position === 'right',
-            hidden: position === 'left',
-          })}
-        >
+        <div className={classes.completeButtonWrapper}>
           <Button shape="round">
             <div
               onClick={clickEvent}
