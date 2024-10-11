@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import Image from 'next/image';
-import styles from '../../../styles/scroll.module.css';
+import styles from '../../styles/scroll.module.css';
 
 type InputProps = {
   placeholder?: string;
