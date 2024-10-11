@@ -33,7 +33,7 @@ export function Modal({
       >
         {isProfile && (
           <Image
-            src="@icons/profile_small.svg"
+            src="/icons/profile_small.svg"
             alt="프로필 아이콘"
             width={24}
             height={24}
@@ -42,7 +42,7 @@ export function Modal({
         )}
         {isDanger && (
           <Image
-            src="@icons/alert.svg"
+            src="/icons/alert.svg"
             alt="경고 아이콘"
             width={24}
             height={24}
@@ -56,7 +56,7 @@ export function Modal({
             onClick={onClose}
           >
             <Image
-              src="@icons/x.svg"
+              src="/icons/x.svg"
               alt="닫기 아이콘"
               width={24}
               height={24}
