@@ -7,6 +7,12 @@ const config: Config = {
       screens: {
         tablet: '1024px',
       },
+      backgroundImage: {
+        'brand-gradient': 'linear-gradient(#10B981, #A3E635)', // brand.gradient 정의된 값
+      },
+      fontFamily: {
+        sans: ['Pretendard', 'sans-serif'],
+      },
       fontSize: {
         '4xl': ['40px', { lineHeight: '48px', fontWeight: '500' }],
         '3xl-bold': ['32px', { lineHeight: '38px', fontWeight: '700' }],
