@@ -1,3 +1,5 @@
+import { Modal } from '@components/@shared/Modal';
+import { useModal } from '@hooks/useModal';
 import { useState } from 'react';
 import Button from '@components/@shared/Button';
 import Dropdown from '@components/@shared/Dropdown';
@@ -10,7 +12,10 @@ import {
   AutoTextArea,
 } from '@components/@shared/Input';
 
+
 export default function Test() {
+  const { isOpen, openModal, closeModal } = useModal();
+
   const NonVisibleIcon = (
     <img src="/icons/visibility_off.svg" alt="Action Icon" />
   );
@@ -27,7 +32,7 @@ export default function Test() {
     setText(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: any) => {
     e.preventDefault();
     console.log('댓글 등록!:', text);
     setText('');
@@ -36,10 +41,45 @@ export default function Test() {
   return (
     <>
       <div className="m-auto grid grid-cols-3 place-items-center gap-4 p-4">
-        <Button>버튼1</Button>
-        <Button bgColor="red" fontSize="14" width={150} height={40}>
-          버튼2
-        </Button>
+        {/* 모달 테스트, 공통 버튼 적용 전 */}
+        <button
+          type="button"
+          onClick={openModal}
+          className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
+        >
+          모달 열기
+        </button>
+        <Modal
+          isOpen={isOpen}
+          isXButton
+          onClose={closeModal}
+          array="column"
+          padding="default"
+          bgColor="primary"
+          fontSize="16"
+          fontArray="center"
+          gap="40"
+        >
+          {/* 모달의 하위 요소에 독립적인 스타일을 적용할 수 있습니다 */}
+          {/* Modal.Wrapper로 헤더와 콘텐츠의 간격을 설정할 수 있습니다 */}
+          <Modal.Wrapper array="column">
+            <Modal.Header fontColor="primary">모달 제목</Modal.Header>
+            <Modal.Content fontColor="secondary" fontSize="14" fontArray="left">
+              <p>모달 내용</p>
+            </Modal.Content>
+          </Modal.Wrapper>
+          <Modal.Footer>
+            {/* 공통 버튼 적용 전 */}
+            <button
+              type="button"
+              onClick={closeModal}
+              className="w-full rounded bg-gray-300 px-4 py-2 hover:bg-gray-400"
+            >
+              닫기
+            </button>
+          </Modal.Footer>
+        </Modal>
+
         <Button bgColor="gradient" fontSize="14" size="full" height={50}>
           버튼3
         </Button>
