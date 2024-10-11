@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import XIcon from 'public/icons/x.svg';
 import clsx from 'clsx';
-import Button from '@pages/components/@shared/Button';
+import Button from '@components/@shared/Button';
 import CheckWhiteIcon from 'public/icons/check_white.svg';
 
 interface SideBarProps {
