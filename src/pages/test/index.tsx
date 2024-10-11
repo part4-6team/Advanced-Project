@@ -1,7 +1,7 @@
 import { Modal } from '@components/@shared/Modal';
 import { useModal } from '@hooks/useModal';
 import { useState } from 'react';
-import Button from '@pages/components/@shared/Button';
+import Button from '@components/@shared/Button';
 import Dropdown from '@components/@shared/Dropdown';
 import Image from 'next/image';
 import {
@@ -10,7 +10,8 @@ import {
   SearchInput,
   ScrollTextArea,
   AutoTextArea,
-} from '../components/@shared/Input';
+} from '@components/@shared/Input';
+
 
 export default function Test() {
   const { isOpen, openModal, closeModal } = useModal();
