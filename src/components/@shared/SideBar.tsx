@@ -9,6 +9,7 @@ interface SideBarProps {
   trigger: (toggle: () => void) => ReactNode;
   position: 'left' | 'right';
   clickEvent?: () => void;
+
 }
 
 /**
@@ -54,6 +55,7 @@ export default function SideBar({
     };
   }, [isOpen]);
 
+
   const classes = {
     sidebar: clsx(
       'fixed h-auto transform bg-gray-800 text-white transition-transform',
@@ -82,13 +84,11 @@ export default function SideBar({
     <>
       {/* 메뉴를 여는 트리거 */}
       {trigger(toggleSideBar)}
-
       <div ref={sideBarRef} className={classes.sidebar}>
         <button className={classes.closeButton} onClick={toggleSideBar}>
           <XIcon />
         </button>
         <div className="mt-10">{children}</div>
-
         <div className={classes.completeButtonWrapper}>
           <Button shape="round">
             <div
