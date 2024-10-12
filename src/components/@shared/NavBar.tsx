@@ -16,7 +16,7 @@ export default function NavBar() {
     setIsLogoOnlyPage(logoOnlyPages.includes(router.pathname));
   }, [router.pathname]);
   return (
-    <header className=" flex h-16 items-center justify-center border-b border-border-primary border-opacity-50 bg-background-secondary px-6">
+    <header className=" flex h-16 items-center justify-center border-b border-border-primary border-opacity-10 bg-background-secondary px-6">
       <nav className="flex h-8 w-[1200px]  items-center justify-between text-text-primary max-xl:w-[696px] max-md:w-[343px] ">
         <div className="flex items-center gap-10 max-md:gap-5">
           <button className="md:hidden">
