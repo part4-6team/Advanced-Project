@@ -33,13 +33,21 @@ export default function CircleGraph({
 
   const gradientId = `gradient-${Math.random().toString(36).substr(2, 9)}`;
 
+  const boxSize = 2 * (radius + strokeWidth);
+
   return (
-    <div className="relative" style={{ width: '120px', height: '120px' }}>
-      {/* 검정색 원을 배경으로 설정 */}
+    <div
+      className="relative"
+      style={{
+        width: `${boxSize}px`,
+        height: `${boxSize}px`,
+      }}
+    >
+      {/* 배경으로 설정 */}
       <svg
         className="absolute left-0 top-0"
-        width="120"
-        height="120"
+        width={`${boxSize}px`}
+        height={`${boxSize}px`}
         viewBox={viewBox}
       >
         <circle
@@ -56,8 +64,8 @@ export default function CircleGraph({
       {/* 그라디언트 원을 전경에 설정 */}
       <svg
         className="absolute left-0 top-0 z-10"
-        width="120"
-        height="120"
+        width={`${boxSize}px`}
+        height={`${boxSize}px`}
         viewBox={viewBox}
       >
         <defs>
