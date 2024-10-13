@@ -1,5 +1,4 @@
-import { Option } from '@/src/types/dropdown';
-import Dropdown from '@components/@shared/Dropdown';
+import Dropdown, { Option } from '@components/@shared/Dropdown';
 import { useState } from 'react';
 import ArrowDown from '@icons/arrow_down.svg';
 import Gear from '@icons/gear.svg';
