@@ -10,6 +10,9 @@ type GraphProps = {
   radius: number; // 원의 반지름
   percentage: number; // 채울 퍼센트 (0~100)
   strokeWidth: number; // 선의 두께
+  additionalText?: string; // 추가 텍스트
+  additionalTextColor?: string; // 추가 텍스트 색상
+  isTextShown?: boolean; // 글씨를 보일지 여부
 };
 
 export default function CircleGraph({
@@ -19,6 +22,9 @@ export default function CircleGraph({
   radius,
   percentage,
   strokeWidth,
+  additionalText,
+  additionalTextColor,
+  isTextShown = false,
 }: GraphProps) {
   const { viewBox, centerX, centerY } = calculateCircleViewBox({
     radius,
@@ -91,6 +97,32 @@ export default function CircleGraph({
           fill="none"
           strokeLinecap="round"
         />
+        {isTextShown && (
+          <>
+            {/* 추가 텍스트를 지정한 색상으로 표시 */}
+            <text
+              x={centerX}
+              y={centerY - 10} // 아래쪽으로 이동
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill={additionalTextColor} // 추가 텍스트 색상
+              style={{ fontSize: '12px' }}
+            >
+              {additionalText}
+            </text>
+            {/* 가운데 퍼센트 텍스트를 그라디언트 색상으로 표시 */}
+            <text
+              x={centerX}
+              y={centerY + 10} // 위쪽으로 이동
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fill={`url(#${gradientId})`}
+              style={{ fontSize: '1.25rem', fontWeight: 'bold' }}
+            >
+              {percentage}%
+            </text>
+          </>
+        )}
       </svg>
     </div>
   );

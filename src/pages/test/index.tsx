@@ -12,7 +12,6 @@ import {
   AutoTextArea,
 } from '@components/@shared/Input';
 
-
 export default function Test() {
   const { isOpen, openModal, closeModal } = useModal();
 
