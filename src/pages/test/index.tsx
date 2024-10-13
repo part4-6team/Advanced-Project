@@ -12,7 +12,6 @@ import {
   AutoTextArea,
 } from '@components/@shared/Input';
 
-
 export default function Test() {
   const { isOpen, openModal, closeModal } = useModal();
 
@@ -79,7 +78,6 @@ export default function Test() {
             </button>
           </Modal.Footer>
         </Modal>
-
         <Button bgColor="gradient" fontSize="14" size="full" height={50}>
           버튼3
         </Button>
