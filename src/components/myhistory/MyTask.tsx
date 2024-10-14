@@ -1,7 +1,7 @@
-import Dropdown from '@components/@shared/Dropdown';
+import Dropdown, { Option } from '@components/@shared/Dropdown';
 import CheckBoxIconActiveIcon from 'public/icons/checkbox_active.svg';
 import KebabIcon from 'public/icons/kebab_small.svg';
-import axios from '@/src/lib/axios';
+import { axiosInstance } from '@/src/libs/axios/axiosInstance';
 import { useQuery } from '@tanstack/react-query';
 
 interface Task {
@@ -20,7 +20,7 @@ interface Task {
 }
 
 const fetchTask = async () => {
-  const response = await axios.get('user/history');
+  const response = await axiosInstance.get('user/history');
   return response.data;
 };
 
@@ -69,6 +69,11 @@ export default function MyTask() {
     {} as Record<string, Task[]>
   );
 
+  const basic: Option[] = [
+    { component: <div>수정하기</div> },
+    { component: <div>삭제하기</div> },
+  ];
+
   return (
     <div className="flex flex-col gap-4  ">
       {Object.keys(groupedTasks).map((date) => (
@@ -85,17 +90,11 @@ export default function MyTask() {
               </div>
 
               <Dropdown
-                buttonChildren={<KebabIcon />}
-                width="w-[120px]"
-                childType="menu"
-              >
-                <button className="flex w-full items-center justify-center px-[24px] py-[14px] text-center text-md-regular">
-                  수정하기
-                </button>
-                <button className="flex w-full items-center justify-center px-[24px] py-[14px] text-center text-md-regular">
-                  삭제하기
-                </button>
-              </Dropdown>
+                options={basic}
+                triggerIcon={<KebabIcon />}
+                optionsWrapClass="mt-2 right-0 rounded-[12px] border border-background-tertiary"
+                optionClass="rounded-[12px] md:w-[135px] md:h-[47px] w-[120px] h-[40px] justify-center text-md-regular md:text-lg-regular text-center hover:bg-background-tertiary"
+              />
             </div>
           ))}
         </div>
