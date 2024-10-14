@@ -9,7 +9,6 @@ interface SideBarProps {
   trigger: (toggle: () => void) => ReactNode;
   position: 'left' | 'right';
   clickEvent?: () => void;
-
 }
 
 /**
@@ -55,13 +54,12 @@ export default function SideBar({
     };
   }, [isOpen]);
 
-
   const classes = {
     sidebar: clsx(
       'fixed h-auto transform bg-gray-800 text-white transition-transform',
       {
         'inset-y-0 left-0 w-52': position === 'left',
-        'bottom-0 right-0 top-[66px] min-w-[375px] border border-border-primary border-opacity-50':
+        'bottom-0 right-0 top-[66px] min-w-[375px] border border-border-primary border-opacity-10':
           position === 'right',
         'translate-x-0': isOpen,
         '-translate-x-full': !isOpen && position === 'left',
