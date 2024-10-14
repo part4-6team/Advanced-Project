@@ -12,10 +12,41 @@ export default function SignInForm() {
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+  // 모든 입력값의 유효성을 검사하는 함수
+  const validateForm = () => {
+    return !emailError && !passwordError;
+  };
+
+  // 이메일 유효성 검사 함수
+  const validateEmail = () => {
+    if (!email) {
+      setEmailError('이메일은 필수 입력입니다.');
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailError('이메일 형식으로 작성해 주세요.');
+    } else {
+      setEmailError('');
+    }
+    validateForm(); // 유효성 검사 후 폼 상태 업데이트
+  };
+
+  // 비밀번호 유효성 검사 함수
+  const validatePassword = () => {
+    if (!password) {
+      setPasswordError('비밀번호는 필수 입력입니다.');
+    } else {
+      setPasswordError('');
+    }
+    validateForm(); // 유효성 검사 후 폼 상태 업데이트
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!validateForm()) return; // 폼이 유효하지 않으면 제출 중지
+
     try {
       const signInResponse = await axiosInstance.post('auth/signIn', {
         email,
@@ -27,7 +58,9 @@ export default function SignInForm() {
       router.push('/');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        console.error('서버에서 반환된 데이터:', error.response.data);
+        console.error('서버에서 반환된 에러 데이터:', error.response.data);
+        setEmailError('이메일 혹은 비밀번호를 확인해주세요.');
+        setPasswordError('이메일 혹은 비밀번호를 확인해주세요.');
       } else {
         console.error('로그인 에러 발생:', error);
       }
@@ -49,18 +82,28 @@ export default function SignInForm() {
             <Input
               label="이메일"
               placeholder="이메일을 입력해주세요."
+              isError={!!emailError}
+              errorMessage={emailError}
               inputProps={{
                 value: email,
-                onChange: (e) => setEmail(e.target.value),
+                onChange: (e) => {
+                  setEmail(e.target.value);
+                },
+                onBlur: validateEmail,
               }}
             />
             <IconInput
               label="비밀번호"
               placeholder="비밀번호를 입력해주세요."
+              isError={!!passwordError}
+              errorMessage={passwordError}
               inputProps={{
                 type: isPasswordVisible ? 'text' : 'password',
                 value: password,
-                onChange: (e) => setPassword(e.target.value),
+                onChange: (e) => {
+                  setPassword(e.target.value);
+                },
+                onBlur: validatePassword,
               }}
               actionIcon={
                 isPasswordVisible ? (
@@ -78,7 +121,7 @@ export default function SignInForm() {
             비밀번호를 잊으셨나요?
           </Link>
         </div>
-        <Button size="full" onClick={handleSubmit}>
+        <Button size="full" onClick={handleSubmit} disabled={!validateForm()}>
           로그인
         </Button>
       </div>
