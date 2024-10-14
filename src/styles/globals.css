@@ -9,5 +9,5 @@
 }
 
 body {
-  @apply bg-background-primary font-sans text-gray-800;
+  @apply bg-background-primary font-sans text-text-primary;
 }
