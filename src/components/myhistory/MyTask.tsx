@@ -20,7 +20,7 @@ interface Task {
 }
 
 const fetchTask = async () => {
-  const response = await axios.get('/user/history');
+  const response = await axios.get('user/history');
   return response.data;
 };
 
