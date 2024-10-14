@@ -9,13 +9,67 @@ import { useState } from 'react';
 
 export default function SignUpForm() {
   const router = useRouter();
+
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
+
+  const [emailValidation, setEmailValidation] = useState('');
+  const [nicknameValidation, setNicknameValidation] = useState('');
+  const [passwordValidation, setPasswordValidation] = useState('');
+  const [passwordConfirmationValidation, setPasswordConfirmationValidation] =
+    useState('');
+
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
+
+  const validateEmail = () => {
+    if (!email) {
+      setEmailValidation('이메일은 필수 입력입니다.');
+    } else if (!/\S+@\S+\.\S+/.test(email)) {
+      setEmailValidation('이메일 형식으로 작성해 주세요.');
+    } else {
+      setEmailValidation('');
+    }
+  };
+
+  const validateNickname = () => {
+    if (!nickname) {
+      setNicknameValidation('닉네임은 필수 입력입니다.');
+    } else if (nickname.length > 20) {
+      setNicknameValidation('닉네임은 최대 20자까지 가능합니다.');
+    } else {
+      setNicknameValidation('');
+    }
+  };
+
+  const validatePassword = () => {
+    if (!password) {
+      setPasswordValidation('비밀번호는 필수 입력입니다.');
+    } else if (password.length < 8) {
+      setPasswordValidation('비밀번호는 최소 8자 이상입니다.');
+    } else if (
+      !/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).+$/.test(password)
+    ) {
+      setPasswordValidation(
+        '비밀번호는 숫자, 영문자, 특수문자(!@#$%^&*)가 각각 하나 이상 포함되어야 합니다.'
+      );
+    } else {
+      setPasswordValidation('');
+    }
+  };
+
+  const validatePasswordConfirmation = () => {
+    if (!passwordConfirmation) {
+      setPasswordConfirmationValidation('비밀번호 확인을 입력해주세요.');
+    } else if (passwordConfirmation !== password) {
+      setPasswordConfirmationValidation('비밀번호가 일치하지 않습니다.');
+    } else {
+      setPasswordConfirmationValidation('');
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -63,26 +117,35 @@ export default function SignUpForm() {
         <Input
           label="이름"
           placeholder="이름을 입력해주세요."
+          isError={!!nicknameValidation}
+          errorMessage={nicknameValidation}
           inputProps={{
             value: nickname,
             onChange: (e) => setNickname(e.target.value),
+            onBlur: validateNickname,
           }}
         />
         <Input
           label="이메일"
           placeholder="이메일을 입력해주세요."
+          isError={!!emailValidation}
+          errorMessage={emailValidation}
           inputProps={{
             value: email,
             onChange: (e) => setEmail(e.target.value),
+            onBlur: validateEmail,
           }}
         />
         <IconInput
           label="비밀번호"
           placeholder="비밀번호를 입력해주세요."
+          isError={!!passwordValidation}
+          errorMessage={passwordValidation}
           inputProps={{
             type: isPasswordVisible ? 'text' : 'password',
             value: password,
             onChange: (e) => setPassword(e.target.value),
+            onBlur: validatePassword,
           }}
           actionIcon={
             isPasswordVisible ? (
@@ -95,10 +158,13 @@ export default function SignUpForm() {
         <IconInput
           label="비밀번호 확인"
           placeholder="비밀번호를 다시 한 번 입력해주세요."
+          isError={!!passwordConfirmationValidation}
+          errorMessage={passwordConfirmationValidation}
           inputProps={{
             type: isConfirmPasswordVisible ? 'text' : 'password',
             value: passwordConfirmation,
             onChange: (e) => setPasswordConfirmation(e.target.value),
+            onBlur: validatePasswordConfirmation,
           }}
           actionIcon={
             isConfirmPasswordVisible ? (
