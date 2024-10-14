@@ -6,89 +6,106 @@ import React, {
   useState,
 } from 'react';
 
-interface DropdownProps {
-  buttonChildren: ReactNode;
-  children: ReactNode;
-  width: string;
-  childType?: 'menu' | 'team';
+export interface Option {
+  label?: string;
+  component: ReactNode;
 }
 
-/**
- * Dropdown 공통 컴포넌트
- * @param buttonChildren 드롭다운을 펼치는 버튼 디자인 컴포넌트를 넣어주시면 됩니다.
- * @param children 드롭다운이 펼쳐질 때 리스트업 할 디자인 컴포넌트를 넣어주시면 됩니다.
- * @param width 리스트업 할 컴포넌트들을 감싸는 ul태그의 넓이를 지정합니다.
- * @param childType 네비게이션 바의 팀(이름)목록: team, 나머지는 menu로 지정해주세요.
- */
+export interface DropdownProps {
+  triggerClass?: string; // 드롭다운 버튼에 추가할 클래스
+  optionsWrapClass?: string; // 옵션을 감싸는 div태그에 추가할 클래스
+  optionClass?: string; // 옵션에 추가할 클래스
+  triggerIcon?: ReactNode; // 드롭다운 버튼에 추가할 아이콘
+  initialOption?: Option;
+  options: Option[];
+  selected?: Option | null;
+  onSelect?: (option: Option) => void;
+}
+
 export default function Dropdown({
-  buttonChildren,
-  children,
-  width,
-  childType = 'menu',
+  initialOption,
+  options,
+  selected,
+  onSelect,
+  triggerIcon,
+  triggerClass,
+  optionsWrapClass,
+  optionClass,
 }: DropdownProps) {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const dropdownRef = useRef<HTMLUListElement | null>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const handleButtonClick = useCallback(
-    (e: React.MouseEvent<HTMLButtonElement>) => {
-      e.stopPropagation();
-      setIsMenuOpen((nextIsMenuOpen) => !nextIsMenuOpen);
-    },
-    []
-  );
+  const handleToggle = useCallback((e: React.MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
+    setIsOpen((prev) => !prev); // 드롭다운 열기/닫기
+  }, []);
 
-  // 메뉴 밖에 누르면 드롭다운 사라지게
+  const handleSelect = (option: Option) => {
+    if (onSelect) {
+      onSelect(option);
+    }
+    setIsOpen(false);
+  };
+
+  // 메뉴 밖의 화면을 누르면 드롭다운 사라지도록
   useEffect(() => {
-    if (!isMenuOpen) return;
+    if (!isOpen) return;
 
-    const handleClickOutsideOfMenu = () => setIsMenuOpen(false);
-    window.addEventListener('click', handleClickOutsideOfMenu);
+    const handleClickOutside = () => setIsOpen(false);
+    window.addEventListener('click', handleClickOutside);
 
     return () => {
-      window.removeEventListener('click', handleClickOutsideOfMenu);
+      window.removeEventListener('click', handleClickOutside);
     };
-  }, [isMenuOpen]);
+  }, [isOpen]);
 
   // 드롭다운이 화면 밖으로 나갈 때 위치 조정
   useEffect(() => {
-    if (isMenuOpen && dropdownRef.current) {
+    if (isOpen && dropdownRef.current) {
       const dropdownRect = dropdownRef.current.getBoundingClientRect();
       const overflowRight = dropdownRect.right > window.innerWidth;
+      const overflowLeft = dropdownRect.left < window.innerWidth;
 
       if (overflowRight) {
         dropdownRef.current.style.left = 'auto';
         dropdownRef.current.style.right = '0'; // 우측 정렬
       }
+
+      if (overflowLeft) {
+        dropdownRef.current.style.left = '0'; // 좌측 정렬
+        dropdownRef.current.style.right = 'auto';
+      }
     }
-  }, [isMenuOpen, childType]);
+  }, [isOpen]);
 
   return (
     <div className="relative">
       <button
         type="button"
-        onClick={handleButtonClick}
-        className="text-text-primary"
+        onClick={handleToggle}
+        className={`${triggerClass}`}
       >
-        {buttonChildren}
+        {initialOption && !selected
+          ? initialOption.label
+          : selected?.label || ''}
+        {triggerIcon}
       </button>
-      {isMenuOpen && (
-        <ul
+      {isOpen && (
+        <div
           ref={dropdownRef}
-          className={`absolute z-10 flex flex-col items-center justify-center rounded-[12px] border border-background-tertiary bg-background-secondary text-text-primary ${width} ${childType === 'team' ? 'border-none p-[16px]' : ''}`}
+          className={`${optionsWrapClass} absolute z-50 flex flex-col bg-background-secondary text-text-primary`}
         >
-          {React.Children.map(children, (child) => {
-            if (React.isValidElement(child)) {
-              return (
-                <li
-                  className={`flex h-full w-full rounded-[12px] hover:bg-background-tertiary
-                    ${childType === 'team' ? 'rounded-[8px]' : ''}`}
-                >
-                  {child}
-                </li>
-              );
-            }
-          })}
-        </ul>
+          {options.map((option) => (
+            <button
+              key={option.label}
+              type="button"
+              onClick={() => handleSelect(option)}
+              className={`${optionClass}`}
+            >
+              {option.component}
+            </button>
+          ))}
+        </div>
       )}
     </div>
   );
