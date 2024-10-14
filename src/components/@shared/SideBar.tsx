@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useRef, useState } from 'react';
 import XIcon from 'public/icons/x.svg';
 import clsx from 'clsx';
-import Button from '@pages/components/@shared/Button';
+import Button from '@components/@shared/Button';
 import CheckWhiteIcon from 'public/icons/check_white.svg';
 
 interface SideBarProps {
@@ -59,7 +59,7 @@ export default function SideBar({
       'fixed h-auto transform bg-gray-800 text-white transition-transform',
       {
         'inset-y-0 left-0 w-52': position === 'left',
-        'bottom-0 right-0 top-[66px] min-w-[375px] border border-border-primary border-opacity-50':
+        'bottom-0 right-0 top-[66px] min-w-[375px] border border-border-primary border-opacity-10':
           position === 'right',
         'translate-x-0': isOpen,
         '-translate-x-full': !isOpen && position === 'left',
@@ -82,13 +82,11 @@ export default function SideBar({
     <>
       {/* 메뉴를 여는 트리거 */}
       {trigger(toggleSideBar)}
-
       <div ref={sideBarRef} className={classes.sidebar}>
         <button className={classes.closeButton} onClick={toggleSideBar}>
           <XIcon />
         </button>
         <div className="mt-10">{children}</div>
-
         <div className={classes.completeButtonWrapper}>
           <Button shape="round">
             <div
