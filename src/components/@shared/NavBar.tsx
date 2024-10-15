@@ -45,16 +45,18 @@ export default function NavBar() {
           </Link>
           {!isLogoOnlyPage && (
             <>
-              <Dropdown
-                initialOption={teams[0]}
-                options={teams}
-                selected={selectedTeam}
-                onSelect={handleSelectTeam}
-                triggerClass="flex gap-[12px] items-center text-text-primary"
-                triggerIcon={<ArrowDown />}
-                optionsWrapClass="mt-[30px] flex p-[16px] rounded-[12px]"
-                optionClass="px[8px] py-[7px] rounded-[8px] w-[186px] h-[46px] hover:bg-background-tertiary"
-              />
+              <div className="max-md:hidden">
+                <Dropdown
+                  initialOption={teams[0]}
+                  options={teams}
+                  selected={selectedTeam}
+                  onSelect={handleSelectTeam}
+                  triggerClass="flex gap-[12px] items-center text-text-primary"
+                  triggerIcon={<ArrowDown />}
+                  optionsWrapClass="mt-[30px] flex p-[16px] rounded-[12px]"
+                  optionClass="px[8px] py-[7px] rounded-[8px] w-[186px] h-[46px] hover:bg-background-tertiary"
+                />
+              </div>
               <Link href={'#'}>
                 <span className="max-md:hidden">자유게시판</span>
               </Link>
