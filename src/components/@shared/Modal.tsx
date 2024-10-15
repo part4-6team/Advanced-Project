@@ -1,9 +1,11 @@
 import React from 'react';
 import { createPortal } from 'react-dom';
-import Image from 'next/image';
 import clsx from 'clsx';
 
-import ICON_PATHS from '@constants/iconPaths';
+import ProfileIcon from '@icons/profile_small.svg';
+import AlertIcon from '@icons/alert.svg';
+import XIcon from '@icons/x.svg';
+
 import { getModalClass, ModalClassProps } from '@utils/getModalClass';
 
 interface ModalProps extends ModalClassProps {
@@ -32,36 +34,15 @@ export function Modal({
       <div
         className={`fixed bottom-0 w-full rounded-t-xl md:relative md:w-[375px] md:rounded-xl xl:w-96 ${modalClass}`}
       >
-        {isProfile && (
-          <Image
-            src={ICON_PATHS.PROFILE}
-            alt="프로필 아이콘"
-            width={24}
-            height={24}
-            className="mx-auto"
-          />
-        )}
-        {isDanger && (
-          <Image
-            src={ICON_PATHS.ALERT}
-            alt="경고 아이콘"
-            width={24}
-            height={24}
-            className="mx-auto"
-          />
-        )}
+        {isProfile && <ProfileIcon className="mx-auto h-6 w-6" />}
+        {isDanger && <AlertIcon className="mx-auto h-6 w-6" />}
         {isXButton && (
           <button
             type="button"
             className="absolute right-4 top-4 flex justify-end"
             onClick={onClose}
           >
-            <Image
-              src={ICON_PATHS.X}
-              alt="닫기 아이콘"
-              width={24}
-              height={24}
-            />
+            <XIcon />
           </button>
         )}
         {children}
