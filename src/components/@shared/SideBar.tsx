@@ -6,10 +6,11 @@ import CheckWhiteIcon from 'public/icons/check_white.svg';
 
 interface SideBarProps {
   children: ReactNode;
-  trigger: (toggle: () => void) => ReactNode;
+  trigger?: (toggle: () => void) => ReactNode;
   position: 'left' | 'right';
   clickEvent?: () => void;
-
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 /**
@@ -25,13 +26,10 @@ export default function SideBar({
   trigger,
   position,
   clickEvent,
+  isOpen,
+  onClose,
 }: SideBarProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const sideBarRef = useRef<HTMLDivElement>(null);
-
-  const toggleSideBar = () => {
-    setIsOpen(!isOpen);
-  };
 
   //사이드바 밖 부분을 클릭시 닫기위한 로직
   useEffect(() => {
@@ -40,7 +38,7 @@ export default function SideBar({
         sideBarRef.current &&
         !sideBarRef.current.contains(event.target as Node)
       ) {
-        setIsOpen(false);
+        onClose();
       }
     };
 
@@ -53,15 +51,14 @@ export default function SideBar({
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [isOpen]);
-
+  }, [isOpen, onClose]);
 
   const classes = {
     sidebar: clsx(
       'fixed h-auto transform bg-gray-800 text-white transition-transform',
       {
         'inset-y-0 left-0 w-52': position === 'left',
-        'bottom-0 right-0 top-[66px] min-w-[375px] border border-border-primary border-opacity-50':
+        'bottom-0 right-0 top-[66px] min-w-[375px] border border-border-primary border-opacity-10':
           position === 'right',
         'translate-x-0': isOpen,
         '-translate-x-full': !isOpen && position === 'left',
@@ -83,9 +80,9 @@ export default function SideBar({
   return (
     <>
       {/* 메뉴를 여는 트리거 */}
-      {trigger(toggleSideBar)}
+      {trigger && trigger(() => onClose())}
       <div ref={sideBarRef} className={classes.sidebar}>
-        <button className={classes.closeButton} onClick={toggleSideBar}>
+        <button className={classes.closeButton} onClick={onClose}>
           <XIcon />
         </button>
         <div className="mt-10">{children}</div>
