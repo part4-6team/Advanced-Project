@@ -23,7 +23,7 @@ export default function Button({
   children,
   width = 136,
   height = 48,
-  disabledBgColor = '#716e6e',
+  disabledBgColor = '#94A3B8',
   className,
   style,
   disabled,
@@ -57,6 +57,7 @@ export default function Button({
       ? { height: `${height}px` }
       : { width: `${width}px`, height: `${height}px` }),
     backgroundColor: disabled ? disabledBgColor : undefined,
+    color: disabled ? '#ffffff' : undefined,
     ...style,
   };
 
