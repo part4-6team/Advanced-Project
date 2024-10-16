@@ -1,6 +1,19 @@
 import MemberBox from './MemberBox';
 
-export default function MemberList() {
+export interface MemberProps {
+  role: string;
+  userImage: string;
+  userEmail: string;
+  userName: string;
+  groupId: number;
+  userId: number;
+}
+
+interface MemberListProps {
+  members: MemberProps[];
+}
+
+export default function MemberList({ members }: MemberListProps) {
   return (
     <div>
       <div className="my-[20px]">
@@ -15,12 +28,15 @@ export default function MemberList() {
         </div>
       </div>
       <div className="grid grid-cols-2 gap-[24px] md:grid-cols-3">
-        <MemberBox />
-        <MemberBox />
-        <MemberBox />
-        <MemberBox />
-        <MemberBox />
-        <MemberBox />
+        {members.map((member) => (
+          <MemberBox
+            key={member.userId}
+            userName={member.userName}
+            userEmail={member.userEmail}
+            userImage={member.userImage}
+            role={member.role}
+          />
+        ))}
       </div>
     </div>
   );
