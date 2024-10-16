@@ -43,9 +43,9 @@ export default function Report({ taskLists }: TaskListProps) {
   }, [taskLists]);
 
   return (
-    <section>
+    <section className="w-full">
       <p className="my-[20px] text-lg-medium">리포트</p>
-      <div className="flex h-[217px] items-center justify-between gap-[30px] rounded-[12px] bg-background-secondary pr-[10px] md:px-[24px]">
+      <div className="flex h-[217px] items-center justify-between gap-[15px] rounded-[12px] bg-background-secondary pr-[10px] md:gap-[30px] md:px-[24px]">
         <div className="flex items-center gap-[20px]">
           <div className="hidden md:block">
             <CircleGraph
@@ -57,14 +57,14 @@ export default function Report({ taskLists }: TaskListProps) {
               strokeWidth={30}
             />
           </div>
-          <div className="md:hidden">
+          <div className="ml-[5px] md:hidden">
             <CircleGraph
               backgroundColor="#334155"
               gradientColorStart="#10B981"
               gradientColorEnd="#A3E635"
-              radius={60}
+              radius={50}
               percentage={doneRate}
-              strokeWidth={30}
+              strokeWidth={25}
               isTextShown
               additionalText="오늘"
               additionalTextColor="#ffffff"
@@ -78,7 +78,7 @@ export default function Report({ taskLists }: TaskListProps) {
             </p>
           </div>
         </div>
-        <div className="max-w-[400px] flex-grow xl:w-[400px] xl:flex-none">
+        <div className="min-w-[145px] max-w-[400px] flex-grow xl:w-[400px] xl:flex-none">
           <div className="flex h-[76.5px] w-full items-center justify-between rounded-[12px] bg-background-tertiary px-[16px] ">
             <div className="flex flex-col gap-[4px]">
               <p className="text-xs-medium text-text-secondary">오늘의 할 일</p>

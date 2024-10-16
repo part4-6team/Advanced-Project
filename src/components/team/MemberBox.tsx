@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 export interface MemberProps {
   role: string;
-  userImage: string;
+  userImage: string | null;
   userEmail: string;
   userName: string;
 }

@@ -55,6 +55,46 @@ export const teamData = {
       groupId: 3,
       userId: 6,
     },
+    {
+      role: 'MEMBER',
+      userImage: null,
+      userEmail: 'adsdsdsdsv@fdfdf.sdsdsd',
+      userName: '난난나나나',
+      groupId: 3,
+      userId: 7,
+    },
+    {
+      role: 'MEMBER',
+      userImage: null,
+      userEmail: 'adsdsdsdsv@fdfdf.sdsdsd',
+      userName: '난난나나나',
+      groupId: 3,
+      userId: 8,
+    },
+    {
+      role: 'MEMBER',
+      userImage: null,
+      userEmail: 'adsdsdsdsv@fdfdf.sdsdsd',
+      userName: '난난나나나',
+      groupId: 3,
+      userId: 9,
+    },
+    {
+      role: 'MEMBER',
+      userImage: null,
+      userEmail: 'adsdsdsdsv@fdfdf.sdsdsd',
+      userName: '난난나나나',
+      groupId: 3,
+      userId: 10,
+    },
+    {
+      role: 'MEMBER',
+      userImage: null,
+      userEmail: 'adsdsdsdsv@fdfdf.sdsdsd',
+      userName: '난난나나나',
+      groupId: 3,
+      userId: 11,
+    },
   ],
   taskLists: [
     {
@@ -161,6 +201,40 @@ export const teamData = {
         },
         {
           name: '설거지하기',
+          done: true,
+        },
+      ],
+    },
+    {
+      displayIndex: 5,
+      groupId: 3,
+      updatedAt: '2024-10-15T08:36:16.439Z',
+      createdAt: '2024-10-15T08:36:16.439Z',
+      name: '지하철타기',
+      id: 5,
+      tasks: [
+        {
+          name: '신발신기',
+          done: true,
+        },
+        {
+          name: '문 열기',
+          done: true,
+        },
+        {
+          name: '계단 내려가기',
+          done: true,
+        },
+        {
+          name: '지하철까지 뛰어가기',
+          done: false,
+        },
+        {
+          name: '카드찍기',
+          done: true,
+        },
+        {
+          name: '탑승하기',
           done: true,
         },
       ],

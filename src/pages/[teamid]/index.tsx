@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import TeamBanner from '@components/team/TeamBanner';
 import TaskList from '@components/team/TaskList';
 import Report from '@components/team/Report';
@@ -42,7 +41,7 @@ export interface TeamDataProps {
 
 export default function TeamPage() {
   return (
-    <main className="mx-auto mt-[20px] w-full px-[10px] xl:w-[1200px] xl:px-0">
+    <main className="mx-auto mt-[20px] w-full min-w-[340px] px-[10px] xl:w-[1200px] xl:px-0">
       <TeamBanner name={teamData.name} />
       <TaskList taskLists={teamData.taskLists} />
       <Report taskLists={teamData.taskLists} />
