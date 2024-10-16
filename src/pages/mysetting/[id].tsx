@@ -1,5 +1,5 @@
 import InputTask from '@components/mysetting/inputTask';
-import SecessionIcon from 'public/icons/secession.svg';
+import RemoveAccount from '@components/mysetting/RemoveAccount';
 
 export default function MySetting() {
   return (
@@ -10,9 +10,8 @@ export default function MySetting() {
       <div className="w-full max-w-[792px]">
         <InputTask />
       </div>
-      <footer className="flex w-full max-w-[792px] items-center gap-2 text-left">
-        <SecessionIcon className="ml-6" />
-        <span className="text-lg-medium text-status-danger">회원 탈퇴하기</span>
+      <footer className="flex w-full max-w-[792px] ">
+        <RemoveAccount />
       </footer>
     </div>
   );
