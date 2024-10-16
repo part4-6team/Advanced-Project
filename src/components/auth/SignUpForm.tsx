@@ -9,18 +9,15 @@ import { useState } from 'react';
 
 export default function SignUpForm() {
   const router = useRouter();
-
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-
   const [emailError, setEmailError] = useState('');
   const [nicknameError, setNicknameError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [passwordConfirmationError, setPasswordConfirmationError] =
     useState('');
-
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
@@ -68,7 +65,7 @@ export default function SignUpForm() {
     } else if (
       !/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).+$/.test(password)
     ) {
-      setPasswordError('비밀번호는 숫자, 영문, 특수문자로만 가능합니다.');
+      setPasswordError('비밀번호는 숫자, 영문, 특수문자가 포함되어야 합니다.');
     } else {
       setPasswordError('');
     }
@@ -141,7 +138,6 @@ export default function SignUpForm() {
             value: nickname,
             onChange: (e) => {
               setNickname(e.target.value);
-              validateNickname();
             },
             onBlur: validateNickname,
           }}
@@ -155,7 +151,6 @@ export default function SignUpForm() {
             value: email,
             onChange: (e) => {
               setEmail(e.target.value);
-              validateEmail();
             },
             onBlur: validateEmail,
           }}
@@ -170,7 +165,6 @@ export default function SignUpForm() {
             value: password,
             onChange: (e) => {
               setPassword(e.target.value);
-              validatePassword();
             },
             onBlur: validatePassword,
           }}
@@ -192,7 +186,6 @@ export default function SignUpForm() {
             value: passwordConfirmation,
             onChange: (e) => {
               setPasswordConfirmation(e.target.value);
-              validatePasswordConfirmation();
             },
             onBlur: validatePasswordConfirmation,
           }}
