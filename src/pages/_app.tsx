@@ -10,9 +10,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <>
       <NavBar />
       <QueryClientProvider client={queryClient}>
-        <main>
-          <Component {...pageProps} />
-        </main>
+        <Component {...pageProps} />
       </QueryClientProvider>
     </>
   );
