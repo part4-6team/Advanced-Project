@@ -7,6 +7,13 @@ import Task from '@/src/types/myhistory/TaskType';
 import { useDeleteTask } from '@hooks/myhistory/useDeleteTask';
 import { useState } from 'react';
 import SideBar from '@components/@shared/SideBar';
+import Image from 'next/image';
+import networkErrorIcon from 'public/icons/networkErrorIcon.png';
+import Button from '@components/@shared/Button';
+
+const handelReload = () => {
+  location.href = location.href;
+};
 
 export default function MyTask() {
   const [isSideBarOpen, setIsSideBarOpen] = useState(false);
@@ -18,7 +25,20 @@ export default function MyTask() {
   }
 
   if (isError) {
-    return <p>Error loading tasks.</p>;
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <Image
+          src={networkErrorIcon}
+          alt="네트워크 에러 아이콘"
+          width={100}
+          height={100}
+        />
+        <span className="text-2xl-bold">네트워크 에러</span>
+        <Button onClick={handelReload} className="mt-4 bg-amber-400">
+          재시도
+        </Button>
+      </div>
+    );
   }
 
   if (tasks.length === 0) {
@@ -100,8 +120,9 @@ export default function MyTask() {
         position="right"
         onClose={handleCloseSideBar}
         isOpen={isSideBarOpen}
+        button="cancelbutton"
       >
-        가자
+        사이드바
       </SideBar>
     </div>
   );
