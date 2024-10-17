@@ -1,5 +1,5 @@
 import { useDate } from '@/src/contexts/DateContext';
-import useFormattedDate from '@hooks/useFormattedDate';
+import getFormattedDate from '@utils/getFormattedDate';
 
 import Pagination from './UI/Pagination';
 import Calender from './UI/Calender';
@@ -7,7 +7,7 @@ import CreateTaskList from './UI/CreateTaskList';
 
 export default function TaskDate() {
   const { date } = useDate();
-  const formattedDate = useFormattedDate(date);
+  const formattedDate = getFormattedDate(date);
 
   return (
     <section className="flex flex-col gap-6 text-text-primary">
