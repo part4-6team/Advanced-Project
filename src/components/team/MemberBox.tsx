@@ -3,7 +3,7 @@ import Image from 'next/image';
 import GetUserDetailModal from './GetUserDetailModal';
 
 export interface MemberProps {
-  role: 'ADMIN' | 'MEMBER';
+  role: string;
   userImage: string | null;
   userEmail: string;
   userName: string;

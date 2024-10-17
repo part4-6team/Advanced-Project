@@ -8,7 +8,7 @@ interface GetUserDetailModalProps {
   name: string;
   email: string;
   img: string | null;
-  role: 'ADMIN' | 'MEMBER';
+  role: string;
 }
 
 export default function GetUserDetailModal({

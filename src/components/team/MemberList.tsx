@@ -3,7 +3,7 @@ import MemberBox from './MemberBox';
 import InvitationModal from './InvitationModal';
 
 interface MemberProps {
-  role: 'ADMIN' | 'MEMBER';
+  role: string;
   userImage: string | null;
   userEmail: string;
   userName: string;
