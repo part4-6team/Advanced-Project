@@ -2,12 +2,42 @@
 @tailwind components;
 @tailwind utilities;
 
+.blur-lg {
+  filter: blur(12px);
+}
+
+.gradient-text-brand {
+  background: linear-gradient(to right, #10b981, #a3e635);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gradient-border {
+  position: relative;
+  border-radius: 40px;
+  background: #0f172a;
+}
+
+.gradient-border::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(to right, #10b981, #a3e635); /* 그라데이션 색상 */
+  z-index: -1;
+  border-radius: 40px;
+  padding: 1px;
+  margin: -1px;
+}
+
 @layer utilities {
   .bg-background-primary {
-    @apply bg-[#0F172A]; /* tailwind.config.js에 정의된 색상과 맞추기 */
+    @apply bg-[#0F172A];
   }
 }
 
 body {
-  @apply bg-background-primary font-sans text-gray-800;
+  @apply bg-background-primary font-sans text-text-primary;
 }
