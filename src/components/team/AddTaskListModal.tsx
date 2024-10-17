@@ -30,7 +30,7 @@ export default function AddTaskListModal({
     >
       <Modal.Wrapper array="column">
         <Modal.Header fontColor="primary">할 일 목록</Modal.Header>
-        <Modal.Content fontColor="secondary" fontSize="14" fontArray="left">
+        <Modal.Content fontColor="secondary" fontSize="14" fontArray="center">
           <Input className="mt-[30px]" placeholder="목록 명을 입력해주세요." />
         </Modal.Content>
       </Modal.Wrapper>

@@ -29,10 +29,8 @@ export default function InvitationModal({
     >
       <Modal.Wrapper array="column">
         <Modal.Header fontColor="primary">멤버 초대</Modal.Header>
-        <Modal.Content fontColor="secondary" fontSize="14" fontArray="left">
-          <p className="mt-[20px] text-center">
-            그룹에 참여할 수 있는 링크를 복사합니다.
-          </p>
+        <Modal.Content fontColor="secondary" fontSize="14" fontArray="center">
+          <p className="mt-[20px]">그룹에 참여할 수 있는 링크를 복사합니다.</p>
         </Modal.Content>
       </Modal.Wrapper>
       <Modal.Footer>

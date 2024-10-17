@@ -22,7 +22,7 @@ export default function TaskBar({ name, tasks }: TaskBarProps) {
   const doneRate = totalTasks === 0 ? 0 : (doneTasksCount / totalTasks) * 100;
 
   return (
-    <div className="flex h-[40px] justify-between bg-background-secondary">
+    <div className="flex h-[40px] cursor-pointer justify-between bg-background-secondary hover:brightness-110 active:brightness-105">
       <div className="flex items-center justify-between gap-[10px]">
         <div className="h-full w-[12px] rounded-bl-[12px] rounded-br-[0px] rounded-tl-[12px] rounded-tr-[0px] bg-point-purple">
           &nbsp;
