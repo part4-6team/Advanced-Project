@@ -29,8 +29,18 @@ export function Modal({
 
   if (!isOpen) return null;
 
+  // 모달 외부 클릭 시 닫기 처리
+  const handleBackgroundClick = (event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
+      onClose?.();
+    }
+  };
+
   return createPortal(
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={handleBackgroundClick}
+    >
       <div
         className={`fixed bottom-0 w-full rounded-t-xl md:relative md:w-[375px] md:rounded-xl xl:w-96 ${modalClass}`}
       >
