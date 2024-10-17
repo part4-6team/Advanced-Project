@@ -9,14 +9,17 @@ export const fetchUserData = async () => {
 // 프로필 이미지 변경
 export const fetchProfileImage = async () => {
   const response = await axiosInstance.patch('user');
+  return response.data;
 };
 
 // 회원탈퇴 api
 export const fetchDeletUser = async () => {
   const response = await axiosInstance.delete('user');
+  return response.data;
 };
 
 // 비밀번호 변경
 export const fetchChangePassword = async () => {
   const response = await axiosInstance.patch('user/password');
+  return response.data;
 };

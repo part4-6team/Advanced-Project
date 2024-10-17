@@ -3,9 +3,17 @@ import { Modal } from '@components/@shared/Modal';
 import { useModal } from '@hooks/useModal';
 import AlertIcon from 'public/icons/alert.svg';
 import Button from '@components/@shared/Button';
+import { useUserDelete } from '@hooks/mysetting/useUserDelete';
 
 export default function RemoveAccount() {
   const { isOpen, openModal, closeModal } = useModal();
+
+  const mutation = useUserDelete();
+
+  const handleUserDelete = () => {
+    mutation.mutate();
+    closeModal();
+  };
 
   return (
     <>
@@ -61,7 +69,7 @@ export default function RemoveAccount() {
               bgColor="red"
               width={136}
               height={48}
-              onClick={closeModal}
+              onClick={handleUserDelete}
               className="bg-amber-400 text-red-50"
             >
               회원 탈퇴
