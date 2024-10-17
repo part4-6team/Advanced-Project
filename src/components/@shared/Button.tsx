@@ -23,7 +23,7 @@ export default function Button({
   children,
   width = 136,
   height = 48,
-  disabledBgColor = '#716e6e',
+  disabledBgColor = '#94A3B8',
   className,
   style,
   disabled,
@@ -32,11 +32,16 @@ export default function Button({
   const buttonClass = clsx(
     'base-class',
     {
-      'bg-brand-primary': !disabled && bgColor === 'green',
-      'bg-status-danger': !disabled && bgColor === 'red',
-      'bg-background-inverse': !disabled && bgColor === 'white',
-      'bg-transparent': !disabled && bgColor === 'transparent',
-      'bg-brand-gradient': !disabled && bgColor === 'gradient',
+      'bg-brand-primary hover:bg-interaction-hover active:bg-interaction-pressed':
+        !disabled && bgColor === 'green',
+      'bg-status-danger hover:bg-[#b31919] active:bg-[#921414]':
+        !disabled && bgColor === 'red',
+      'bg-background-inverse hover:text-black active:brightness-90':
+        !disabled && bgColor === 'white',
+      'bg-transparent hover:bg-[#ffffff10] active:bg-transparent':
+        !disabled && bgColor === 'transparent',
+      'bg-brand-gradient transition duration-150 hover:brightness-110 active:brightness-95':
+        !disabled && bgColor === 'gradient',
       'border border-brand-primary': border === 'green',
       'border border-text-secondary': border === 'gray',
       'border border-text-inverse': border === 'white',
@@ -57,6 +62,7 @@ export default function Button({
       ? { height: `${height}px` }
       : { width: `${width}px`, height: `${height}px` }),
     backgroundColor: disabled ? disabledBgColor : undefined,
+    color: disabled ? '#ffffff' : undefined,
     ...style,
   };
 
