@@ -1,6 +1,7 @@
 import { useModal } from '@hooks/useModal';
 import Image from 'next/image';
 import GetUserDetailModal from './GetUserDetailModal';
+import ExileDropdown from './ExileDropdown';
 
 export interface MemberProps {
   role: string;
@@ -46,12 +47,7 @@ export default function MemberBox({
             {userEmail}
           </p>
         </div>
-        <Image
-          src="/icons/kebab_large.svg"
-          alt="더보기 아이콘"
-          width={4}
-          height={10}
-        />
+        <ExileDropdown />
       </div>
       <GetUserDetailModal
         isOpen={isOpen}
