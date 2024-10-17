@@ -33,8 +33,7 @@ export default function Report({ taskLists }: TaskListProps) {
     taskLists.forEach((taskList) => {
       total += taskList.tasks.length;
       done += taskList.tasks.filter((task) => task.done).length;
-      const calRate = total === 0 ? 0 : (done / total) * 100;
-      rate = Number(calRate.toFixed(0));
+      rate = total === 0 ? 0 : Math.round((done / total) * 100);
     });
 
     setTotalTasks(total);

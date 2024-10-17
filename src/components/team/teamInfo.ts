@@ -115,7 +115,7 @@ export const teamData = {
         },
         {
           name: '밥차리기',
-          done: false,
+          done: true,
         },
         {
           name: '설거지하기',
