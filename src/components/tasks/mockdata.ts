@@ -34,6 +34,31 @@ export const MockData: TaskListDto[] = [
         name: 'Task 1',
         id: 1,
       },
+      {
+        doneBy: {
+          user: {
+            image: 'user1.png',
+            nickname: 'User One',
+            id: 1,
+          },
+        },
+        writer: {
+          image: 'writer1.png',
+          nickname: 'Writer One',
+          id: 2,
+        },
+        displayIndex: 0,
+        commentCount: 7,
+        deletedAt: null,
+        recurringId: 1,
+        frequency: 'DAILY',
+        updatedAt: '2024-10-16T12:59:10.181Z',
+        doneAt: '2024-10-16T12:59:10.181Z',
+        date: '2024-10-16T12:59:10.181Z',
+        description: 'Description for Task 1',
+        name: '두우번째',
+        id: 2,
+      },
     ],
   },
   {
