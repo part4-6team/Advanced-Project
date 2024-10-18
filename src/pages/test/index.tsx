@@ -9,6 +9,7 @@ import {
   ScrollTextArea,
   AutoTextArea,
 } from '@components/@shared/Input';
+import ProfileImageInput from '@components/@shared/ProfileImageInput';
 
 export default function Test() {
   const { isOpen, openModal, closeModal } = useModal();
@@ -33,6 +34,10 @@ export default function Test() {
     e.preventDefault();
     console.log('댓글 등록!:', text);
     setText('');
+  };
+
+  const handleFileChange = (imgFile: File) => {
+    console.log(imgFile);
   };
 
   return (
@@ -148,6 +153,7 @@ export default function Test() {
         placeholder="댓글을 달아주세요"
         onSubmit={handleSubmit}
       />
+      <ProfileImageInput onFileChange={handleFileChange} />
     </div>
   );
 }
