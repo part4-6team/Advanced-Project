@@ -7,6 +7,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import PasswordInput from './PasswordInput';
 import userMockData from './usermockdata';
+// import NetworkError from '@components/@shared/NetworkError';
 
 // const handelReload = () => {
 //   location.href = location.href;
@@ -24,6 +25,8 @@ export default function InputTask() {
     if (userMockData && userMockData.image) {
       setProfileImage(
         <Image
+          width={64}
+          height={64}
           src={userMockData.image}
           alt="프로필 이미지"
           className="h-16 w-16 rounded-full object-cover "
@@ -38,20 +41,7 @@ export default function InputTask() {
   // }
 
   // if (isError) {
-  //   return (
-  //     <div className="flex flex-col items-center justify-center">
-  //       <Image
-  //         src={networkErrorIcon}
-  //         alt="네트워크 에러 아이콘"
-  //         width={100}
-  //         height={100}
-  //       />
-  //       <span className="text-2xl-bold">네트워크 에러</span>
-  //       <Button onClick={handelReload} className="mt-4 bg-amber-400">
-  //         재시도
-  //       </Button>
-  //     </div>
-  //   );
+  //   return <NetworkError />;
   // }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {

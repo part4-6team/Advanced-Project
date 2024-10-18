@@ -9,10 +9,14 @@ export default function PasswordInput() {
 
   const mutation = usePasswordCheck();
 
-  const handleSubmit = () => {
-    mutation.mutate({ email, password });
+  const handleSubmit = async (): Promise<number> => {
+    try {
+      await mutation.mutateAsync({ email, password });
+      return 200; // 성공 시 200 반환
+    } catch {
+      return 400; // 실패 시 400 반환
+    }
   };
-
   const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setEmail(value);

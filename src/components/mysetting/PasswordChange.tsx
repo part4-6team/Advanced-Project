@@ -1,23 +1,32 @@
 import Button from '@components/@shared/Button';
 import { IconInput } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
+import NetworkError from '@components/@shared/NetworkError';
 import { useModal } from '@hooks/useModal';
 
 interface PasswordChangeProps {
-  onSubmit: () => void; // onSubmit 프롭 추가
+  onSubmit: () => Promise<number>; // onSubmit 프롭 추가
 }
 
 export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
   const { isOpen, openModal, closeModal } = useModal();
 
-  const handlesubmit = () => {
-    openModal();
-    onSubmit();
-  };
+  const handleSubmit = async () => {
+    try {
+      const statusCode = await onSubmit(); // onSubmit 호출 후 상태 코드 확인
 
+      if (statusCode === 200) {
+        openModal(); // 상태 코드가 200일 때 모달 열기
+      } else if (statusCode === 400) {
+        alert('비밀번호가 틀렸습니다.'); // 400 에러 처리
+      }
+    } catch {
+      <NetworkError />;
+    }
+  };
   return (
     <>
-      <Button onClick={handlesubmit} fontSize="14" width={70} height={20}>
+      <Button onClick={handleSubmit} fontSize="14" width={70} height={20}>
         변경하기
       </Button>
 
