@@ -1,17 +1,13 @@
+import { useDate } from '@/src/contexts/DateContext';
+import getFormattedDate from '@utils/getFormattedDate';
+
 import Pagination from './UI/Pagination';
 import Calender from './UI/Calender';
 import CreateTaskList from './UI/CreateTaskList';
 
 export default function TaskDate() {
-  const today = new Date();
-
-  const options: Intl.DateTimeFormatOptions = {
-    month: 'long',
-    day: 'numeric',
-    weekday: 'short',
-  };
-
-  const formattedDate = today.toLocaleDateString('ko-KR', options);
+  const { date } = useDate();
+  const formattedDate = getFormattedDate(date);
 
   return (
     <section className="flex flex-col gap-6 text-text-primary">

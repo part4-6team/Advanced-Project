@@ -86,7 +86,7 @@ export default function Test() {
         height={50}
         border="green"
       >
-        버튼4
+        초록투명
       </Button>
       <Button
         bgColor="transparent"
@@ -96,7 +96,7 @@ export default function Test() {
         height={50}
         border="white"
       >
-        버튼5
+        하얀투명
       </Button>
       <Button
         bgColor="white"
@@ -106,12 +106,16 @@ export default function Test() {
         height={50}
         border="gray"
       >
-        버튼6
+        하얀버튼
       </Button>
       <Button fontSize="14" shape="round" width={100} height={30}>
-        버튼7
+        초록동글
       </Button>
-      <Button className="bg-amber-400">커스텀버튼</Button>
+      <Button className="bg-amber-500 hover:bg-amber-400 active:bg-amber-600">
+        커스텀버튼
+      </Button>
+      <Button>초록버튼</Button>
+      <Button bgColor="red">빨간버튼</Button>
       <Button className="bg-amber-400" disabled>
         비활성화
       </Button>
