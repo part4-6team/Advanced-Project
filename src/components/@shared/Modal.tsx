@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 
@@ -26,6 +26,15 @@ export function Modal({
   ...props
 }: ModalProps) {
   const modalClass = getModalClass({ ...props, isXButton });
+
+  // 모달 외부 스크롤 막기
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
 
   if (!isOpen) return null;
 
