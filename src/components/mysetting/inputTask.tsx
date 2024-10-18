@@ -1,36 +1,58 @@
-import { IconInput } from '@components/@shared/Input';
 import ProfileEditIcon from 'public/icons/profile_edit.svg';
-import PasswordChange from './PasswordChange';
 import { useEffect, useRef, useState } from 'react';
-import { useUserData } from '@hooks/mysetting/useUserData';
+// import { useUserData } from '@hooks/mysetting/useUserData';
+// import Image from 'next/image';
+// import networkErrorIcon from 'public/icons/networkErrorIcon.png';
+// import Button from '@components/@shared/Button';
+import Image from 'next/image';
+import PasswordInput from './PasswordInput';
+import userMockData from './usermockdata';
 
-const InputTask = () => {
+// const handelReload = () => {
+//   location.href = location.href;
+// };
+
+export default function InputTask() {
   const [ProfileImage, setProfileImage] = useState<string | JSX.Element>(
     <ProfileEditIcon />
   );
   const fileInput = useRef<HTMLInputElement | null>(null);
 
-  const { data, isLoading, isError } = useUserData();
+  // const { data, isLoading, isError } = useUserData();
 
   useEffect(() => {
-    if (data && data.image) {
+    if (userMockData && userMockData.image) {
       setProfileImage(
-        <img
-          src={data.image}
+        <Image
+          src={userMockData.image}
           alt="프로필 이미지"
           className="h-16 w-16 rounded-full object-cover "
         />
       );
     }
-  }, [data]);
+  }, []);
+  // [userMockData]
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
+  // if (isLoading) {
+  //   return <p>Loading...</p>;
+  // }
 
-  if (isError) {
-    return <p>Error loading tasks.</p>;
-  }
+  // if (isError) {
+  //   return (
+  //     <div className="flex flex-col items-center justify-center">
+  //       <Image
+  //         src={networkErrorIcon}
+  //         alt="네트워크 에러 아이콘"
+  //         width={100}
+  //         height={100}
+  //       />
+  //       <span className="text-2xl-bold">네트워크 에러</span>
+  //       <Button onClick={handelReload} className="mt-4 bg-amber-400">
+  //         재시도
+  //       </Button>
+  //     </div>
+  //   );
+  // }
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -40,7 +62,7 @@ const InputTask = () => {
       reader.onload = () => {
         if (reader.readyState === 2 && reader.result) {
           setProfileImage(
-            <img
+            <Image
               src={reader.result as string}
               alt="프로필이미지"
               className="h-16 w-16 rounded-full object-cover "
@@ -64,6 +86,7 @@ const InputTask = () => {
           onChange={onChange}
         />
         <button
+          type="button"
           onClick={() => {
             if (fileInput.current) {
               fileInput.current.click();
@@ -79,25 +102,10 @@ const InputTask = () => {
           className="h-[48px] w-full rounded-[12px] bg-background-secondary p-[15px] text-lg-regular text-text-primary outline outline-[1px]
             outline-[#343E4E] focus:outline-none"
         >
-          {data?.nickname}
+          {userMockData?.nickname}
         </div>
       </div>
-      <div className="flex w-full flex-col">
-        <span className="mb-3 text-lg-medium text-text-primary">이메일</span>
-        <div
-          className="h-[48px] w-full rounded-[12px] bg-background-secondary p-[15px] text-lg-regular text-text-primary outline outline-[1px]
-            outline-[#343E4E] focus:outline-none"
-        >
-          {data?.email}
-        </div>
-      </div>
-      <IconInput
-        label="비밀번호"
-        placeholder="비밀번호를 입력해주세요"
-        actionIcon={<PasswordChange />}
-      />
+      <PasswordInput />
     </main>
   );
-};
-
-export default InputTask;
+}

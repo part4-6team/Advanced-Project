@@ -17,7 +17,11 @@ export default function RemoveAccount() {
 
   return (
     <>
-      <button onClick={openModal} className="flex items-center gap-2">
+      <button
+        type="button"
+        onClick={openModal}
+        className="flex items-center gap-2"
+      >
         <SecessionIcon className="ml-6" />
         <span className="text-lg-medium text-status-danger">회원 탈퇴하기</span>
       </button>

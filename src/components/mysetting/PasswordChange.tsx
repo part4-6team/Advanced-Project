@@ -3,12 +3,21 @@ import { IconInput } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import { useModal } from '@hooks/useModal';
 
-export default function PasswordChange() {
+interface PasswordChangeProps {
+  onSubmit: () => void; // onSubmit 프롭 추가
+}
+
+export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
   const { isOpen, openModal, closeModal } = useModal();
+
+  const handlesubmit = () => {
+    openModal();
+    onSubmit();
+  };
 
   return (
     <>
-      <Button onClick={openModal} fontSize="14" width={70} height={20}>
+      <Button onClick={handlesubmit} fontSize="14" width={70} height={20}>
         변경하기
       </Button>
 
