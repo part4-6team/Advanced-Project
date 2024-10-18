@@ -2,7 +2,9 @@ import Button from '@components/@shared/Button';
 import { IconInput } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import NetworkError from '@components/@shared/NetworkError';
+import { usePasswordChange } from '@hooks/mysetting/usePasswordChange';
 import { useModal } from '@hooks/useModal';
+import { useState } from 'react';
 
 interface PasswordChangeProps {
   onSubmit: () => Promise<number>; // onSubmit 프롭 추가
@@ -10,6 +12,27 @@ interface PasswordChangeProps {
 
 export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
   const { isOpen, openModal, closeModal } = useModal();
+  const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+
+  const mutation = usePasswordChange();
+
+  const handelSubmit = () => {
+    mutation.mutate({ passwordConfirmation, password });
+    closeModal();
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setPassword(value);
+  };
+
+  const handlePasswordConfirmation = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const { value } = e.target;
+    setPasswordConfirmation(value);
+  };
 
   const handleSubmit = async () => {
     try {
@@ -54,10 +77,18 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
               <IconInput
                 label="새 비밀번호"
                 placeholder="비밀번호를 입력해주세요"
+                inputProps={{
+                  value: password,
+                  onChange: handlePasswordChange,
+                }}
               />
               <IconInput
                 label="새 비밀번호 확인"
                 placeholder="비밀번호를 입력해주세요"
+                inputProps={{
+                  value: passwordConfirmation,
+                  onChange: handlePasswordConfirmation,
+                }}
               />
             </div>
           </Modal.Content>
@@ -81,7 +112,7 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
               fontColor="white"
               width={136}
               height={48}
-              onClick={closeModal}
+              onClick={handelSubmit}
               className="bg-amber-400 text-red-50"
             >
               변경하기
