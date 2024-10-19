@@ -107,7 +107,7 @@ export default function Calender() {
         type="button"
         className="relative h-6 rounded-full bg-background-secondary p-[6px]"
         onClick={() => {
-          setIsOpen(true);
+          setIsOpen((prev) => !prev);
         }}
       >
         <CalenderIcon />
@@ -139,7 +139,7 @@ export default function Calender() {
           </Modal.Wrapper>
         </Modal>
       ) : (
-        renderDatePicker()
+        isOpen && renderDatePicker()
       )}
     </>
   );
