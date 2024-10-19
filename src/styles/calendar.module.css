@@ -4,6 +4,13 @@
   font-family: 'Pretendard', sans-serif;
   border: hidden;
 }
+@media (max-width: 768px) {
+  div.calenderWrapper {
+    position: static;
+    background-color: transparent;
+    right: 50%;
+  }
+}
 
 /* 날짜, 월과 연도*/
 .customHeader {

@@ -43,11 +43,6 @@ body {
 }
 
 /* datepicker */
-div.react-datepicker {
-  background-color: #1e293b;
-  border-radius: 24px;
-}
-
 .react-datepicker__month-container {
   border-radius: 24px;
   position: absolute;
@@ -91,8 +86,10 @@ div.react-datepicker__day-name {
   color: white;
 }
 
+div.react-datepicker,
 div.react-datepicker__day--keyboard-selected,
 div.react-datepicker__day--selected {
+  border-radius: 24px;
   background-color: #1e293b;
 }
 
