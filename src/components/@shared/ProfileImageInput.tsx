@@ -41,7 +41,7 @@ export default function ProfileImageInput({
   }, []);
 
   return (
-    <main className="mx-6 flex max-w-[792px] flex-col gap-6">
+    <main className="flex max-w-[792px] flex-col">
       <div className="relative inline-block">
         <input
           type="file"
@@ -57,7 +57,7 @@ export default function ProfileImageInput({
             }
           }}
           className="relative rounded-[50%]"
-          style={{ outline: profileImage ? '1px solid #64748B' : undefined }}
+          style={{ border: profileImage ? '3px solid #64748B' : undefined }}
         >
           {profileImage ? (
             <img
