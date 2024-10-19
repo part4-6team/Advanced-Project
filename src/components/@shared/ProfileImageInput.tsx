@@ -1,16 +1,15 @@
+import Image from 'next/image';
 import ProfileEditIcon from 'public/icons/profile_edit.svg';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface ProfileImageInputProps {
-  onFileChange: (file: File) => void;
+  onFileChange: (file: File | null) => void;
 }
 
 export default function ProfileImageInput({
   onFileChange,
 }: ProfileImageInputProps) {
-  const [ProfileImage, setProfileImage] = useState<string | JSX.Element>(
-    <ProfileEditIcon />
-  );
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const fileInput = useRef<HTMLInputElement | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -20,13 +19,7 @@ export default function ProfileImageInput({
       const reader = new FileReader();
       reader.onload = () => {
         if (reader.readyState === 2 && reader.result) {
-          setProfileImage(
-            <img
-              src={reader.result as string}
-              alt="프로필 이미지"
-              className="h-16 w-16 rounded-full object-cover"
-            />
-          );
+          setProfileImage(reader.result as string);
         }
       };
       reader.readAsDataURL(file);
@@ -34,13 +27,22 @@ export default function ProfileImageInput({
       // 부모 컴포넌트에 파일 전달
       onFileChange(file);
     } else {
-      setProfileImage(<ProfileEditIcon />);
+      // 파일이 없으면 이미지 제거
+      setProfileImage(null);
+      onFileChange(null);
     }
   };
 
+  // 컴포넌트 언마운트 시 이미지 메모리에서 제거
+  useEffect(() => {
+    return () => {
+      setProfileImage(null);
+    };
+  }, []);
+
   return (
     <main className="mx-6 flex max-w-[792px] flex-col gap-6">
-      <div>
+      <div className="relative inline-block">
         <input
           type="file"
           ref={fileInput}
@@ -54,8 +56,22 @@ export default function ProfileImageInput({
               fileInput.current.click();
             }
           }}
+          className="relative rounded-[50%]"
+          style={{ outline: profileImage ? '1px solid #64748B' : undefined }}
         >
-          {ProfileImage}
+          {profileImage ? (
+            <img
+              src={profileImage}
+              alt="프로필 이미지"
+              className="h-16 w-16 rounded-full object-cover"
+            />
+          ) : (
+            <ProfileEditIcon />
+          )}
+
+          <div className="absolute bottom-[-2px] right-[-2px] h-[25px] w-[25px]">
+            <Image src="/icons/button_edit.svg" alt="수정 버튼 아이콘" fill />
+          </div>
         </button>
       </div>
     </main>
