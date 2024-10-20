@@ -2,9 +2,8 @@ export const teamData = {
   teamId: '8-6',
   updatedAt: '2024-10-15T08:36:16.439Z',
   createdAt: '2024-10-15T08:36:16.439Z',
-  image:
-    'https://news.nateimg.co.kr/orgImg/kr/2024/01/12/ck-tc00420003738-l-700x467.jpg',
-  name: '팀티미미팉미',
+  image: '/images/todo.png',
+  name: '포포포포포미닛',
   id: 0,
   members: [
     {

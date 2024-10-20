@@ -8,12 +8,14 @@ interface EditTeamModalProps {
   isOpen: boolean;
   closeModal: () => void;
   initialTeamName?: string;
+  initialFile?: string | null;
 }
 
 export default function EditTeamModal({
   isOpen,
   closeModal,
-  initialTeamName = '기존 팀 이름',
+  initialTeamName = '',
+  initialFile = null,
 }: EditTeamModalProps) {
   const [teamName, setTeamName] = useState(initialTeamName);
 
@@ -22,12 +24,15 @@ export default function EditTeamModal({
   };
 
   const handleEditClick = () => {
+    setTeamName(initialTeamName);
     closeModal();
     console.log('팀 이름', teamName, '으로 변경!');
+    // API요청 추가 예정
   };
 
   const handleFileChange = (imgFile: File | null) => {
     console.log(imgFile);
+    // API요청 추가 예정
   };
 
   return (
@@ -41,7 +46,10 @@ export default function EditTeamModal({
     >
       <p className="mb-[40px] text-center text-2xl-semibold">팀 수정하기</p>
       <p className="mb-[15px] text-lg-medium">팀 프로필</p>
-      <ProfileImageInput onFileChange={handleFileChange} />
+      <ProfileImageInput
+        onFileChange={handleFileChange}
+        initialFile={initialFile}
+      />
       <p className="mt-[20px] text-lg-medium">팀 이름</p>
       <Input
         placeholder="팀 이름을 입력해주세요."

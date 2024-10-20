@@ -4,12 +4,14 @@ import { useEffect, useRef, useState } from 'react';
 
 interface ProfileImageInputProps {
   onFileChange: (file: File | null) => void;
+  initialFile?: string | null;
 }
 
 export default function ProfileImageInput({
   onFileChange,
+  initialFile = null,
 }: ProfileImageInputProps) {
-  const [profileImage, setProfileImage] = useState<string | null>(null);
+  const [profileImage, setProfileImage] = useState(initialFile);
   const fileInput = useRef<HTMLInputElement | null>(null);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,6 +34,10 @@ export default function ProfileImageInput({
       onFileChange(null);
     }
   };
+
+  useEffect(() => {
+    setProfileImage(initialFile);
+  }, [initialFile]);
 
   // 컴포넌트 언마운트 시 이미지 메모리에서 제거
   useEffect(() => {
