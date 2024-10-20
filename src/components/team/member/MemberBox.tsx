@@ -2,6 +2,7 @@ import { useModal } from '@hooks/useModal';
 import Image from 'next/image';
 import GetUserDetailModal from './GetUserDetailModal';
 import ExileDropdown from './ExileDropdown';
+import ExileUserModal from './ExileUserModal';
 
 export interface MemberProps {
   role: string;
@@ -17,8 +18,17 @@ export default function MemberBox({
   role,
 }: MemberProps) {
   const { isOpen, openModal, closeModal } = useModal();
+  const {
+    isOpen: deleteIsOpen,
+    openModal: deleteOpenModal,
+    closeModal: deleteCloseModal,
+  } = useModal();
   const handleDropdownClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 클릭 이벤트 전파 방지
+  };
+
+  const handleExileClick = () => {
+    deleteOpenModal();
   };
   return (
     <>
@@ -51,7 +61,7 @@ export default function MemberBox({
           </p>
         </div>
         <div onClick={handleDropdownClick}>
-          <ExileDropdown />
+          <ExileDropdown onSelect={handleExileClick} />
         </div>
       </div>
       <GetUserDetailModal
@@ -61,6 +71,11 @@ export default function MemberBox({
         email={userEmail}
         img={userImage}
         role={role}
+      />
+      <ExileUserModal
+        isOpen={deleteIsOpen}
+        closeModal={deleteCloseModal}
+        memberName={userName}
       />
     </>
   );
