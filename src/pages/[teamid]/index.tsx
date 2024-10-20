@@ -1,7 +1,7 @@
-import TeamBanner from '@components/team/TeamBanner';
-import TaskList from '@components/team/TaskList';
+import TeamBanner from '@components/team/banner/TeamBanner';
+import TaskList from '@components/team/taskList/TaskList';
 import Report from '@components/team/Report';
-import MemberList from '@components/team/MemberList';
+import MemberList from '@components/team/member/MemberList';
 import { teamData } from '../../components/team/teamInfo';
 
 export interface MemberProps {
