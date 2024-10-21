@@ -1,9 +1,9 @@
 import { useDate } from '@/src/contexts/DateContext';
 import getFormattedDate from '@utils/getFormattedDate';
 
-import Pagination from './UI/Pagination';
-import Calender from './UI/Calender';
-import AddTaskListButton from './UI/AddTaskListButton';
+import Pagination from '../UI/Pagination';
+import Calender from '../UI/Calender';
+import AddTaskListButton from '../UI/AddTaskListButton';
 
 export default function TaskDate() {
   const { date } = useDate();

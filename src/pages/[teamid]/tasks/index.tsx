@@ -1,5 +1,5 @@
-import TaskDate from '@components/tasks/TaskDate';
-import TaskList from '@components/tasks/TaskList';
+import TaskDate from '@components/tasks/Layout/TaskDate';
+import TaskList from '@components/tasks/Layout/TaskList';
 import AddTaskButton from '@components/tasks/UI/AddTaskButton';
 
 import { TaskListProvider } from '@/src/contexts/TaskListContext';
