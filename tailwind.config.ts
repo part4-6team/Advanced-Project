@@ -7,6 +7,9 @@ const config: Config = {
       screens: {
         tablet: '1024px',
       },
+      borderRadius: {
+        '40': '40px',
+      },
       backgroundImage: {
         'brand-gradient': 'linear-gradient(#10B981, #A3E635)', // brand.gradient 정의된 값
       },
@@ -14,7 +17,9 @@ const config: Config = {
         sans: ['Pretendard', 'sans-serif'],
       },
       fontSize: {
+        '5xl-semibold': ['48px', { lineHeight: '48px', fontWeight: '600' }],
         '4xl': ['40px', { lineHeight: '48px', fontWeight: '500' }],
+        '4xl-semibold': ['40px', { lineHeight: '48px', fontWeight: '600' }],
         '3xl-bold': ['32px', { lineHeight: '38px', fontWeight: '700' }],
         '3xl-semibold': ['32px', { lineHeight: '38px', fontWeight: '600' }],
         '2xl-bold': ['24px', { lineHeight: '28px', fontWeight: '700' }],

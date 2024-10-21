@@ -1,3 +1,15 @@
+import Banner from '@components/home/Banner';
+import Content from '@components/home/Content';
+import Footer from '@components/home/Footer';
+
 export default function Home() {
-  return <div className="text-red-500">Home</div>;
+  return (
+    <>
+      <main>
+        <Banner />
+        <Content />
+      </main>
+      <Footer />
+    </>
+  );
 }

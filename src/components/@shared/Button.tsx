@@ -9,6 +9,7 @@ type ButtonProps = {
   width?: number;
   height?: number;
   border?: 'none' | 'green' | 'white' | 'gray';
+  disabledBgColor?: string;
   children: React.ReactNode;
 } & React.ComponentPropsWithoutRef<'button'>;
 
@@ -22,38 +23,55 @@ export default function Button({
   children,
   width = 136,
   height = 48,
+  disabledBgColor = '#94A3B8',
+  className,
+  style,
+  disabled,
   ...props
 }: ButtonProps) {
-  const buttonClass = clsx('base-class', {
-    'bg-brand-primary': bgColor === 'green',
-    'bg-status-danger': bgColor === 'red',
-    'bg-background-inverse': bgColor === 'white',
-    'bg-transparent': bgColor === 'transparent',
-    'bg-brand-gradient': bgColor === 'gradient',
-    'border border-brand-primary': border === 'green',
-    'border border-text-secondary': border === 'gray',
-    'border border-text-inverse': border === 'white',
-    'rounded-[12px]': shape === 'square',
-    'rounded-[40px]': shape === 'round',
-    'text-text-primary': fontColor === 'white',
-    'text-text-default': fontColor === 'gray',
-    'text-brand-primary': fontColor === 'green',
-    'text-lg-semibold': fontSize === '16',
-    'text-md-semibold': fontSize === '14',
-    'w-full': size === 'full',
-  });
+  const buttonClass = clsx(
+    'base-class',
+    {
+      'bg-brand-primary hover:bg-interaction-hover active:bg-interaction-pressed':
+        !disabled && bgColor === 'green',
+      'bg-status-danger hover:bg-[#b31919] active:bg-[#921414]':
+        !disabled && bgColor === 'red',
+      'bg-background-inverse hover:text-black active:brightness-90':
+        !disabled && bgColor === 'white',
+      'bg-transparent hover:bg-[#ffffff10] active:bg-transparent':
+        !disabled && bgColor === 'transparent',
+      'bg-brand-gradient transition duration-150 hover:brightness-110 active:brightness-95':
+        !disabled && bgColor === 'gradient',
+      'border border-brand-primary': border === 'green',
+      'border border-text-secondary': border === 'gray',
+      'border border-text-inverse': border === 'white',
+      'rounded-[12px]': shape === 'square',
+      'rounded-[40px]': shape === 'round',
+      'text-text-primary': fontColor === 'white',
+      'text-text-default': fontColor === 'gray',
+      'text-brand-primary': fontColor === 'green',
+      'text-lg-semibold': fontSize === '16',
+      'text-md-semibold': fontSize === '14',
+      'w-full': size === 'full',
+    },
+    className
+  );
 
-  // style에서 width와 height는 size가 'full'이 아닌 경우에만 적용
-  const buttonStyle =
-    size === 'full'
+  const buttonStyle = {
+    ...(size === 'full'
       ? { height: `${height}px` }
-      : { width: `${width}px`, height: `${height}px` };
+      : { width: `${width}px`, height: `${height}px` }),
+    backgroundColor: disabled ? disabledBgColor : undefined,
+    color: disabled ? '#ffffff' : undefined,
+    ...style,
+  };
 
   return (
     <button
       type="button"
       className={buttonClass}
       style={buttonStyle}
+      disabled={disabled}
       {...props}
     >
       {children}

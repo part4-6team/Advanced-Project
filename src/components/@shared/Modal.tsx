@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import Image from 'next/image';
 import clsx from 'clsx';
+
+import ProfileIcon from '@icons/profile_small.svg';
+import AlertIcon from '@icons/alert.svg';
+import XIcon from '@icons/x.svg';
 
 import { getModalClass, ModalClassProps } from '@utils/getModalClass';
 
@@ -24,43 +27,41 @@ export function Modal({
 }: ModalProps) {
   const modalClass = getModalClass({ ...props, isXButton });
 
+  // 모달 외부 스크롤 막기
+  useEffect(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : '';
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isOpen]);
+
   if (!isOpen) return null;
 
+  // 모달 외부 클릭 시 닫기 처리
+  const handleBackgroundClick = (event: React.MouseEvent) => {
+    if (event.target === event.currentTarget) {
+      onClose?.();
+    }
+  };
+
   return createPortal(
-    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+    <div
+      className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+      onClick={handleBackgroundClick}
+    >
       <div
         className={`fixed bottom-0 w-full rounded-t-xl md:relative md:w-[375px] md:rounded-xl xl:w-96 ${modalClass}`}
       >
-        {isProfile && (
-          <Image
-            src="/icons/profile_small.svg"
-            alt="프로필 아이콘"
-            width={24}
-            height={24}
-            className="mx-auto"
-          />
-        )}
-        {isDanger && (
-          <Image
-            src="/icons/alert.svg"
-            alt="경고 아이콘"
-            width={24}
-            height={24}
-            className="mx-auto"
-          />
-        )}
+        {isProfile && <ProfileIcon className="mx-auto h-6 w-6" />}
+        {isDanger && <AlertIcon className="mx-auto h-6 w-6" />}
         {isXButton && (
           <button
             type="button"
             className="absolute right-4 top-4 flex justify-end"
             onClick={onClose}
           >
-            <Image
-              src="/icons/x.svg"
-              alt="닫기 아이콘"
-              width={24}
-              height={24}
-            />
+            <XIcon />
           </button>
         )}
         {children}

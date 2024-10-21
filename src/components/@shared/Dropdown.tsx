@@ -64,7 +64,7 @@ export default function Dropdown({
     if (isOpen && dropdownRef.current) {
       const dropdownRect = dropdownRef.current.getBoundingClientRect();
       const overflowRight = dropdownRect.right > window.innerWidth;
-      const overflowLeft = dropdownRect.left < window.innerWidth;
+      const overflowLeft = dropdownRect.left < 0;
 
       if (overflowRight) {
         dropdownRef.current.style.left = 'auto';
