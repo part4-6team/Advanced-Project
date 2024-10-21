@@ -21,6 +21,11 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
     openModal: openErrorModal,
     closeModal: closeErrorModlal,
   } = useModal();
+  const {
+    isOpen: iscompleteChangeopen,
+    openModal: opencompleteChange,
+    closeModal: closecompleteChange,
+  } = useModal();
 
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -29,6 +34,7 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
   const handelSubmit = () => {
     mutation.mutate({ passwordConfirmation, password });
     closeSuccessModlal();
+    opencompleteChange();
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,8 +79,6 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
         fontArray="center"
         gap="40"
       >
-        {/* 모달의 하위 요소에 독립적인 스타일을 적용할 수 있습니다 */}
-        {/* Modal.Wrapper로 헤더와 콘텐츠의 간격을 설정할 수 있습니다 */}
         <Modal.Wrapper array="column">
           <Modal.Header fontColor="primary">
             <header className="mb-4 text-lg-medium text-text-primary">
@@ -157,6 +161,40 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
             height={40}
             border="gray"
             onClick={closeErrorModlal}
+          >
+            닫기
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* 비밀번호 변경 완료 모달 */}
+      <Modal
+        isOpen={iscompleteChangeopen}
+        isXButton={false}
+        onClose={closecompleteChange}
+        array="column"
+        padding="default"
+        bgColor="primary"
+        fontSize="16"
+        fontArray="center"
+        gap="40"
+      >
+        <Modal.Wrapper array="column">
+          <Modal.Header fontColor="primary">
+            <header className="mb-1 text-lg-medium text-text-primary">
+              비밀번호가 변경되었습니다.
+            </header>
+          </Modal.Header>
+        </Modal.Wrapper>
+        <Modal.Footer>
+          <Button
+            bgColor="green"
+            fontColor="white"
+            fontSize="16"
+            width={110}
+            height={40}
+            border="gray"
+            onClick={closecompleteChange}
           >
             닫기
           </Button>
