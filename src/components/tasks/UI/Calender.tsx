@@ -2,11 +2,10 @@ import { useState } from 'react';
 import DatePicker from 'react-datepicker';
 import dayjs, { Dayjs } from 'dayjs';
 
+import { useDate } from '@/src/contexts/DateContext';
 import { Modal } from '@components/@shared/Modal';
 import Button from '@components/@shared/Button';
-import { useDate } from '@/src/contexts/DateContext';
 import useViewportSize from '@hooks/useViewportSize';
-import CalenderIcon from '@icons/calendar.svg';
 import CalenderArrowLeft from '@icons/calender_arrow_left.svg';
 import CalenderArrowRight from '@icons/calender_arrow_right.svg';
 
@@ -19,11 +18,22 @@ interface CustomHeaderProps {
   increaseMonth: () => void;
 }
 
-export default function Calender() {
+interface CalenderProps {
+  isOpen: boolean;
+  onClose: () => void;
+  onDateChange?: (date: Dayjs) => void | null;
+  isInput?: boolean; // input 여부
+}
+
+export default function Calender({
+  isOpen,
+  onClose,
+  onDateChange,
+  isInput = false,
+}: CalenderProps) {
   const { date: contextDate, setDate, today } = useDate();
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs(contextDate));
   const [displayedMonth, setDisplayedMonth] = useState(dayjs(contextDate));
-  const [isOpen, setIsOpen] = useState(false);
   const { isMobile } = useViewportSize();
 
   const handleDateChange = (newDate: Date | null) => {
@@ -31,7 +41,10 @@ export default function Calender() {
       const dayjsDate = dayjs(newDate); // Date를 Dayjs로 변환
       setSelectedDate(dayjsDate); // 선택된 날짜 업데이트
       setDate(dayjsDate); // 선택된 날짜 Context에 업데이트
-      setIsOpen(false);
+      if (onDateChange) {
+        onDateChange(dayjsDate); // 선택된 날짜 부모 컴포넌트에 전달
+      }
+      onClose();
     }
   };
 
@@ -71,7 +84,7 @@ export default function Calender() {
   // 공통 DatePicker 컴포넌트
   const renderDatePicker = () => (
     <DatePicker
-      inline
+      inline={!isInput}
       dateFormat="yyyy년 MM월 dd일"
       selected={selectedDate.toDate()}
       renderCustomHeader={renderCustomHeader}
@@ -103,25 +116,17 @@ export default function Calender() {
 
   return (
     <>
-      <button
-        type="button"
-        className="relative h-6 rounded-full bg-background-secondary p-[6px]"
-        onClick={() => {
-          setIsOpen((prev) => !prev);
-        }}
-      >
-        <CalenderIcon />
-      </button>
+      {isInput ? renderDatePicker() : null}
 
-      {/* 모바일 모달 */}
-      {isMobile ? (
+      {/* 모바일 모달: isMobile이고 showInput이 아닐 때만 렌더링 */}
+      {isMobile && !isInput && isOpen ? (
         <Modal
           isOpen={isOpen}
-          onClose={() => setIsOpen(false)}
+          onClose={onClose}
           className="relative flex flex-1 justify-center"
         >
           <Modal.Wrapper className="flex flex-col">
-            <Modal.Content> {renderDatePicker()} </Modal.Content>
+            <Modal.Content>{renderDatePicker()}</Modal.Content>
             <Modal.Footer className="mr-1 flex justify-end">
               <Button
                 className="bg-slate-400 "
@@ -131,7 +136,7 @@ export default function Calender() {
                 width={60}
                 height={30}
                 border="gray"
-                onClick={() => setIsOpen(false)}
+                onClick={onClose}
               >
                 닫기
               </Button>

@@ -1,10 +1,13 @@
-import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { Dayjs } from 'dayjs';
 
 import Button from '@components/@shared/Button';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
 import { Input, ScrollTextArea } from '@components/@shared/Input';
 import ToggleIcon from '@icons/toggle.svg';
+
+import Calender from './UI/Calender';
 
 interface AddTaskFormProps {
   onClose: () => void;
@@ -22,9 +25,11 @@ interface TaskFormData {
   description: string | null;
   startDate: string;
   frequency: string;
+  monthDay?: number;
 }
 
 export default function AddTaskForm({ onClose }: AddTaskFormProps) {
+  const [isOpen, setIsOpen] = useState(false);
   const [selectedFrequency, setSelectedFrequency] = useState<Option>(
     frequencyOptions[0]
   );
@@ -57,6 +62,13 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
     });
   };
 
+  const handleDateChange = (date: Dayjs) => {
+    setValue('startDate', date.format('YYYY-MM-DD HH:mm'), {
+      shouldValidate: true,
+    });
+    setIsOpen(false);
+  };
+
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6">
       <Input
@@ -68,15 +80,11 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
         isError={!!errors.name}
         errorMessage={errors.name?.message}
       />
-      <Input
-        label="시작 날짜 및 시간"
-        inputProps={{
-          ...register('startDate', {
-            required: '시작 날짜는 필수 입력 사항입니다.',
-          }),
-        }}
-        isError={!!errors.name}
-        errorMessage={errors.name?.message}
+      <Calender
+        isOpen={isOpen}
+        onClose={() => setIsOpen(false)}
+        onDateChange={handleDateChange}
+        isInput
       />
       <p>반복 설정</p>
       <Dropdown
