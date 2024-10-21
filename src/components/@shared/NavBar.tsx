@@ -7,6 +7,9 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Menu from 'public/icons/menu.svg';
+import { useModal } from '@hooks/useModal';
+import AddTeamModal from '@components/team/AddTeamModal';
+import Button from './Button';
 import KebabIcon from 'public/icons/kebab_small.svg';
 import { useUserData } from '@hooks/mysetting/useUserData';
 import NetworkError from './NetworkError';
@@ -73,7 +76,7 @@ export default function NavBar() {
   ];
 
   const teams: Option[] =
-    data?.memberships.map((membership) => ({
+    [{data?.memberships.map((membership) => ({
       label: membership.group.name || '',
       component: (
         <div className="flex items-center justify-between">
@@ -91,10 +94,27 @@ export default function NavBar() {
           <KebabIcon />
         </div>
       ),
-    })) || [];
+    })) ,  }, {
+      label: 'addButton',
+      component: (
+        <Button bgColor="transparent" border="white" size="full" height={40}>
+          + 팀 추가하기
+        </Button>
+      ),
+    },]|| [];
+      
+       const {
+    isOpen: addIsOpen,
+    openModal: addOpenModal,
+    closeModal: addCloseModal,
+  } = useModal();
 
   const handleSelectTeam = (option: Option) => {
-    setSelectedTeam(option);
+    if (option.label === 'addButton') {
+      addOpenModal();
+    } else {
+      setSelectedTeam(option);
+    }
   };
 
   if (isLoading) {
@@ -137,6 +157,7 @@ export default function NavBar() {
                   optionsWrapClass="mt-[30px] flex p-[16px] rounded-[12px]"
                   optionClass="px[8px] py-[7px] rounded-[8px] w-[186px] h-[46px] hover:bg-background-tertiary"
                 />
+                <AddTeamModal isOpen={addIsOpen} closeModal={addCloseModal} />
               </div>
               <Link href="#">
                 <span className="max-md:hidden">자유게시판</span>

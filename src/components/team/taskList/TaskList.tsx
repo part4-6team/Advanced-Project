@@ -21,7 +21,12 @@ interface TaskListProps {
 }
 
 export default function TaskList({ taskLists }: TaskListProps) {
-  const { isOpen, openModal, closeModal } = useModal();
+  const {
+    isOpen: addListIsOpen,
+    openModal: addListOpenModal,
+    closeModal: addListCloseModal,
+  } = useModal();
+
   const listCount = taskLists.length;
 
   return (
@@ -34,12 +39,15 @@ export default function TaskList({ taskLists }: TaskListProps) {
           </div>
           <button
             type="button"
-            onClick={openModal}
+            onClick={addListOpenModal}
             className="cursor-pointer text-md-regular text-brand-primary"
           >
             +새로운 목록 추가하기
           </button>
-          <AddTaskListModal isOpen={isOpen} closeModal={closeModal} />
+          <AddTaskListModal
+            isOpen={addListIsOpen}
+            closeModal={addListCloseModal}
+          />
         </div>
       </div>
       <div className="flex flex-col gap-[10px]">

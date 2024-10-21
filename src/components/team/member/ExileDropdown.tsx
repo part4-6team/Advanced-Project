@@ -1,7 +1,11 @@
 import BasicDropdown from '@components/@shared/BasicDropdown';
 import Image from 'next/image';
 
-export default function ExileDropdown() {
+interface ExileDropdownProps {
+  onSelect: () => void;
+}
+
+export default function ExileDropdown({ onSelect }: ExileDropdownProps) {
   const Option = [
     { component: <div className="text-point-rose">추방하기</div> },
   ];
@@ -17,5 +21,11 @@ export default function ExileDropdown() {
     </div>
   );
 
-  return <BasicDropdown options={Option} triggerIcon={moreIcon} />;
+  return (
+    <BasicDropdown
+      options={Option}
+      triggerIcon={moreIcon}
+      onSelect={onSelect}
+    />
+  );
 }

@@ -1,7 +1,7 @@
-import TeamBanner from '@components/team/TeamBanner';
-import TaskList from '@components/team/TaskList';
+import TeamBanner from '@components/team/banner/TeamBanner';
+import TaskList from '@components/team/taskList/TaskList';
 import Report from '@components/team/Report';
-import MemberList from '@components/team/MemberList';
+import MemberList from '@components/team/member/MemberList';
 import { teamData } from '../../components/team/teamInfo';
 
 export interface MemberProps {
@@ -42,7 +42,7 @@ export interface TeamDataProps {
 export default function TeamPage() {
   return (
     <main className="mx-auto mt-[20px] w-full min-w-[340px] px-[10px] xl:w-[1200px] xl:px-0">
-      <TeamBanner name={teamData.name} />
+      <TeamBanner name={teamData.name} teamImage={teamData.image} />
       <TaskList taskLists={teamData.taskLists} />
       <Report taskLists={teamData.taskLists} />
       <MemberList members={teamData.members} />
