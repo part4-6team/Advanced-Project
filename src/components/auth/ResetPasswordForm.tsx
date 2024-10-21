@@ -1,5 +1,7 @@
 import Button from '@components/@shared/Button';
-import { IconInput } from '@components/@shared/Input';
+import { IconInput, Input } from '@components/@shared/Input';
+import { Modal } from '@components/@shared/Modal';
+import { useModal } from '@hooks/useModal';
 import NonVisibleIcon from '@icons/visibility_off.svg';
 import VisibleIcon from '@icons/visibility_on.svg';
 import { useState } from 'react';
@@ -10,6 +12,7 @@ export default function SignUpForm() {
   const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
+  const { isOpen, openModal, closeModal } = useModal();
 
   const toggleNewPasswordVisibility = () => {
     setIsNewPasswordVisible((prev) => !prev);
@@ -20,8 +23,8 @@ export default function SignUpForm() {
   };
 
   return (
-    <div className="mt-[24px] flex w-[343px] flex-col gap-[40px] md:mt-[100px] md:w-[460px]">
-      <form className="flex w-full flex-col gap-[24px]">
+    <div className="mt-6 flex w-[343px] flex-col gap-10 md:mt-[100px] md:w-[460px]">
+      <form className="flex w-full flex-col gap-6">
         <h1 className="flex w-full justify-center text-2xl-medium text-text-primary md:mb-[80px] xl:text-4xl">
           비밀번호 재설정
         </h1>
@@ -58,7 +61,46 @@ export default function SignUpForm() {
           }
         />
       </form>
-      <Button size="full">재설정</Button>
+      <Button size="full" onClick={openModal}>
+        재설정
+      </Button>
+      <Modal
+        isOpen={isOpen}
+        array="column"
+        padding="default"
+        bgColor="primary"
+        fontSize="16"
+        fontArray="center"
+        gap="24"
+      >
+        <Modal.Wrapper>
+          <Modal.Header fontColor="primary">비밀번호 재설정</Modal.Header>
+          <Modal.Content
+            className="items-center gap-4"
+            array="column"
+            fontColor="secondary"
+            fontSize="14"
+          >
+            <p className="mt-2">비밀번호 재설정 링크를 보내드립니다.</p>
+            <div className="w-[280px]">
+              <Input placeholder="이메일을 입력하세요." />
+            </div>
+          </Modal.Content>
+        </Modal.Wrapper>
+        <Modal.Footer className="justify-center" array="row">
+          <div className="flex w-[280px] gap-2">
+            <Button
+              onClick={closeModal}
+              bgColor="white"
+              fontColor="green"
+              border="green"
+            >
+              닫기
+            </Button>
+            <Button>링크 보내기</Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
