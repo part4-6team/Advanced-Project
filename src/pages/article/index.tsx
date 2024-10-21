@@ -3,6 +3,7 @@ import Button from '@components/@shared/Button';
 import { SearchInput } from '@components/@shared/Input';
 import ArrayDropdown from '@components/article/ArrayDropdown';
 import ArticleCard from '@components/article/ArticleCard';
+import BestCard from '@components/article/BestCard';
 import ArrowRightIcon from 'public/icons/arrow_right.svg';
 import PlusIcon from 'public/icons/plus.svg';
 
@@ -26,13 +27,13 @@ export default function ArticlePage() {
           </div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
             <div>
-              <ArticleCard />
+              <BestCard />
             </div>
             <div className="hidden md:block">
-              <ArticleCard />
+              <BestCard />
             </div>
             <div className="hidden xl:block">
-              <ArticleCard />
+              <BestCard />
             </div>
           </div>
         </div>

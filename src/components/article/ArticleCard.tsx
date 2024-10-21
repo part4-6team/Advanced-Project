@@ -1,17 +1,12 @@
 import Image from 'next/image';
-import IcmediaIcon from 'public/icons/ic_medal.svg';
 import ProfileIcon from 'public/icons/profile_large.svg';
 import HeartIcon from 'public/icons/heart.svg';
 
 export default function ArticleCard() {
   return (
     <article className=" h-[178px] w-full rounded-xl border border-background-tertiary bg-background-secondary">
-      <div className="mx-4 mb-4 mt-[9.5px]  ">
-        <div className=" mb-[13.5px] flex items-center">
-          <IcmediaIcon />
-          <span className="text-md-semibold md:text-lg-semibold">Best</span>
-        </div>
-        <div className="mb-4 flex justify-between">
+      <div className="mx-4 mb-4 mt-6  ">
+        <div className="mb-10 flex justify-between">
           <div>
             <h3 className="mb-3 text-md-medium md:text-2lg-medium">
               게시판 제목들
