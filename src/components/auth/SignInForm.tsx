@@ -1,8 +1,9 @@
+import { useUserStore } from '@/src/stores/useUserStore';
 import Button from '@components/@shared/Button';
 import { IconInput, Input } from '@components/@shared/Input';
 import NonVisibleIcon from '@icons/visibility_off.svg';
 import VisibleIcon from '@icons/visibility_on.svg';
-import { axiosInstance } from '@libs/axios/axiosInstance';
+import { publicAxiosInstance } from '@libs/axios/axiosInstance';
 import axios from 'axios';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -15,6 +16,7 @@ export default function SignInForm() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const { setTokens, updateUser } = useUserStore();
 
   // 모든 입력값의 유효성을 검사하는 함수
   const validateForm = () => {
@@ -48,11 +50,15 @@ export default function SignInForm() {
     if (!validateForm()) return; // 폼이 유효하지 않으면 제출 중지
 
     try {
-      const signInResponse = await axiosInstance.post('auth/signIn', {
+      const signInResponse = await publicAxiosInstance.post('auth/signIn', {
         email,
         password,
       });
       console.log('로그인 성공', signInResponse.data);
+
+      const { accessToken, refreshToken, user } = signInResponse.data;
+      setTokens(accessToken, refreshToken);
+      updateUser(user);
 
       // 로그인 성공 후 랜딩 페이지로 이동
       router.push('/');
