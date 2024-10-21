@@ -2,7 +2,7 @@ import { useDate } from '@/src/contexts/DateContext';
 import getFormattedDate from '@utils/getFormattedDate';
 
 import Pagination from '../UI/Pagination';
-import Calender from '../UI/Calender';
+import CalenderButton from '../UI/CalenderButton';
 import AddTaskListButton from '../UI/AddTaskListButton';
 
 export default function TaskDate() {
@@ -16,7 +16,7 @@ export default function TaskDate() {
         <div className="flex gap-3">
           <p className="text-lg-medium">{formattedDate}</p>
           <Pagination />
-          <Calender />
+          <CalenderButton />
         </div>
         <AddTaskListButton />
       </div>
