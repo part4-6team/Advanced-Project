@@ -21,9 +21,9 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
     openModal: openErrorModal,
     closeModal: closeErrorModlal,
   } = useModal();
+
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-
   const mutation = usePasswordChange();
 
   const handelSubmit = () => {
