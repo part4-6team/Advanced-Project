@@ -3,7 +3,7 @@ import getFormattedDate from '@utils/getFormattedDate';
 
 import Pagination from './UI/Pagination';
 import Calender from './UI/Calender';
-import CreateTaskList from './UI/CreateTaskList';
+import AddTaskListButton from './UI/AddTaskListButton';
 
 export default function TaskDate() {
   const { date } = useDate();
@@ -18,7 +18,7 @@ export default function TaskDate() {
           <Pagination />
           <Calender />
         </div>
-        <CreateTaskList />
+        <AddTaskListButton />
       </div>
     </section>
   );
