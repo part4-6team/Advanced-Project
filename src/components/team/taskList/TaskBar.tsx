@@ -1,6 +1,10 @@
+import { useModal } from '@hooks/useModal';
+import { Option } from '@components/@shared/Dropdown';
 import Image from 'next/image';
-import CircleGraph from './CircleGraph';
-import EditDropdown from './EditDropdown';
+import CircleGraph from '../CircleGraph';
+import EditDropdown from '../EditDropdown';
+import DeleteTaskListModal from './DeleteTaskListModal';
+import EditTaskListModal from './EditTaskListModal';
 
 export interface TaskProps {
   name: string;
@@ -22,6 +26,17 @@ export default function TaskBar({ name, tasks }: TaskBarProps) {
   // 3. 진척도
   const doneRate = totalTasks === 0 ? 0 : (doneTasksCount / totalTasks) * 100;
 
+  const {
+    isOpen: editListIsOpen,
+    openModal: editListOpenModal,
+    closeModal: editListCloseModal,
+  } = useModal();
+  const {
+    isOpen: deleteListIsOpen,
+    openModal: deleteListOpenModal,
+    closeModal: deleteListCloseModal,
+  } = useModal();
+
   const moreIcon = (
     <div className="flex h-[10px] w-[10px] items-center">
       <Image
@@ -33,6 +48,14 @@ export default function TaskBar({ name, tasks }: TaskBarProps) {
     </div>
   );
 
+  // 드롭다운에서 선택된 옵션을 처리하는 함수
+  const handleSelect = (option: Option) => {
+    if (option.label === 'edit') {
+      editListOpenModal(); // '수정하기'를 선택했을 때
+    } else {
+      deleteListOpenModal();
+    } // '삭제하기'를 선택했을 때
+  };
   return (
     <div className="flex h-[40px] cursor-pointer justify-between bg-background-secondary ">
       <div className="flex items-center justify-between gap-[10px]">
@@ -66,7 +89,17 @@ export default function TaskBar({ name, tasks }: TaskBarProps) {
           </p>
         </div>
 
-        <EditDropdown triggerIcon={moreIcon} />
+        <EditDropdown triggerIcon={moreIcon} onSelect={handleSelect} />
+        <EditTaskListModal
+          isOpen={editListIsOpen}
+          closeModal={editListCloseModal}
+          initialTaskListName={name}
+        />
+        <DeleteTaskListModal
+          isOpen={deleteListIsOpen}
+          closeModal={deleteListCloseModal}
+          taskName={name}
+        />
       </div>
     </div>
   );
