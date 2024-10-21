@@ -11,15 +11,24 @@ interface PasswordChangeProps {
 }
 
 export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
-  const { isOpen, openModal, closeModal } = useModal();
+  const {
+    isOpen: isSuccessModalopen,
+    openModal: openSuccessModal,
+    closeModal: closeSuccessModlal,
+  } = useModal();
+  const {
+    isOpen: isErrorModalopen,
+    openModal: openErrorModal,
+    closeModal: closeErrorModlal,
+  } = useModal();
+
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
-
   const mutation = usePasswordChange();
 
   const handelSubmit = () => {
     mutation.mutate({ passwordConfirmation, password });
-    closeModal();
+    closeSuccessModlal();
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,9 +48,9 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
       const statusCode = await onSubmit(); // onSubmit 호출 후 상태 코드 확인
 
       if (statusCode === 200) {
-        openModal(); // 상태 코드가 200일 때 모달 열기
+        openSuccessModal(); // 상태 코드가 200일 때 모달 열기
       } else if (statusCode === 400) {
-        alert('비밀번호가 틀렸습니다.'); // 400 에러 처리
+        openErrorModal(); // 400 에러 처리
       }
     } catch {
       <NetworkError />;
@@ -54,9 +63,9 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
       </Button>
 
       <Modal
-        isOpen={isOpen}
+        isOpen={isSuccessModalopen}
         isXButton={false}
-        onClose={closeModal}
+        onClose={closeSuccessModlal}
         array="column"
         padding="default"
         bgColor="primary"
@@ -103,7 +112,7 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
               width={136}
               height={48}
               border="gray"
-              onClick={closeModal}
+              onClick={closeSuccessModlal}
             >
               닫기
             </Button>
@@ -118,6 +127,39 @@ export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
               변경하기
             </Button>
           </div>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        isOpen={isErrorModalopen}
+        isXButton={false}
+        onClose={closeErrorModlal}
+        array="column"
+        padding="default"
+        bgColor="primary"
+        fontSize="16"
+        fontArray="center"
+        gap="40"
+      >
+        <Modal.Wrapper array="column">
+          <Modal.Header fontColor="primary">
+            <header className="mb-1 text-lg-medium text-text-primary">
+              비밀번호가 일치하지 않습니다.
+            </header>
+          </Modal.Header>
+        </Modal.Wrapper>
+        <Modal.Footer>
+          <Button
+            bgColor="red"
+            fontColor="white"
+            fontSize="16"
+            width={110}
+            height={40}
+            border="gray"
+            onClick={closeErrorModlal}
+          >
+            닫기
+          </Button>
         </Modal.Footer>
       </Modal>
     </>
