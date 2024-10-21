@@ -9,10 +9,10 @@ import Link from 'next/link';
 import Menu from 'public/icons/menu.svg';
 import { useModal } from '@hooks/useModal';
 import AddTeamModal from '@components/team/AddTeamModal';
-import Button from './Button';
 import KebabIcon from 'public/icons/kebab_small.svg';
 import { useUserData } from '@hooks/mysetting/useUserData';
 import NetworkError from './NetworkError';
+import Button from './Button';
 
 export default function NavBar() {
   const router = useRouter();
@@ -21,6 +21,12 @@ export default function NavBar() {
   const [isClient, setIsClient] = useState(false);
 
   const { data, isLoading, isError } = useUserData();
+
+  const {
+    isOpen: addIsOpen,
+    openModal: addOpenModal,
+    closeModal: addCloseModal,
+  } = useModal();
 
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
@@ -75,42 +81,37 @@ export default function NavBar() {
     },
   ];
 
-  const teams: Option[] =
-    [{data?.memberships.map((membership) => ({
+  const teams: Option[] = [
+    ...(data?.memberships?.map((membership) => ({
       label: membership.group.name || '',
       component: (
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Image
               src={membership.group.image}
-              alt="팀이미지"
+              alt="팀 이미지"
               width={30}
               height={30}
               className="rounded-md"
             />
-
             {membership.group.name}
           </div>
           <KebabIcon />
         </div>
       ),
-    })) ,  }, {
-      label: 'addButton',
+    })) || []),
+    {
+      label: '팀 메뉴',
       component: (
         <Button bgColor="transparent" border="white" size="full" height={40}>
           + 팀 추가하기
         </Button>
       ),
-    },]|| [];
-      
-       const {
-    isOpen: addIsOpen,
-    openModal: addOpenModal,
-    closeModal: addCloseModal,
-  } = useModal();
+    },
+  ];
 
   const handleSelectTeam = (option: Option) => {
-    if (option.label === 'addButton') {
+    if (option.label === '팀 메뉴') {
       addOpenModal();
     } else {
       setSelectedTeam(option);
