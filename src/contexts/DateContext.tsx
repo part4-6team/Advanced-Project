@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import { createContext, useContext, useState, ReactNode } from 'react';
 import dayjs from 'dayjs';
+import 'dayjs/locale/ko';
 
 interface DateContextProps {
   date: dayjs.Dayjs;
@@ -13,6 +14,8 @@ const DateContext = createContext<DateContextProps | undefined>(undefined);
 export function DateProvider({ children }: { children: ReactNode }) {
   const today = dayjs(); // 오늘 날짜
   const [date, setDate] = useState<dayjs.Dayjs>(today); // 현재 날짜 상태
+
+  dayjs.locale('ko');
 
   return (
     <DateContext.Provider value={{ date, setDate, today }}>
