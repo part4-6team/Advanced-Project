@@ -11,7 +11,6 @@ import { useModal } from '@hooks/useModal';
 import AddTeamModal from '@components/team/AddTeamModal';
 import KebabIcon from 'public/icons/kebab_small.svg';
 import { useUserData } from '@hooks/mysetting/useUserData';
-import NetworkError from './NetworkError';
 import Button from './Button';
 
 export default function NavBar() {
@@ -20,7 +19,7 @@ export default function NavBar() {
   const [selectedTeam, setSelectedTeam] = useState<Option | null>(null);
   const [isClient, setIsClient] = useState(false);
 
-  const { data, isLoading, isError } = useUserData();
+  const { data } = useUserData();
 
   const {
     isOpen: addIsOpen,
@@ -29,13 +28,13 @@ export default function NavBar() {
   } = useModal();
 
   const handleLogout = () => {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userStorage');
     router.push('/signin');
   };
 
   useEffect(() => {
     setIsClient(true);
-    const logoOnlyPages = ['/login', 'signup', 'addteam', '/'];
+    const logoOnlyPages = ['/signin', 'signup', 'addteam', '/'];
     // 팀참여하기 페이지, 비밀번호 재설정페이지 추가 필요
     setIsLogoOnlyPage(logoOnlyPages.includes(router.pathname));
   }, [router.pathname]);
@@ -117,18 +116,6 @@ export default function NavBar() {
       setSelectedTeam(option);
     }
   };
-
-  if (isLoading) {
-    return <div> 로딩중</div>;
-  }
-
-  if (isError) {
-    return (
-      <div>
-        <NetworkError />
-      </div>
-    );
-  }
 
   return (
     <header className=" flex h-16 items-center justify-center border-b border-border-primary border-opacity-10 bg-background-secondary px-6">

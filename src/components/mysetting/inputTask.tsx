@@ -24,6 +24,8 @@ export default function InputTask() {
           className="h-16 w-16 rounded-full object-cover "
         />
       );
+    } else {
+      setProfileImage(<ProfileEditIcon />);
     }
   }, [data]);
 
@@ -41,11 +43,13 @@ export default function InputTask() {
 
       const reader = new FileReader();
       reader.onload = () => {
-        if (reader.readyState === 2 && reader.result) {
+        if (reader.result) {
           setProfileImage(
             <Image
               src={reader.result as string}
               alt="프로필이미지"
+              width={64}
+              height={64}
               className="h-16 w-16 rounded-full object-cover "
             />
           );
@@ -73,8 +77,12 @@ export default function InputTask() {
               fileInput.current.click();
             }
           }}
+          className="relative"
         >
           {ProfileImage}
+          <div className="absolute bottom-[-2px] right-[-2px] h-[25px] w-[25px]">
+            <Image src="/icons/button_edit.svg" alt="수정 버튼 아이콘" fill />
+          </div>
         </button>
       </div>
       <div className="flex w-full flex-col">

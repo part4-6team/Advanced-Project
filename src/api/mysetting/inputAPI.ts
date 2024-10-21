@@ -6,7 +6,9 @@ import {
 
 // 계정설정 페이지의 프로필이미지, 이름, 이메일 가져옴
 export const fetchUserData = async () => {
+  console.log('fetchUserData 호출됨'); // 호출 여부 확인
   const response = await authAxiosInstance.get('user');
+  console.log('response:', response); // 응답 확인
   return response.data;
 };
 
