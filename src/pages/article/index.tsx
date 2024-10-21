@@ -10,28 +10,38 @@ export default function ArticlePage() {
   return (
     <div className="mx-4 mt-8">
       <header className="mb-6">
-        <h1 className="mb-6 text-2lg-bold">자유 게시판</h1>
+        <h1 className="mb-6 text-2lg-bold md:text-2xl-bold">자유 게시판</h1>
         <SearchInput placeholder="검색어를 입력해주세요" />
       </header>
       <main>
         <div>
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-lg-bold">베스트 게시글</h2>
+            <h2 className="text-lg-bold md:text-xl-bold">베스트 게시글</h2>
             <button type="button" className="flex items-center gap-[1px]">
-              <span className="text-sm text-slate-400">더보기</span>
+              <span className="text-sm text-slate-400 md:text-lg-regular">
+                더보기
+              </span>
               <ArrowRightIcon />
             </button>
           </div>
-          <article className="flex justify-center">
-            <ArticleCard />
-          </article>
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
+            <div>
+              <ArticleCard />
+            </div>
+            <div className="hidden md:block">
+              <ArticleCard />
+            </div>
+            <div className="hidden xl:block">
+              <ArticleCard />
+            </div>
+          </div>
         </div>
         <hr className="my-8 opacity-10" />
         <div className="mb-6 flex items-center justify-between">
-          <h2>게시글</h2>
+          <h2 className="text-lg-bold md:text-xl-bold">게시글</h2>
           <ArrayDropdown />
         </div>
-        <ul className="flex flex-col gap-4">
+        <ul className="grid gap-4 xl:grid-cols-2">
           <ArticleCard />
           <ArticleCard />
           <ArticleCard />

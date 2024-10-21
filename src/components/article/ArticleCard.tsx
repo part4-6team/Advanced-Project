@@ -5,16 +5,20 @@ import HeartIcon from 'public/icons/heart.svg';
 
 export default function ArticleCard() {
   return (
-    <div className=" h-[178px] w-full rounded-xl border border-background-tertiary bg-background-secondary">
+    <article className=" h-[178px] w-full rounded-xl border border-background-tertiary bg-background-secondary">
       <div className="mx-4 mb-4 mt-[9.5px]  ">
         <div className=" mb-[13.5px] flex items-center">
           <IcmediaIcon />
-          <span>Best</span>
+          <span className="text-md-semibold md:text-lg-semibold">Best</span>
         </div>
         <div className="mb-4 flex justify-between">
           <div>
-            <h3 className="mb-3 text-md-medium">게시판 제목들</h3>
-            <span className="text-xs-regular text-slate-400">2024.07.25</span>
+            <h3 className="mb-3 text-md-medium md:text-2lg-medium">
+              게시판 제목들
+            </h3>
+            <span className="text-xs-regular text-slate-400 md:text-md-medium">
+              2024.07.25
+            </span>
           </div>
           <div>
             <Image
@@ -29,14 +33,16 @@ export default function ArticleCard() {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <ProfileIcon />
-            <span className="text-xs-medium">우지은</span>
+            <span className="text-xs-medium md:text-md-medium">카카시</span>
           </div>
           <div className="flex items-center gap-1">
             <HeartIcon />
-            <span className="text-xs-regular text-slate-400">9999+</span>
+            <span className="text-xs-regular text-slate-400 md:text-md-medium">
+              9999+
+            </span>
           </div>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
