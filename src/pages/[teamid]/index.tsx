@@ -47,10 +47,8 @@ export default function TeamPage() {
   const router = useRouter();
   const { teamid } = router.query;
 
-  // teamid는 string | string[] | undefined로 추론되므로 string으로 변환
   const teamIdString = Array.isArray(teamid) ? teamid[0] : teamid;
 
-  // React Query로 그룹 데이터 가져오기
   const { data, isLoading, isError } = useQuery({
     queryKey: ['group', teamIdString],
     queryFn: () => getGroupById(teamIdString as string),
@@ -70,7 +68,7 @@ export default function TeamPage() {
 
   return (
     <main className="mx-auto mt-[20px] w-full min-w-[340px] px-[10px] xl:w-[1200px] xl:px-0">
-      <TeamBanner teamId={data?.id} name={data?.name} teamImage={data?.image} />
+      <TeamBanner />
       <TaskList taskLists={data?.taskLists} />
       <Report taskLists={data?.taskLists} />
       <MemberList members={data?.members} />
