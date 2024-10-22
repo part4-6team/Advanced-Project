@@ -118,7 +118,7 @@ export default function Calender({
     <>
       {isInput ? renderDatePicker() : null}
 
-      {/* 모바일 모달: isMobile이고 showInput이 아닐 때만 렌더링 */}
+      {/* 모바일 모달: 모바일 사이즈고 input 태그가 없을 경우 */}
       {isMobile && !isInput && isOpen ? (
         <Modal
           isOpen={isOpen}
@@ -129,7 +129,7 @@ export default function Calender({
             <Modal.Content>{renderDatePicker()}</Modal.Content>
             <Modal.Footer className="mr-1 flex justify-end">
               <Button
-                className="bg-slate-400 "
+                className="bg-slate-400"
                 shape="square"
                 fontColor="white"
                 fontSize="14"
