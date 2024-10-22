@@ -64,6 +64,7 @@ export default function SignUpForm() {
       );
       if (resetPasswordResponse) {
         console.log(resetPasswordResponse.data);
+        router.push('/signin');
       }
     } catch (error) {
       console.error('비밀번호 재설정 에러:', error);
