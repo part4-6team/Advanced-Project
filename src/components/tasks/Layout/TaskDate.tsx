@@ -14,6 +14,7 @@ export default function TaskDate() {
       <h1 className="text-xl-bold">할 일</h1>
       <div className="flex justify-between">
         <div className="flex gap-3">
+          {/* 패칭한 서버 Date 값으로 변경 예정, 즉시 업데이트 되지 않도록 수정 */}
           <p className="text-lg-medium">{formattedDate}</p>
           <Pagination />
           <CalenderButton />
