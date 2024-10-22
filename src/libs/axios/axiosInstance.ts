@@ -17,6 +17,35 @@ export const authAxiosInstance = axios.create({
  * - 'accessToken'이 존재하면 요청 헤더에 'Authorization'으로 토큰을 포함시킵니다.
  * - 토큰이 없거나 파싱 에러가 발생하면 경고 메시지 또는 에러 메시지를 출력합니다.
  */
+authAxiosInstance.interceptors.request.use(
+  (config) => {
+    const requestConfig = config;
+    const storageData = localStorage.getItem('userStorage');
+    if (storageData) {
+      try {
+        const parsedData = JSON.parse(storageData);
+        const token = parsedData?.state?.accessToken;
+        if (token) {
+          requestConfig.headers.Authorization = `Bearer ${token}`;
+        } else {
+          console.warn('토큰이 존재하지 않습니다.');
+        }
+      } catch (parsingError) {
+        console.error('토큰 파싱 에러가 발생했습니다.:', parsingError);
+      }
+    } else {
+      console.warn('저장된 유저 데이터가 없습니다.');
+    }
+    return config;
+  },
+  (requestInterceptorError) => {
+    console.error('요청 인터셉터 에러:', requestInterceptorError);
+    return Promise.reject(requestInterceptorError);
+  }
+);
+
+
+
 // 인터셉터를 설정할 때 useUserStore를 사용하지 않도록 변경합니다.
 authAxiosInstance.interceptors.response.use(
   (response) => response,
