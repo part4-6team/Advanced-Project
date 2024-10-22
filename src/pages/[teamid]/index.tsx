@@ -5,6 +5,8 @@ import TeamBanner from '@components/team/banner/TeamBanner';
 import TaskList from '@components/team/taskList/TaskList';
 import Report from '@components/team/Report';
 import MemberList from '@components/team/member/MemberList';
+import { useTeamStore } from '@/src/stores/teamStore';
+import { useEffect } from 'react';
 
 export interface MemberProps {
   role: string;
@@ -49,18 +51,26 @@ export default function TeamPage() {
   const teamIdString = Array.isArray(teamid) ? teamid[0] : teamid;
 
   // React Query로 그룹 데이터 가져오기
-  const { data, isLoading, isError } = useQuery<TeamDataProps>({
+  const { data, isLoading, isError } = useQuery({
     queryKey: ['group', teamIdString],
     queryFn: () => getGroupById(teamIdString as string),
   });
 
+  const { setTeamData } = useTeamStore();
+
+  useEffect(() => {
+    if (data) {
+      // 팀 데이터를 Zustand 스토어에 저장
+      setTeamData(data);
+    }
+  }, [data, setTeamData]);
+
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading data</div>;
-  console.log(data);
 
   return (
     <main className="mx-auto mt-[20px] w-full min-w-[340px] px-[10px] xl:w-[1200px] xl:px-0">
-      <TeamBanner name={data?.name} teamImage={data?.image} />
+      <TeamBanner teamId={data?.id} name={data?.name} teamImage={data?.image} />
       <TaskList taskLists={data?.taskLists} />
       <Report taskLists={data?.taskLists} />
       <MemberList members={data?.members} />
