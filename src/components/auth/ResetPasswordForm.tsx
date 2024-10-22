@@ -100,6 +100,7 @@ export default function SignUpForm() {
       );
       if (resetPasswordResponse) {
         console.log(resetPasswordResponse.data);
+        router.push('/signin'); // 비밀번호가 변경되면 로그인 페이지로 이동
       }
     } catch (error) {
       console.error('비밀번호 재설정 에러:', error);
