@@ -1,5 +1,5 @@
 import Button from '@components/@shared/Button';
-import { IconInput, Input } from '@components/@shared/Input';
+import { IconInput } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import { useModal } from '@hooks/useModal';
 import NonVisibleIcon from '@icons/visibility_off.svg';
@@ -9,7 +9,6 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 export default function SignUpForm() {
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -18,7 +17,6 @@ export default function SignUpForm() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
-  const [emailSentMessageVisible, setEmailSentMessageVisible] = useState(false);
   const { isOpen, openModal, closeModal } = useModal();
   const router = useRouter();
   const { token } = router.query;
@@ -63,27 +61,6 @@ export default function SignUpForm() {
     setIsConfirmPasswordVisible((prev) => !prev);
   };
 
-  // 이메일로 비밀번호 재설정 링크 보내기
-  const handleSubmitEmail = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const sendEmailResponse = await publicAxiosInstance.post(
-        'user/send-reset-password-email',
-        {
-          email,
-          redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
-        }
-      );
-      if (sendEmailResponse) {
-        console.log(sendEmailResponse.data);
-        setEmailSentMessageVisible(true);
-      }
-    } catch (error) {
-      console.error('비밀번호 재설정 이메일 전송 에러:', error);
-    }
-  };
-
   // 받은 링크의 토큰을 가지고 비밀번호 재설정하기
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,16 +77,16 @@ export default function SignUpForm() {
       );
       if (resetPasswordResponse) {
         console.log(resetPasswordResponse.data);
-        router.push('/signin'); // 비밀번호가 변경되면 로그인 페이지로 이동
+        openModal();
       }
     } catch (error) {
       console.error('비밀번호 재설정 에러:', error);
     }
   };
 
-  const handleCloseClick = () => {
+  const handleModalButtonClick = () => {
+    router.push('/signin');
     closeModal();
-    setEmailSentMessageVisible(false);
   };
 
   return (
@@ -163,7 +140,7 @@ export default function SignUpForm() {
       </form>
       <Button
         size="full"
-        onClick={token ? handleResetPassword : openModal} // 토큰이 있으면 비밀번호 재설정이 되고, 없으면 링크를 이메일로 보내는 모달이 켜짐
+        onClick={handleResetPassword}
         disabled={!validateForm()}
       >
         재설정
@@ -177,46 +154,22 @@ export default function SignUpForm() {
         fontArray="center"
         gap="24"
       >
-        <Modal.Wrapper>
-          <Modal.Header fontColor="primary">비밀번호 재설정</Modal.Header>
+        <Modal.Wrapper className="w-[280px]">
+          <Modal.Header fontColor="primary">비밀번호 재설정 완료</Modal.Header>
           <Modal.Content
-            className="items-center gap-4"
+            className="items-center"
             array="column"
             fontColor="secondary"
             fontSize="14"
           >
-            <p className="mt-2">비밀번호 재설정 링크를 보내드립니다.</p>
-            <form className="w-[280px]">
-              <Input
-                placeholder="이메일을 입력하세요."
-                inputProps={{
-                  value: email,
-                  onChange: (e) => setEmail(e.target.value),
-                }}
-              />
-            </form>
-            {emailSentMessageVisible && (
-              <div
-                className="flex flex-col items-center justify-center text-brand-primary"
-                onClick={handleCloseClick}
-              >
-                <span>비밀번호 재설정 링크를 보냈습니다</span>
-                <span>이메일을 확인해주세요!</span>
-              </div>
-            )}
+            <p className="mt-2">변경된 비밀번호로 로그인해주세요!</p>
           </Modal.Content>
         </Modal.Wrapper>
         <Modal.Footer className="justify-center" array="row">
-          <div className="flex w-[280px] gap-2">
-            <Button
-              onClick={handleCloseClick}
-              bgColor="white"
-              fontColor="green"
-              border="green"
-            >
-              닫기
+          <div className="flex gap-2">
+            <Button onClick={handleModalButtonClick} width={280}>
+              확인
             </Button>
-            <Button onClick={handleSubmitEmail}>링크 보내기</Button>
           </div>
         </Modal.Footer>
       </Modal>
