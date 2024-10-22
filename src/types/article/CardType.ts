@@ -15,5 +15,5 @@ export interface List {
 
 export interface Card {
   totalCount: number;
-  List: List[];
+  List: List;
 }

@@ -26,15 +26,7 @@ export default function ArticlePage() {
             </button>
           </div>
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
-            <div>
-              <BestCard />
-            </div>
-            <div className="hidden md:block">
-              <BestCard />
-            </div>
-            <div className="hidden xl:block">
-              <BestCard />
-            </div>
+            <BestCard keyword="" />
           </div>
         </div>
         <hr className="my-8 opacity-10" />
