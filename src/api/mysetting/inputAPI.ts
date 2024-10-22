@@ -2,6 +2,7 @@ import { authAxiosInstance } from '@libs/axios/axiosInstance';
 import {
   UserPassword,
   UserPasswordCheck,
+  UserProfileChange,
 } from '@/src/types/mysetting/settingData';
 
 // 계정설정 페이지의 프로필이미지, 이름, 이메일 가져옴
@@ -13,8 +14,10 @@ export const fetchUserData = async () => {
 };
 
 // 프로필 이미지 변경
-export const fetchProfileImage = async () => {
-  const response = await authAxiosInstance.patch('user');
+export const fetchProfileImage = async ({ image }: UserProfileChange) => {
+  const response = await authAxiosInstance.patch('user', {
+    image,
+  });
   return response.data;
 };
 
@@ -44,6 +47,18 @@ export const fetchPasswordCheck = async ({
   const response = await authAxiosInstance.post('auth/signIn', {
     email,
     password,
+  });
+  return response.data;
+};
+
+export const fetchImageURL = async ({ image }: { image: File }) => {
+  const formData = new FormData();
+  formData.append('image', image); // 'image'는 서버에서 기대하는 필드 이름
+
+  const response = await authAxiosInstance.post('images/upload', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data', // FormData 전송을 위한 헤더 설정
+    },
   });
   return response.data;
 };

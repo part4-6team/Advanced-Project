@@ -2,6 +2,8 @@ import ProfileEditIcon from 'public/icons/profile_edit.svg';
 import { useEffect, useRef, useState } from 'react';
 import { useUserData } from '@hooks/mysetting/useUserData';
 import NetworkError from '@components/@shared/NetworkError';
+import { useProfileChange } from '@hooks/mysetting/useProfileChange';
+import { useImageURL } from '@hooks/mysetting/useImageURL';
 import Image from 'next/image';
 import PasswordInput from './PasswordInput';
 
@@ -9,9 +11,39 @@ export default function InputTask() {
   const [ProfileImage, setProfileImage] = useState<string | JSX.Element>(
     <ProfileEditIcon />
   );
+
   const fileInput = useRef<HTMLInputElement | null>(null);
 
   const { data, isLoading, isError } = useUserData();
+  const mutation = useProfileChange();
+
+  const mutationImage = useImageURL();
+
+  // 프로필 업데이트 하는 핸들러 (PETCH)
+  const handelImageChange = (imageURL: string) => {
+    if (imageURL) {
+      mutation.mutate({ image: imageURL });
+    }
+  };
+
+  // 이미지 파일을 업로드하고 URL을 받는 핸들러 (POST)
+  const handelImageUpload = (file: File) => {
+    const formData = new FormData();
+    formData.append('image', file); // 이미지 파일 추가
+
+    mutationImage.mutate(
+      { image: file },
+      {
+        onSuccess: (response) => {
+          console.log('Image upload response:', response);
+          // 성공적으로 URL이 변경된 경우, 해당 URL로 PETCH 요청 보내기
+          if (response.url) {
+            handelImageChange(response.url);
+          }
+        },
+      }
+    );
+  };
 
   useEffect(() => {
     if (data && data.image) {
@@ -21,7 +53,7 @@ export default function InputTask() {
           height={64}
           src={data.image}
           alt="프로필 이미지"
-          className="h-16 w-16 rounded-full object-cover "
+          className="h-16 w-16 rounded-full object-cover"
         />
       );
     } else {
@@ -41,21 +73,19 @@ export default function InputTask() {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
 
-      const reader = new FileReader();
-      reader.onload = () => {
-        if (reader.result) {
-          setProfileImage(
-            <Image
-              src={reader.result as string}
-              alt="프로필이미지"
-              width={64}
-              height={64}
-              className="h-16 w-16 rounded-full object-cover "
-            />
-          );
-        }
-      };
-      reader.readAsDataURL(file);
+      // 이미지 미리보기 설정
+      setProfileImage(
+        <Image
+          src={URL.createObjectURL(file)} // 파일을 직접 미리보기
+          alt="프로필이미지"
+          width={64}
+          height={64}
+          className="h-16 w-16 rounded-full object-cover"
+        />
+      );
+
+      // 파일을 서버로 전송
+      handelImageUpload(file);
     } else {
       setProfileImage(<ProfileEditIcon />);
     }
@@ -77,7 +107,7 @@ export default function InputTask() {
               fileInput.current.click();
             }
           }}
-          className="relative"
+          className="relative rounded-full"
         >
           {ProfileImage}
           <div className="absolute bottom-[-2px] right-[-2px] h-[25px] w-[25px]">

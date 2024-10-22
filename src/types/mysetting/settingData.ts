@@ -42,3 +42,7 @@ export interface UserPasswordCheck {
   email: string;
   password: string;
 }
+
+export interface UserProfileChange {
+  image: File | string;
+}

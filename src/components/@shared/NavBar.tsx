@@ -45,6 +45,7 @@ export default function NavBar() {
 
   const basic: Option[] = [
     {
+      label: '마이 히스토리',
       component: (
         <button
           type="button"
@@ -55,6 +56,7 @@ export default function NavBar() {
       ),
     },
     {
+      label: '계정 설정',
       component: (
         <button
           type="button"
@@ -65,6 +67,7 @@ export default function NavBar() {
       ),
     },
     {
+      label: '팀 참여',
       component: (
         <button type="button" onClick={() => router.push('#')}>
           팀 참여
@@ -72,6 +75,7 @@ export default function NavBar() {
       ),
     },
     {
+      label: '로그아웃',
       component: (
         <button type="button" onClick={handleLogout}>
           로그아웃
@@ -154,7 +158,7 @@ export default function NavBar() {
           )}
         </div>
         {!isLogoOnlyPage && (
-          <button type="button">
+          <div>
             <Dropdown
               options={basic}
               triggerIcon={
@@ -169,7 +173,7 @@ export default function NavBar() {
               optionsWrapClass="mt-2 right-0 rounded-[12px] border border-background-tertiary"
               optionClass="rounded-[12px] md:w-[150px] md:h-[47px] w-[120px] h-[40px] justify-center text-md-regular md:text-lg-regular text-center hover:bg-background-tertiary"
             />
-          </button>
+          </div>
         )}
       </nav>
     </header>
