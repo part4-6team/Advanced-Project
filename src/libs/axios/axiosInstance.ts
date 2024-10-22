@@ -8,7 +8,7 @@ export const publicAxiosInstance = axios.create({
 
 // 인증이 필요한 요청에 사용
 export const authAxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_RUL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 /**

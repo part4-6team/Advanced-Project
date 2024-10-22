@@ -11,7 +11,6 @@ import { useModal } from '@hooks/useModal';
 import AddTeamModal from '@components/team/AddTeamModal';
 import KebabIcon from 'public/icons/kebab_small.svg';
 import { useUserData } from '@hooks/mysetting/useUserData';
-import NetworkError from './NetworkError';
 import Button from './Button';
 
 export default function NavBar() {
@@ -20,7 +19,7 @@ export default function NavBar() {
   const [selectedTeam, setSelectedTeam] = useState<Option | null>(null);
   const [isClient, setIsClient] = useState(false);
 
-  const { data, isLoading, isError } = useUserData();
+  const { data } = useUserData();
 
   const {
     isOpen: addIsOpen,
@@ -29,13 +28,13 @@ export default function NavBar() {
   } = useModal();
 
   const handleLogout = () => {
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem('userStorage');
     router.push('/signin');
   };
 
   useEffect(() => {
     setIsClient(true);
-    const logoOnlyPages = ['/login', 'signup', 'addteam', '/'];
+    const logoOnlyPages = ['/signin', 'signup', 'addteam', '/'];
     // 팀참여하기 페이지, 비밀번호 재설정페이지 추가 필요
     setIsLogoOnlyPage(logoOnlyPages.includes(router.pathname));
   }, [router.pathname]);
@@ -46,6 +45,7 @@ export default function NavBar() {
 
   const basic: Option[] = [
     {
+      label: '마이 히스토리',
       component: (
         <button
           type="button"
@@ -56,6 +56,7 @@ export default function NavBar() {
       ),
     },
     {
+      label: '계정 설정',
       component: (
         <button
           type="button"
@@ -66,6 +67,7 @@ export default function NavBar() {
       ),
     },
     {
+      label: '팀 참여',
       component: (
         <button type="button" onClick={() => router.push('#')}>
           팀 참여
@@ -73,6 +75,7 @@ export default function NavBar() {
       ),
     },
     {
+      label: '로그아웃',
       component: (
         <button type="button" onClick={handleLogout}>
           로그아웃
@@ -118,18 +121,6 @@ export default function NavBar() {
     }
   };
 
-  if (isLoading) {
-    return <div> 로딩중</div>;
-  }
-
-  if (isError) {
-    return (
-      <div>
-        <NetworkError />
-      </div>
-    );
-  }
-
   return (
     <header className=" flex h-16 items-center justify-center border-b border-border-primary border-opacity-10 bg-background-secondary px-6">
       <nav className="flex h-8 w-[1200px]  items-center justify-between text-text-primary max-xl:w-full max-md:w-full ">
@@ -167,7 +158,7 @@ export default function NavBar() {
           )}
         </div>
         {!isLogoOnlyPage && (
-          <button type="button">
+          <div>
             <Dropdown
               options={basic}
               triggerIcon={
@@ -182,7 +173,7 @@ export default function NavBar() {
               optionsWrapClass="mt-2 right-0 rounded-[12px] border border-background-tertiary"
               optionClass="rounded-[12px] md:w-[150px] md:h-[47px] w-[120px] h-[40px] justify-center text-md-regular md:text-lg-regular text-center hover:bg-background-tertiary"
             />
-          </button>
+          </div>
         )}
       </nav>
     </header>
