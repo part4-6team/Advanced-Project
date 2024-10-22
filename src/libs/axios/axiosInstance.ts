@@ -1,4 +1,3 @@
-import { useUserStore } from '@/src/stores/useUserStore';
 import axios from 'axios';
 
 // 인증이 필요하지 않은 요청에 사용
@@ -55,7 +54,6 @@ authAxiosInstance.interceptors.request.use(
 authAxiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
-    const { setTokens } = useUserStore();
     const originalRequest = error.config;
     const storageData = localStorage.getItem('userStorage');
     if (error.response?.status === 401 && storageData) {
@@ -70,7 +68,17 @@ authAxiosInstance.interceptors.response.use(
 
           if (refreshResponse) {
             const { accessToken } = refreshResponse.data;
-            setTokens(accessToken, refreshToken);
+            // 기존 로컬 스토리지에 새 accessToken 저장
+            localStorage.setItem(
+              'userStorage',
+              JSON.stringify({
+                ...parsedData,
+                state: {
+                  ...parsedData.state,
+                  accessToken,
+                },
+              })
+            );
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             return authAxiosInstance(originalRequest);
           }
@@ -79,7 +87,8 @@ authAxiosInstance.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error('토큰 갱신 중 오류 발생:', refreshError);
-        setTokens(null, null);
+        // 토큰 삭제
+        localStorage.removeItem('userStorage');
         return Promise.reject(error);
       }
     }
