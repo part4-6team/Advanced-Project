@@ -179,7 +179,7 @@ export default function SignInForm() {
         isOpen={isOpen}
         array="column"
         padding="default"
-        bgColor="primary"
+        bgColor="secondary"
         fontSize="16"
         fontArray="center"
         gap="24"
