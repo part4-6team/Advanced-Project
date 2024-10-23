@@ -1,16 +1,14 @@
 import { useModal } from '@hooks/useModal';
 import { Option } from '@components/@shared/Dropdown';
+import { useTeamStore } from '@/src/stores/teamStore';
 import Image from 'next/image';
 import EditDropdown from '../EditDropdown';
 import EditTeamModal from './EditTeamModal';
 import DeleteTeamModal from './DeleteTeamModal';
 
-interface TeamBannerProps {
-  name: string;
-  teamImage: string;
-}
+export default function TeamBanner() {
+  const { teamName, imageUrl } = useTeamStore();
 
-export default function TeamBanner({ name, teamImage }: TeamBannerProps) {
   const {
     isOpen: editIsOpen,
     openModal: editOpenModal,
@@ -38,18 +36,13 @@ export default function TeamBanner({ name, teamImage }: TeamBannerProps) {
     <div className="flex items-center justify-between rounded-[12px] border border-border-primary border-opacity-10 bg-slate-50 bg-opacity-10 bg-[url('/images/thumbnail_team.png')] bg-contain bg-[90%] bg-no-repeat p-[24px]">
       <div className="flex items-center gap-[15px]">
         <div className="relative h-[45px] w-[45px] rounded-[16px] bg-border-primary">
-          <Image src={teamImage} alt="팀 프로필 이미지" fill />
+          <Image src={imageUrl} alt="팀 프로필 이미지" fill />
         </div>
-        <p className="text-xl-bold">{name}</p>
+        <p className="text-xl-bold">{teamName}</p>
       </div>
 
       <EditDropdown triggerIcon={gearIcon} onSelect={handleSelect} />
-      <EditTeamModal
-        isOpen={editIsOpen}
-        closeModal={editCloseModal}
-        initialTeamName={name}
-        initialFile={teamImage}
-      />
+      <EditTeamModal isOpen={editIsOpen} closeModal={editCloseModal} />
       <DeleteTeamModal isOpen={deleteIsOpen} closeModal={deleteCloseModal} />
     </div>
   );
