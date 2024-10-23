@@ -7,7 +7,7 @@ export const publicAxiosInstance = axios.create({
 
 // 인증이 필요한 요청에 사용
 export const authAxiosInstance = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_RUL,
+  baseURL: process.env.NEXT_PUBLIC_API_URL,
 });
 
 /**
@@ -44,22 +44,21 @@ authAxiosInstance.interceptors.request.use(
   }
 );
 
-/**
- * @설명
- * - 응답 인터셉터는 서버로부터 응답이 도착하기 전에 실행됩니다.
- * - 401 상태 코드이고 로컬스토리지에 'userStorage'가 있는 경우 'accessToken' 재발급을 시도합니다.
- * - 재발급이 성공하면 다시 원래 요청을 보냅니다.
- * - 재발급이 실패한 경우 'refreshToken'이 만료된 걸로 간주해서 토큰을 삭제합니다.
- */
+
+
+// 인터셉터를 설정할 때 useUserStore를 사용하지 않도록 변경합니다.
 authAxiosInstance.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
     const storageData = localStorage.getItem('userStorage');
+
+    // 401 에러 및 유저 데이터가 있는지 확인
     if (error.response?.status === 401 && storageData) {
       try {
         const parsedData = JSON.parse(storageData);
         const refreshToken = parsedData?.state?.refreshToken;
+
         if (refreshToken) {
           const refreshResponse = await publicAxiosInstance.post(
             '/auth/refresh-token',
@@ -68,7 +67,8 @@ authAxiosInstance.interceptors.response.use(
 
           if (refreshResponse) {
             const { accessToken } = refreshResponse.data;
-            // 기존 로컬 스토리지에 새 accessToken 저장
+
+            // 로컬 스토리지에 새 토큰 저장
             localStorage.setItem(
               'userStorage',
               JSON.stringify({
@@ -79,6 +79,7 @@ authAxiosInstance.interceptors.response.use(
                 },
               })
             );
+
             originalRequest.headers.Authorization = `Bearer ${accessToken}`;
             return authAxiosInstance(originalRequest);
           }
@@ -87,7 +88,8 @@ authAxiosInstance.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error('토큰 갱신 중 오류 발생:', refreshError);
-        // 토큰 삭제
+        
+        // 토큰 삭제 로직
         localStorage.removeItem('userStorage');
         return Promise.reject(error);
       }

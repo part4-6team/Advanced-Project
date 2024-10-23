@@ -7,6 +7,7 @@ interface DateContextProps {
   date: dayjs.Dayjs;
   setDate: (date: dayjs.Dayjs) => void;
   today: dayjs.Dayjs;
+  getCurrentMonth: () => number;
 }
 
 const DateContext = createContext<DateContextProps | undefined>(undefined);
@@ -17,8 +18,13 @@ export function DateProvider({ children }: { children: ReactNode }) {
 
   dayjs.locale('ko');
 
+  // 현재 날짜의 월 추출
+  const getCurrentMonth = () => {
+    return date.month() + 1;
+  };
+
   return (
-    <DateContext.Provider value={{ date, setDate, today }}>
+    <DateContext.Provider value={{ date, setDate, today, getCurrentMonth }}>
       {children}
     </DateContext.Provider>
   );
