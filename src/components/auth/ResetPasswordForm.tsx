@@ -1,5 +1,5 @@
 import Button from '@components/@shared/Button';
-import { IconInput, Input } from '@components/@shared/Input';
+import { IconInput } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import { useModal } from '@hooks/useModal';
 import NonVisibleIcon from '@icons/visibility_off.svg';
@@ -9,71 +9,82 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 export default function SignUpForm() {
-  const [email, setEmail] = useState('');
-  const [newPassword, setNewPassword] = useState('');
-  const [passwordConfirmation, setPasswordConfirmation] = useState('');
-  const [isNewPasswordVisible, setIsNewPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
-    useState(false);
-  const [emailSentMessageVisible, setEmailSentMessageVisible] = useState(false);
-  const { isOpen, openModal, closeModal } = useModal();
   const router = useRouter();
   const { token } = router.query;
+  const { isOpen, openModal, closeModal } = useModal();
+
+  const [password, setPassword] = useState('');
+  const [passwordConfirmation, setPasswordConfirmation] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [passwordConfirmationError, setPasswordConfirmationError] =
+    useState('');
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
+
+  // 비밀번호 유효성 검사 함수
+  const validatePassword = () => {
+    if (!password) {
+      setPasswordError('비밀번호를 입력해주세요.');
+    } else if (password.length < 8) {
+      setPasswordError('비밀번호는 최소 8자 이상입니다.');
+    } else if (
+      !/^(?=.*[0-9])(?=.*[a-zA-Z])(?=.*[!@#$%^&*]).+$/.test(password)
+    ) {
+      setPasswordError('비밀번호는 숫자, 영문, 특수문자가 포함되어야 합니다.');
+    } else {
+      setPasswordError('');
+    }
+  };
+
+  // 비밀번호 확인 유효성 검사 함수
+  const validatePasswordConfirmation = () => {
+    if (!passwordConfirmation) {
+      setPasswordConfirmationError('비밀번호 확인을 입력해주세요.');
+    } else if (passwordConfirmation !== password) {
+      setPasswordConfirmationError('비밀번호가 일치하지 않습니다.');
+    } else {
+      setPasswordConfirmationError('');
+    }
+  };
 
   const toggleNewPasswordVisibility = () => {
-    setIsNewPasswordVisible((prev) => !prev);
+    setIsPasswordVisible((prev) => !prev);
   };
 
   const toggleConfirmPasswordVisibility = () => {
     setIsConfirmPasswordVisible((prev) => !prev);
   };
 
-  // 이메일로 비밀번호 재설정 링크 보내기
-  const handleSubmitEmail = async (e: React.FormEvent) => {
-    e.preventDefault();
-
-    try {
-      const sendEmailResponse = await publicAxiosInstance.post(
-        'user/send-reset-password-email',
-        {
-          email,
-          redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
-        }
-      );
-      if (sendEmailResponse) {
-        console.log(sendEmailResponse.data);
-        setEmailSentMessageVisible(true);
-      }
-    } catch (error) {
-      console.error('비밀번호 재설정 이메일 전송 에러:', error);
-    }
-  };
-
   // 받은 링크의 토큰을 가지고 비밀번호 재설정하기
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
+    validatePassword();
+    validatePasswordConfirmation();
+
+    if (passwordError || passwordConfirmationError) return;
 
     try {
       const resetPasswordResponse = await publicAxiosInstance.patch(
         'user/reset-password',
         {
           passwordConfirmation,
-          password: newPassword,
+          password,
           token,
         }
       );
       if (resetPasswordResponse) {
         console.log(resetPasswordResponse.data);
-        router.push('/signin');
+        openModal();
       }
     } catch (error) {
       console.error('비밀번호 재설정 에러:', error);
     }
   };
 
-  const handleCloseClick = () => {
+  const handleModalButtonClick = () => {
+    router.push('/signin');
     closeModal();
-    setEmailSentMessageVisible(false);
   };
 
   return (
@@ -85,13 +96,19 @@ export default function SignUpForm() {
         <IconInput
           label="새 비밀번호"
           placeholder="영문, 숫자, 특수문자 포함 8자 이상"
+          isError={!!passwordError}
+          errorMessage={passwordError}
           inputProps={{
-            type: isNewPasswordVisible ? 'text' : 'password',
-            value: newPassword,
-            onChange: (e) => setNewPassword(e.target.value),
+            type: isPasswordVisible ? 'text' : 'password',
+            value: password,
+            onChange: (e) => {
+              setPassword(e.target.value);
+              validatePassword();
+            },
+            onBlur: validatePassword,
           }}
           actionIcon={
-            isNewPasswordVisible ? (
+            isPasswordVisible ? (
               <VisibleIcon onClick={toggleNewPasswordVisibility} />
             ) : (
               <NonVisibleIcon onClick={toggleNewPasswordVisibility} />
@@ -101,10 +118,16 @@ export default function SignUpForm() {
         <IconInput
           label="비밀번호 확인"
           placeholder="비밀번호를 다시 한 번 입력해주세요."
+          isError={!!passwordConfirmationError}
+          errorMessage={passwordConfirmationError}
           inputProps={{
             type: isConfirmPasswordVisible ? 'text' : 'password',
             value: passwordConfirmation,
-            onChange: (e) => setPasswordConfirmation(e.target.value),
+            onChange: (e) => {
+              setPasswordConfirmation(e.target.value);
+              validatePasswordConfirmation();
+            },
+            onBlur: validatePasswordConfirmation,
           }}
           actionIcon={
             isConfirmPasswordVisible ? (
@@ -115,7 +138,7 @@ export default function SignUpForm() {
           }
         />
       </form>
-      <Button size="full" onClick={token ? handleResetPassword : openModal}>
+      <Button size="full" onClick={handleResetPassword}>
         재설정
       </Button>
       <Modal
@@ -126,48 +149,18 @@ export default function SignUpForm() {
         fontSize="16"
         fontArray="center"
         gap="24"
+        className="items-center"
       >
-        <Modal.Wrapper>
-          <Modal.Header fontColor="primary">비밀번호 재설정</Modal.Header>
-          <Modal.Content
-            className="items-center gap-4"
-            array="column"
-            fontColor="secondary"
-            fontSize="14"
-          >
-            <p className="mt-2">비밀번호 재설정 링크를 보내드립니다.</p>
-            <form className="w-[280px]">
-              <Input
-                placeholder="이메일을 입력하세요."
-                inputProps={{
-                  value: email,
-                  onChange: (e) => setEmail(e.target.value),
-                }}
-              />
-            </form>
-            {emailSentMessageVisible && (
-              <div
-                className="flex flex-col items-center justify-center text-brand-primary"
-                onClick={handleCloseClick}
-              >
-                <span>비밀번호 재설정 링크를 보냈습니다</span>
-                <span>이메일을 확인해주세요!</span>
-              </div>
-            )}
+        <Modal.Wrapper className="w-[280px]">
+          <Modal.Header fontColor="primary">비밀번호 재설정 완료</Modal.Header>
+          <Modal.Content array="column" fontColor="secondary" fontSize="14">
+            <p className="mt-2">변경된 비밀번호로 로그인해주세요!</p>
           </Modal.Content>
         </Modal.Wrapper>
-        <Modal.Footer className="justify-center" array="row">
-          <div className="flex w-[280px] gap-2">
-            <Button
-              onClick={handleCloseClick}
-              bgColor="white"
-              fontColor="green"
-              border="green"
-            >
-              닫기
-            </Button>
-            <Button onClick={handleSubmitEmail}>링크 보내기</Button>
-          </div>
+        <Modal.Footer>
+          <Button onClick={handleModalButtonClick} width={280}>
+            확인
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>
