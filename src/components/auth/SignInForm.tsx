@@ -14,7 +14,7 @@ import React, { useState } from 'react';
 export default function SignInForm() {
   const router = useRouter();
   const { setTokens, updateUser } = useUserStore();
-  const { isOpen, openModal, closeModal } = useModal();
+  const { isOpen, onOpen, onClose } = useModal();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -108,7 +108,7 @@ export default function SignInForm() {
     if (emailSentMessageVisible) {
       window.close();
     } else {
-      closeModal();
+      onClose();
     }
   };
 
@@ -160,7 +160,7 @@ export default function SignInForm() {
           <button
             className="text-right text-[14px] font-medium leading-6 text-interaction-focus underline md:text-[16px]"
             type="button"
-            onClick={openModal}
+            onClick={onOpen}
           >
             비밀번호를 잊으셨나요?
           </button>
