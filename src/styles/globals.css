@@ -96,28 +96,20 @@ div.react-datepicker-popper .react-datepicker__triangle {
 }
 
 /* input */
-.react-datepicker__input-container {
-  padding: 16px 16px;
-  color: #343e4e;
-  background-color: #1e293b;
-  border-radius: 12px;
-  border-color: #343e4e;
-  border-width: 1px;
-  width: 100%;
-}
-
 .react-datepicker__input-container input {
-  background-color: transparent;
+  background-color: #1e293b;
+  border-color: #343e4e;
   color: #9ca3af;
+  border-radius: 12px;
+  border-width: 1px;
+  padding: 16px 16px;
   width: 100%;
-  border: 0;
   outline: none;
   cursor: pointer;
 }
 
-.react-datepicker__input-container input::hover {
+.react-datepicker__input-container input:focus {
   border-color: #10b981;
-  border: 1px;
 }
 
 .react-datepicker__tab-loop div.react-datepicker-popper {
