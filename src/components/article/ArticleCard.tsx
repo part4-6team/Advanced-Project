@@ -6,12 +6,11 @@ import { useCards } from '@hooks/article/useArticleCard';
 import NetworkError from '@components/@shared/NetworkError';
 import { useInView } from 'react-intersection-observer';
 import dayjs from 'dayjs';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 
 interface ArticleCardProps {
   keyword: string;
-  orderBy: string;
 }
 
 interface Writer {
@@ -27,7 +26,8 @@ interface Card {
   likeCount: number;
 }
 
-export default function ArticleCard({ keyword, orderBy }: ArticleCardProps) {
+export default function ArticleCard({ keyword }: ArticleCardProps) {
+  const [orderBy, setorderBy] = useState('recent');
   const {
     data: cards,
     isError,
@@ -35,6 +35,10 @@ export default function ArticleCard({ keyword, orderBy }: ArticleCardProps) {
     hasNextPage,
     isFetchingNextPage,
   } = useCards(6, orderBy, keyword || '');
+
+  const handleSelect = (value: string) => {
+    setorderBy(value);
+  };
 
   const { ref, inView } = useInView();
 
@@ -56,7 +60,7 @@ export default function ArticleCard({ keyword, orderBy }: ArticleCardProps) {
     <>
       <div className="mb-6 flex items-center justify-between">
         <h2 className="text-lg-bold md:text-xl-bold">게시글</h2>
-        <ArrayDropdown />
+        <ArrayDropdown onSelect={handleSelect} />
       </div>
 
       {cards?.pages.map((page) => (
