@@ -121,7 +121,7 @@ export default function SignInForm() {
             />
           </form>
           <Link
-            href="/#"
+            href="/reset-password"
             className="text-right text-[14px] font-medium leading-6 text-interaction-focus underline md:text-[16px]"
           >
             비밀번호를 잊으셨나요?
