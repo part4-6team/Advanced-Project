@@ -9,6 +9,10 @@ import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
 export default function SignUpForm() {
+  const router = useRouter();
+  const { token } = router.query;
+  const { isOpen, openModal, closeModal } = useModal();
+
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
   const [passwordError, setPasswordError] = useState('');
@@ -17,13 +21,6 @@ export default function SignUpForm() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
-  const { isOpen, openModal, closeModal } = useModal();
-  const router = useRouter();
-  const { token } = router.query;
-
-  const validateForm = () => {
-    return !passwordError && !passwordConfirmationError;
-  };
 
   // 비밀번호 유효성 검사 함수
   const validatePassword = () => {
@@ -38,7 +35,6 @@ export default function SignUpForm() {
     } else {
       setPasswordError('');
     }
-    validateForm(); // 유효성 검사 후 폼 상태 업데이트
   };
 
   // 비밀번호 확인 유효성 검사 함수
@@ -50,7 +46,6 @@ export default function SignUpForm() {
     } else {
       setPasswordConfirmationError('');
     }
-    validateForm(); // 유효성 검사 후 폼 상태 업데이트
   };
 
   const toggleNewPasswordVisibility = () => {
@@ -64,7 +59,10 @@ export default function SignUpForm() {
   // 받은 링크의 토큰을 가지고 비밀번호 재설정하기
   const handleResetPassword = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return; // 폼이 유효하지 않으면 제출 중지
+    validatePassword();
+    validatePasswordConfirmation();
+
+    if (passwordError || passwordConfirmationError) return;
 
     try {
       const resetPasswordResponse = await publicAxiosInstance.patch(
@@ -105,6 +103,7 @@ export default function SignUpForm() {
             value: password,
             onChange: (e) => {
               setPassword(e.target.value);
+              validatePassword();
             },
             onBlur: validatePassword,
           }}
@@ -126,6 +125,7 @@ export default function SignUpForm() {
             value: passwordConfirmation,
             onChange: (e) => {
               setPasswordConfirmation(e.target.value);
+              validatePasswordConfirmation();
             },
             onBlur: validatePasswordConfirmation,
           }}
@@ -138,11 +138,7 @@ export default function SignUpForm() {
           }
         />
       </form>
-      <Button
-        size="full"
-        onClick={handleResetPassword}
-        disabled={!validateForm()}
-      >
+      <Button size="full" onClick={handleResetPassword}>
         재설정
       </Button>
       <Modal
@@ -153,24 +149,18 @@ export default function SignUpForm() {
         fontSize="16"
         fontArray="center"
         gap="24"
+        className="items-center"
       >
         <Modal.Wrapper className="w-[280px]">
           <Modal.Header fontColor="primary">비밀번호 재설정 완료</Modal.Header>
-          <Modal.Content
-            className="items-center"
-            array="column"
-            fontColor="secondary"
-            fontSize="14"
-          >
+          <Modal.Content array="column" fontColor="secondary" fontSize="14">
             <p className="mt-2">변경된 비밀번호로 로그인해주세요!</p>
           </Modal.Content>
         </Modal.Wrapper>
-        <Modal.Footer className="justify-center" array="row">
-          <div className="flex gap-2">
-            <Button onClick={handleModalButtonClick} width={280}>
-              확인
-            </Button>
-          </div>
+        <Modal.Footer>
+          <Button onClick={handleModalButtonClick} width={280}>
+            확인
+          </Button>
         </Modal.Footer>
       </Modal>
     </div>

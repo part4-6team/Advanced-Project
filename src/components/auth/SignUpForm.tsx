@@ -10,6 +10,8 @@ import { useState } from 'react';
 
 export default function SignUpForm() {
   const router = useRouter();
+  const { setTokens, updateUser } = useUserStore();
+
   const [email, setEmail] = useState('');
   const [nickname, setNickname] = useState('');
   const [password, setPassword] = useState('');
@@ -22,17 +24,6 @@ export default function SignUpForm() {
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
-  const { setTokens, updateUser } = useUserStore();
-
-  // 모든 입력값의 유효성을 검사하는 함수
-  const validateForm = () => {
-    return (
-      !emailError &&
-      !nicknameError &&
-      !passwordError &&
-      !passwordConfirmationError
-    );
-  };
 
   // 이메일 유효성 검사 함수
   const validateEmail = () => {
@@ -43,7 +34,6 @@ export default function SignUpForm() {
     } else {
       setEmailError('');
     }
-    validateForm(); // 유효성 검사 후 폼 상태 업데이트
   };
 
   // 닉네임 유효성 검사 함수
@@ -55,7 +45,6 @@ export default function SignUpForm() {
     } else {
       setNicknameError('');
     }
-    validateForm(); // 유효성 검사 후 폼 상태 업데이트
   };
 
   // 비밀번호 유효성 검사 함수
@@ -71,7 +60,6 @@ export default function SignUpForm() {
     } else {
       setPasswordError('');
     }
-    validateForm(); // 유효성 검사 후 폼 상태 업데이트
   };
 
   // 비밀번호 확인 유효성 검사 함수
@@ -83,12 +71,23 @@ export default function SignUpForm() {
     } else {
       setPasswordConfirmationError('');
     }
-    validateForm(); // 유효성 검사 후 폼 상태 업데이트
   };
 
+  // 폼 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return; // 폼이 유효하지 않으면 제출 중지
+    validateEmail();
+    validateNickname();
+    validatePassword();
+    validatePasswordConfirmation();
+
+    if (
+      emailError ||
+      nicknameError ||
+      passwordError ||
+      passwordConfirmationError
+    )
+      return;
 
     try {
       const signUpResponse = await publicAxiosInstance.post('/auth/signUp', {
@@ -114,9 +113,7 @@ export default function SignUpForm() {
       router.push('/');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        console.error('서버에서 반환된 에러 데이터:', error.response.data);
-      } else {
-        console.error('회원가입 에러 발생:', error);
+        console.error('회원가입 에러:', error.response.data);
       }
     }
   };
@@ -144,6 +141,7 @@ export default function SignUpForm() {
             value: nickname,
             onChange: (e) => {
               setNickname(e.target.value);
+              validateNickname();
             },
             onBlur: validateNickname,
           }}
@@ -157,6 +155,7 @@ export default function SignUpForm() {
             value: email,
             onChange: (e) => {
               setEmail(e.target.value);
+              validateEmail();
             },
             onBlur: validateEmail,
           }}
@@ -171,6 +170,7 @@ export default function SignUpForm() {
             value: password,
             onChange: (e) => {
               setPassword(e.target.value);
+              validatePassword();
             },
             onBlur: validatePassword,
           }}
@@ -192,6 +192,7 @@ export default function SignUpForm() {
             value: passwordConfirmation,
             onChange: (e) => {
               setPasswordConfirmation(e.target.value);
+              validatePasswordConfirmation();
             },
             onBlur: validatePasswordConfirmation,
           }}
@@ -204,7 +205,7 @@ export default function SignUpForm() {
           }
         />
       </form>
-      <Button size="full" onClick={handleSubmit} disabled={!validateForm()}>
+      <Button size="full" onClick={handleSubmit}>
         회원가입
       </Button>
     </div>

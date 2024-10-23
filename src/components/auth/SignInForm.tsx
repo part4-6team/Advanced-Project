@@ -13,21 +13,17 @@ import React, { useState } from 'react';
 
 export default function SignInForm() {
   const router = useRouter();
+  const { setTokens, updateUser } = useUserStore();
+  const { isOpen, openModal, closeModal } = useModal();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
-  const [modalEmail, setModalEmail] = useState('');
-  const [emailSentMessageVisible, setEmailSentMessageVisible] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const { setTokens, updateUser } = useUserStore();
-  const { isOpen, openModal, closeModal } = useModal();
   const [emailLoading, setEmailLoading] = useState(false);
-
-  // 모든 입력값의 유효성을 검사하는 함수
-  const validateForm = () => {
-    return !emailError && !passwordError;
-  };
+  const [emailSentMessageVisible, setEmailSentMessageVisible] = useState(false);
+  const [modalEmail, setModalEmail] = useState('');
 
   // 이메일 유효성 검사 함수
   const validateEmail = () => {
@@ -38,7 +34,6 @@ export default function SignInForm() {
     } else {
       setEmailError('');
     }
-    validateForm(); // 유효성 검사 후 폼 상태 업데이트
   };
 
   // 비밀번호 유효성 검사 함수
@@ -48,12 +43,15 @@ export default function SignInForm() {
     } else {
       setPasswordError('');
     }
-    validateForm(); // 유효성 검사 후 폼 상태 업데이트
   };
 
+  // 폼 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return; // 폼이 유효하지 않으면 제출 중지
+    validateEmail();
+    validatePassword();
+
+    if (emailError || passwordError) return;
 
     try {
       const signInResponse = await publicAxiosInstance.post('auth/signIn', {
@@ -70,11 +68,9 @@ export default function SignInForm() {
       router.push('/');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        console.error('서버에서 반환된 에러 데이터:', error.response.data);
+        console.error('로그인 에러:', error);
         setEmailError('이메일 혹은 비밀번호를 확인해주세요.');
         setPasswordError('이메일 혹은 비밀번호를 확인해주세요.');
-      } else {
-        console.error('로그인 에러 발생:', error);
       }
     }
   };
@@ -108,10 +104,11 @@ export default function SignInForm() {
   };
 
   const handleCloseClick = () => {
-    closeModal();
-    setEmailSentMessageVisible(false);
+    // 링크가 전송됐을 때 닫기 버튼 누를 시 창 꺼짐
     if (emailSentMessageVisible) {
       window.close();
+    } else {
+      closeModal();
     }
   };
 
@@ -132,6 +129,7 @@ export default function SignInForm() {
                 value: email,
                 onChange: (e) => {
                   setEmail(e.target.value);
+                  validateEmail();
                 },
                 onBlur: validateEmail,
               }}
@@ -146,6 +144,7 @@ export default function SignInForm() {
                 value: password,
                 onChange: (e) => {
                   setPassword(e.target.value);
+                  validatePassword();
                 },
                 onBlur: validatePassword,
               }}
@@ -166,7 +165,7 @@ export default function SignInForm() {
             비밀번호를 잊으셨나요?
           </button>
         </div>
-        <Button size="full" onClick={handleSubmit} disabled={!validateForm()}>
+        <Button size="full" onClick={handleSubmit}>
           로그인
         </Button>
       </div>
