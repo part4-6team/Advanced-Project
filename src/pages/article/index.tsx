@@ -5,24 +5,44 @@ import ArticleCard from '@components/article/ArticleCard';
 import BestCard from '@components/article/BestCard';
 import { useRouter } from 'next/router';
 import PlusIcon from 'public/icons/plus.svg';
+import { useState } from 'react';
 
 export default function ArticlePage() {
+  const [value, setValue] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const router = useRouter();
 
   const handelNewArticle = () => {
     router.push('/article/newarticle');
   };
 
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter') {
+      setSearchTerm(value);
+    }
+  };
+
   return (
     <div className="mx-4 mt-8 max-w-[1200px] lg:mx-auto">
       <header className="mb-6">
         <h1 className="mb-6 text-2lg-bold md:text-2xl-bold">자유 게시판</h1>
-        <SearchInput placeholder="검색어를 입력해주세요" />
+        <SearchInput
+          placeholder="검색어를 입력해주세요"
+          inputProps={{
+            onChange: handleChange,
+            onKeyDown: handleKeyDown,
+            value,
+          }}
+        />
       </header>
       <main>
-        <BestCard keyword="" />
+        <BestCard keyword={searchTerm} />
         <hr className="my-8 opacity-10" />
-        <ArticleCard keyword="" />
+        <ArticleCard keyword={searchTerm} />
       </main>
       <div className="fixed bottom-4 right-4">
         <Button
