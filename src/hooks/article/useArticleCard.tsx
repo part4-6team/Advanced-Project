@@ -1,5 +1,5 @@
 import { fetchBestCard } from '@/src/api/article/articlecardAPI';
-import { Card } from '@/src/types/article/CardType';
+import { list } from '@/src/types/article/CardType';
 import { useQuery } from '@tanstack/react-query';
 
 export const useCard = (
@@ -8,7 +8,7 @@ export const useCard = (
   orderBy: string,
   keyword: string
 ) => {
-  return useQuery<Card[]>({
+  return useQuery<list[]>({
     queryKey: ['card', page, pageSize, orderBy, keyword],
     queryFn: () =>
       fetchBestCard({ queryKey: [page, pageSize, orderBy, keyword] }),

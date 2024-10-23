@@ -3,11 +3,11 @@ export interface Writer {
   id: number;
 }
 
-export interface List {
+export interface list {
   updatedAt: string;
   createdAt: string;
   likeCount: number;
-  wirter: Writer;
+  writer: Writer;
   image: string;
   title: string;
   id: number;
@@ -15,5 +15,5 @@ export interface List {
 
 export interface Card {
   totalCount: number;
-  List: List;
+  list: list[];
 }
