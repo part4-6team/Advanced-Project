@@ -6,20 +6,20 @@ import Button from '@components/@shared/Button';
 import { useUserDelete } from '@hooks/mysetting/useUserDelete';
 
 export default function RemoveAccount() {
-  const { isOpen, openModal, closeModal } = useModal();
+  const { isOpen, onOpen, onClose } = useModal();
 
   const mutation = useUserDelete();
 
   const handleUserDelete = () => {
     mutation.mutate();
-    closeModal();
+    onClose();
   };
 
   return (
     <>
       <button
         type="button"
-        onClick={openModal}
+        onClick={onOpen}
         className="flex items-center gap-2"
       >
         <SecessionIcon className="ml-6" />
@@ -29,7 +29,7 @@ export default function RemoveAccount() {
       <Modal
         isOpen={isOpen}
         isXButton={false}
-        onClose={closeModal}
+        onClose={onClose}
         array="column"
         padding="default"
         bgColor="primary"
@@ -62,7 +62,7 @@ export default function RemoveAccount() {
               width={136}
               height={48}
               border="gray"
-              onClick={closeModal}
+              onClick={onClose}
             >
               닫기
             </Button>
