@@ -32,3 +32,13 @@ export interface TaskListDto {
   id: number;
   tasks: TaskDto[];
 }
+
+// Request
+export interface TaskRequestDto {
+  name: string;
+  description: string | null;
+  startDate: string;
+  frequency: string;
+  weekDays?: number[];
+  monthDay?: number;
+}

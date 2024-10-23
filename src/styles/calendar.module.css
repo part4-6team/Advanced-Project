@@ -1,5 +1,5 @@
 /* 달력 */
-.calenderWrapper {
+div.calenderWrapper {
   position: relative;
   font-family: 'Pretendard', sans-serif;
   border: hidden;
