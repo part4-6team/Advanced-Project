@@ -5,7 +5,7 @@ export interface ModalClassProps {
   isXButton?: boolean;
   array?: 'column' | 'row';
   padding?: 'default' | 'datePicker';
-  bgColor?: 'primary';
+  bgColor?: 'primary' | 'secondary';
   fontColor?: 'primary' | 'secondary';
   fontSize?: '16' | '14' | '12';
   fontArray?: 'center' | 'left' | 'right';
@@ -34,6 +34,7 @@ export const getModalClass = ({
     'gap-8': gap === '32',
     'gap-10': gap === '40',
     'bg-background-primary': bgColor === 'primary',
+    'bg-background-secondary': bgColor === 'secondary',
     'text-text-primary': fontColor === 'primary',
     'text-text-secondary': fontColor === 'secondary',
     'text-lg-medium': fontSize === '16',
