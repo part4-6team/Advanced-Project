@@ -6,7 +6,7 @@ import type { TaskDto } from '@/src/types/tasks/TaskListDto';
 import { useTaskListContext } from '@/src/contexts/TaskListContext';
 
 import Dropdown, { Option } from '@components/@shared/Dropdown';
-import CheckBox from './UI/CheckBox';
+import CheckBox from './CheckBox';
 
 interface TaskCardProps {
   task: TaskDto;

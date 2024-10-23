@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import type { TaskListDto, TaskDto } from '@/src/types/tasks/TaskListDto';
 
-import TaskCard from './TaskCard';
-import { MockData } from './mockdata';
+import TaskCard from '../UI/TaskCard';
+import { MockData } from '../mockdata';
 
 interface TaskListProps {
   initialTaskListId?: number;
