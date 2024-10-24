@@ -12,8 +12,8 @@ export default function AddTeamForm() {
   const [teamProfileFile, setTeamProfileFile] = useState<File | null>(null);
   const router = useRouter();
 
-  // 그룹 생성 Mutation
-  const { mutate: createGroup } = useMutation({
+  // 팀 생성 Mutation
+  const { mutate: addTeam } = useMutation({
     mutationFn: ({ image, name }: { image: string; name: string }) =>
       postGroupById(image, name),
     onSuccess: (data) => {
@@ -27,7 +27,7 @@ export default function AddTeamForm() {
       }
     },
     onError: (error) => {
-      console.error('그룹 생성 실패:', error);
+      console.error('팀 생성 실패:', error);
     },
   });
 
@@ -36,7 +36,7 @@ export default function AddTeamForm() {
     mutationFn: (file: File) => postImage(file),
     onSuccess: (imageUrl: string) => {
       // 이미지 URL을 성공적으로 받으면 팀 생성 요청
-      createGroup({ image: imageUrl, name: teamName });
+      addTeam({ image: imageUrl, name: teamName });
     },
     onError: (error) => {
       console.error('이미지 업로드 실패:', error);
