@@ -1,21 +1,43 @@
+import { deleteTaskList } from '@/src/api/tasks/taskListAPI';
+import { useTeamStore } from '@/src/stores/teamStore';
 import Button from '@components/@shared/Button';
 import { Modal } from '@components/@shared/Modal';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 
 interface DeleteTaskListModalProps {
   isOpen: boolean;
   onClose: () => void;
+  taskListId: number;
   taskName: string;
 }
 
 export default function DeleteTaskListModal({
   isOpen,
   onClose,
+  taskListId,
   taskName,
 }: DeleteTaskListModalProps) {
+  const queryClient = useQueryClient();
+  const { id } = useTeamStore();
+
+  // 목록 삭제 Mutation
+  const { mutate: deleteList } = useMutation({
+    mutationFn: (id: number) => deleteTaskList(id),
+    onSuccess: () => {
+      onClose();
+    },
+    onSettled: () => {
+      // 쿼리 무효화 및 리패치
+      queryClient.invalidateQueries({ queryKey: ['group', id] });
+    },
+    onError: (error) => {
+      console.error('목록 삭제 실패:', error);
+    },
+  });
+
   const handleDeleteClick = () => {
-    console.log('할 일 목록 삭제 완료!');
-    onClose();
+    deleteList(taskListId);
   };
 
   return (
