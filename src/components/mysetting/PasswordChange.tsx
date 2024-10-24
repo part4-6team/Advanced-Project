@@ -13,18 +13,18 @@ interface PasswordChangeProps {
 export default function PasswordChange({ onSubmit }: PasswordChangeProps) {
   const {
     isOpen: isSuccessModalopen,
-    openModal: openSuccessModal,
-    closeModal: closeSuccessModlal,
+    onOpen: openSuccessModal,
+    onClose: closeSuccessModlal,
   } = useModal();
   const {
     isOpen: isErrorModalopen,
-    openModal: openErrorModal,
-    closeModal: closeErrorModlal,
+    onOpen: openErrorModal,
+    onClose: closeErrorModlal,
   } = useModal();
   const {
     isOpen: iscompleteChangeopen,
-    openModal: opencompleteChange,
-    closeModal: closecompleteChange,
+    onOpen: opencompleteChange,
+    onClose: closecompleteChange,
   } = useModal();
 
   const [password, setPassword] = useState('');
