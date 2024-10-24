@@ -10,13 +10,10 @@ import { useEffect, useState } from 'react';
 
 interface EditTeamModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
 }
 
-export default function EditTeamModal({
-  isOpen,
-  closeModal,
-}: EditTeamModalProps) {
+export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const { teamId, teamName, imageUrl, setTeamName } = useTeamStore();
   // 모달 내부에서 관리할 임시 상태
@@ -44,7 +41,7 @@ export default function EditTeamModal({
       name: string;
     }) => patchGroupById(id, image, name),
     onSuccess: () => {
-      closeModal();
+      onClose();
       console.log(`${teamName} 팀 정보가 성공적으로 수정되었습니다.`);
     },
 
@@ -91,7 +88,7 @@ export default function EditTeamModal({
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"

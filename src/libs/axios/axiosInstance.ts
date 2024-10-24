@@ -44,8 +44,6 @@ authAxiosInstance.interceptors.request.use(
   }
 );
 
-
-
 // 인터셉터를 설정할 때 useUserStore를 사용하지 않도록 변경합니다.
 authAxiosInstance.interceptors.response.use(
   (response) => response,
@@ -88,7 +86,7 @@ authAxiosInstance.interceptors.response.use(
         }
       } catch (refreshError) {
         console.error('토큰 갱신 중 오류 발생:', refreshError);
-        
+
         // 토큰 삭제 로직
         localStorage.removeItem('userStorage');
         return Promise.reject(error);
