@@ -4,7 +4,6 @@ import Button from '@components/@shared/Button';
 import { Modal } from '@components/@shared/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
-import { useState } from 'react';
 
 interface ExileUserModalProps {
   isOpen: boolean;
@@ -51,7 +50,6 @@ export default function ExileUserModal({
 }: ExileUserModalProps) {
   const { teamId } = useTeamStore();
   const queryClient = useQueryClient();
-  const [errorMessage, setErrorMessage] = useState('');
 
   // 'user' 키로 캐싱된 유저 데이터 가져오기
   const userData = queryClient.getQueryData<UserData>(['user']);
@@ -84,13 +82,11 @@ export default function ExileUserModal({
   const handleDeleteClick = () => {
     // 팀 관리자만 삭제 가능
     if (!isAdmin) {
-      setErrorMessage('관리자만 삭제할 수 있습니다.');
       return;
     }
 
     // 본인 삭제 불가 체크
     if (isSelf) {
-      setErrorMessage('본인은 삭제할 수 없습니다.');
       return;
     }
 
