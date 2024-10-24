@@ -31,7 +31,7 @@ interface Membership {
   group: Group;
 }
 
-interface UserData {
+export interface UserData {
   id: number;
   nickname: string;
   createdAt: string;
