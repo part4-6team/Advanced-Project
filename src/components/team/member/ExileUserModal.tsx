@@ -1,21 +1,45 @@
+import { deleteMemberById } from '@/src/api/team/memberAPI';
+import { useTeamStore } from '@/src/stores/teamStore';
 import Button from '@components/@shared/Button';
 import { Modal } from '@components/@shared/Modal';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
 
 interface ExileUserModalProps {
   isOpen: boolean;
   onClose: () => void;
   memberName: string;
+  userId: number;
 }
 
 export default function ExileUserModal({
   isOpen,
   onClose,
   memberName,
+  userId,
 }: ExileUserModalProps) {
+  const { teamId } = useTeamStore();
+  const queryClient = useQueryClient();
+
+  // 그룹 삭제 Mutation
+  const { mutate: deleteMember } = useMutation({
+    mutationFn: ({ id, userid }: { id: string; userid: number }) =>
+      deleteMemberById(id, userid),
+    onSuccess: () => {
+      console.log('멤버 정보 삭제 완료!');
+      onClose();
+    },
+    onSettled: () => {
+      // 쿼리 무효화 및 리패치
+      queryClient.invalidateQueries({ queryKey: ['group', teamId] });
+    },
+    onError: (error) => {
+      console.error('멤버 삭제 실패:', error);
+    },
+  });
+
   const handleDeleteClick = () => {
-    console.log(`${memberName} 멤버 삭제 완료!`);
-    onClose();
+    deleteMember({ id: teamId as string, userid: userId as number });
   };
 
   return (

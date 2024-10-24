@@ -9,6 +9,7 @@ export interface MemberProps {
   userImage: string | null;
   userEmail: string;
   userName: string;
+  userId: number;
 }
 
 export default function MemberBox({
@@ -16,6 +17,7 @@ export default function MemberBox({
   userEmail,
   userImage,
   role,
+  userId,
 }: MemberProps) {
   const { isOpen, onOpen, onClose } = useModal();
   const {
@@ -23,6 +25,7 @@ export default function MemberBox({
     onOpen: deleteOpenModal,
     onClose: deleteCloseModal,
   } = useModal();
+
   const handleDropdownClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 클릭 이벤트 전파 방지
   };
@@ -76,6 +79,7 @@ export default function MemberBox({
         isOpen={deleteIsOpen}
         onClose={deleteCloseModal}
         memberName={userName}
+        userId={userId}
       />
     </>
   );

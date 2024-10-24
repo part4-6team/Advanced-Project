@@ -1,22 +1,12 @@
 import { useModal } from '@hooks/useModal';
+import { useTeamStore } from '@/src/stores/teamStore';
 import MemberBox from './MemberBox';
 import InvitationModal from './InvitationModal';
 
-interface MemberProps {
-  role: string;
-  userImage: string | null;
-  userEmail: string;
-  userName: string;
-  groupId: number;
-  userId: number;
-}
-
-interface MemberListProps {
-  members: MemberProps[];
-}
-
-export default function MemberList({ members }: MemberListProps) {
+export default function MemberList() {
   const { isOpen, onOpen, onClose } = useModal();
+  const { members } = useTeamStore();
+
   const memberCount = members.length;
   return (
     <div>
@@ -42,6 +32,7 @@ export default function MemberList({ members }: MemberListProps) {
         {members.map((member) => (
           <MemberBox
             key={member.userId}
+            userId={member.userId}
             userName={member.userName}
             userEmail={member.userEmail}
             userImage={member.userImage}
