@@ -31,7 +31,7 @@ export default function TeamPage() {
   if (isError) return <div>Error loading data</div>;
 
   return (
-    <main className="mx-auto mt-[20px] w-full min-w-[340px] px-[10px] xl:w-[1200px] xl:px-0">
+    <main className="mx-auto mb-[30px] mt-[20px] w-full min-w-[340px] px-[10px] xl:w-[1200px] xl:px-0">
       <TeamBanner />
       <TaskList />
       <Report />

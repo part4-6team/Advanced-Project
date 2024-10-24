@@ -36,6 +36,11 @@ export default function TaskList() {
           />
         </div>
       </div>
+      {listCount === 0 && (
+        <p className="my-[100px] text-center text-md-medium text-text-default">
+          아직 할 일 목록이 없습니다.
+        </p>
+      )}
       <div className="flex flex-col gap-[10px]">
         {taskLists.map((taskList) => (
           <TaskBar
