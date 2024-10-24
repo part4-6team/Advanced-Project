@@ -16,7 +16,7 @@ interface MemberListProps {
 }
 
 export default function MemberList({ members }: MemberListProps) {
-  const { isOpen, openModal, closeModal } = useModal();
+  const { isOpen, onOpen, onClose } = useModal();
   const memberCount = members.length;
   return (
     <div>
@@ -30,12 +30,12 @@ export default function MemberList({ members }: MemberListProps) {
           </div>
           <button
             type="button"
-            onClick={openModal}
+            onClick={onOpen}
             className="cursor-pointer text-md-regular text-brand-primary"
           >
             +새로운 멤버 초대하기
           </button>
-          <InvitationModal isOpen={isOpen} closeModal={closeModal} />
+          <InvitationModal isOpen={isOpen} onClose={onClose} />
         </div>
       </div>
       <div className="grid grid-cols-2 gap-[10px] md:grid-cols-3 md:gap-[24px]">

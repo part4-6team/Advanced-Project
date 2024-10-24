@@ -4,25 +4,25 @@ import Image from 'next/image';
 
 interface DeleteTaskListModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
   taskName: string;
 }
 
 export default function DeleteTaskListModal({
   isOpen,
-  closeModal,
+  onClose,
   taskName,
 }: DeleteTaskListModalProps) {
   const handleDeleteClick = () => {
     console.log('할 일 목록 삭제 완료!');
-    closeModal();
+    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"
@@ -55,7 +55,7 @@ export default function DeleteTaskListModal({
             size="full"
             bgColor="white"
             fontColor="gray"
-            onClick={closeModal}
+            onClick={onClose}
           >
             취소
           </Button>

@@ -11,14 +11,14 @@ export default function TeamBanner() {
 
   const {
     isOpen: editIsOpen,
-    openModal: editOpenModal,
-    closeModal: editCloseModal,
+    onOpen: editOpenModal,
+    onClose: editCloseModal,
   } = useModal();
 
   const {
     isOpen: deleteIsOpen,
-    openModal: deleteOpenModal,
-    closeModal: deleteCloseModal,
+    onOpen: deleteOpenModal,
+    onClose: deleteCloseModal,
   } = useModal();
 
   const gearIcon = (
@@ -46,8 +46,8 @@ export default function TeamBanner() {
       </div>
 
       <EditDropdown triggerIcon={gearIcon} onSelect={handleSelect} />
-      <EditTeamModal isOpen={editIsOpen} closeModal={editCloseModal} />
-      <DeleteTeamModal isOpen={deleteIsOpen} closeModal={deleteCloseModal} />
+      <EditTeamModal isOpen={editIsOpen} onClose={editCloseModal} />
+      <DeleteTeamModal isOpen={deleteIsOpen} onClose={deleteCloseModal} />
     </div>
   );
 }

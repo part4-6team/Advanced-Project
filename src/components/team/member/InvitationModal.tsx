@@ -3,23 +3,23 @@ import { Modal } from '@components/@shared/Modal';
 
 interface InvitationModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
 }
 
 export default function InvitationModal({
   isOpen,
-  closeModal,
+  onClose,
 }: InvitationModalProps) {
   const handleCopyClick = () => {
     console.log('클립보드에 복사 완료!');
-    closeModal();
+    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"

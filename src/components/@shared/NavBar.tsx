@@ -23,8 +23,8 @@ export default function NavBar() {
 
   const {
     isOpen: addIsOpen,
-    openModal: addOpenModal,
-    closeModal: addCloseModal,
+    onOpen: addOpenModal,
+    onClose: addCloseModal,
   } = useModal();
 
   const handleLogout = () => {
@@ -149,7 +149,7 @@ export default function NavBar() {
                   optionsWrapClass="mt-[30px] flex p-[16px] rounded-[12px]"
                   optionClass="px[8px] py-[7px] rounded-[8px] w-[186px] h-[46px] hover:bg-background-tertiary"
                 />
-                <AddTeamModal isOpen={addIsOpen} closeModal={addCloseModal} />
+                <AddTeamModal isOpen={addIsOpen} onClose={addCloseModal} />
               </div>
               <Link href="#">
                 <span className="max-md:hidden">자유게시판</span>

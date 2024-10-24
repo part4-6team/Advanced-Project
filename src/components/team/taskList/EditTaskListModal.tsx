@@ -5,13 +5,13 @@ import { useEffect, useState } from 'react';
 
 interface EditTaskListModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
   initialTaskListName?: string;
 }
 
 export default function EditTaskListModal({
   isOpen,
-  closeModal,
+  onClose,
   initialTaskListName = '',
 }: EditTaskListModalProps) {
   const [TaskListName, setTaskListName] = useState(initialTaskListName);
@@ -22,7 +22,7 @@ export default function EditTaskListModal({
 
   const handleEditClick = () => {
     setTaskListName(initialTaskListName);
-    closeModal();
+    onClose();
     console.log('목록 이름', TaskListName, '으로 변경!');
     // API요청 추가 예정
   };
@@ -38,7 +38,7 @@ export default function EditTaskListModal({
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"

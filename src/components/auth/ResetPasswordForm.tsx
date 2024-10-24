@@ -11,7 +11,7 @@ import React, { useState } from 'react';
 export default function SignUpForm() {
   const router = useRouter();
   const { token } = router.query;
-  const { isOpen, openModal, closeModal } = useModal();
+  const { isOpen, onOpen, onClose } = useModal();
 
   const [password, setPassword] = useState('');
   const [passwordConfirmation, setPasswordConfirmation] = useState('');
@@ -75,7 +75,7 @@ export default function SignUpForm() {
       );
       if (resetPasswordResponse) {
         console.log(resetPasswordResponse.data);
-        openModal();
+        onOpen();
       }
     } catch (error) {
       console.error('비밀번호 재설정 에러:', error);
@@ -84,7 +84,7 @@ export default function SignUpForm() {
 
   const handleModalButtonClick = () => {
     router.push('/signin');
-    closeModal();
+    onClose();
   };
 
   return (

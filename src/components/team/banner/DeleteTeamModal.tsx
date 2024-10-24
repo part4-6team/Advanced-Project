@@ -8,12 +8,12 @@ import { useRouter } from 'next/router';
 
 interface DeleteTeamModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
 }
 
 export default function DeleteTeamModal({
   isOpen,
-  closeModal,
+  onClose,
 }: DeleteTeamModalProps) {
   const { teamId } = useTeamStore();
   const router = useRouter();
@@ -23,7 +23,7 @@ export default function DeleteTeamModal({
     mutationFn: (id: string) => deleteGroupById(id),
     onSuccess: () => {
       console.log('팀 정보 삭제 완료!');
-      closeModal();
+      onClose();
       router.push('/');
     },
     onError: (error) => {
@@ -39,7 +39,7 @@ export default function DeleteTeamModal({
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"
@@ -72,7 +72,7 @@ export default function DeleteTeamModal({
             size="full"
             bgColor="white"
             fontColor="gray"
-            onClick={closeModal}
+            onClick={onClose}
           >
             취소
           </Button>

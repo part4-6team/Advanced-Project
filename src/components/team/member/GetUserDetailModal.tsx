@@ -4,7 +4,7 @@ import Image from 'next/image';
 
 interface GetUserDetailModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
   name: string;
   email: string;
   img: string | null;
@@ -13,7 +13,7 @@ interface GetUserDetailModalProps {
 
 export default function GetUserDetailModal({
   isOpen,
-  closeModal,
+  onClose,
   name,
   email,
   img,
@@ -28,14 +28,14 @@ export default function GetUserDetailModal({
       .catch((err) => {
         console.error('복사에 실패했습니다!: ', err);
       });
-    closeModal();
+    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"

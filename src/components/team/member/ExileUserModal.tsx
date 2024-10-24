@@ -4,25 +4,25 @@ import Image from 'next/image';
 
 interface ExileUserModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
   memberName: string;
 }
 
 export default function ExileUserModal({
   isOpen,
-  closeModal,
+  onClose,
   memberName,
 }: ExileUserModalProps) {
   const handleDeleteClick = () => {
     console.log(`${memberName} 멤버 삭제 완료!`);
-    closeModal();
+    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"
@@ -55,7 +55,7 @@ export default function ExileUserModal({
             size="full"
             bgColor="white"
             fontColor="gray"
-            onClick={closeModal}
+            onClick={onClose}
           >
             취소
           </Button>

@@ -28,13 +28,13 @@ export default function TaskBar({ name, tasks }: TaskBarProps) {
 
   const {
     isOpen: editListIsOpen,
-    openModal: editListOpenModal,
-    closeModal: editListCloseModal,
+    onOpen: editListOpenModal,
+    onClose: editListCloseModal,
   } = useModal();
   const {
     isOpen: deleteListIsOpen,
-    openModal: deleteListOpenModal,
-    closeModal: deleteListCloseModal,
+    onOpen: deleteListOpenModal,
+    onClose: deleteListCloseModal,
   } = useModal();
 
   const moreIcon = (
@@ -92,12 +92,12 @@ export default function TaskBar({ name, tasks }: TaskBarProps) {
         <EditDropdown triggerIcon={moreIcon} onSelect={handleSelect} />
         <EditTaskListModal
           isOpen={editListIsOpen}
-          closeModal={editListCloseModal}
+          onClose={editListCloseModal}
           initialTaskListName={name}
         />
         <DeleteTaskListModal
           isOpen={deleteListIsOpen}
-          closeModal={deleteListCloseModal}
+          onClose={deleteListCloseModal}
           taskName={name}
         />
       </div>
