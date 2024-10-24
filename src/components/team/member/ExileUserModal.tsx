@@ -4,6 +4,7 @@ import Button from '@components/@shared/Button';
 import { Modal } from '@components/@shared/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
+import { useState } from 'react';
 
 interface ExileUserModalProps {
   isOpen: boolean;
@@ -50,6 +51,7 @@ export default function ExileUserModal({
 }: ExileUserModalProps) {
   const { teamId } = useTeamStore();
   const queryClient = useQueryClient();
+  const [errorMessage, setErrorMessage] = useState('');
 
   // 'user' 키로 캐싱된 유저 데이터 가져오기
   const userData = queryClient.getQueryData<UserData>(['user']);
@@ -71,20 +73,24 @@ export default function ExileUserModal({
     },
   });
 
+  // 팀 관리자만 삭제 가능
+  const isAdmin =
+    userData &&
+    userData.memberships.find((m) => m.groupId === Number(teamId))?.role ===
+      'ADMIN';
+  // 본인 삭제 불가 체크
+  const isSelf = userData && userData.id === userId;
+
   const handleDeleteClick = () => {
     // 팀 관리자만 삭제 가능
-    if (
-      userData &&
-      userData.memberships.find((m) => m.groupId === Number(teamId))?.role !==
-        'ADMIN'
-    ) {
-      console.log('관리자가 아닙니다. 삭제 불가능.');
+    if (!isAdmin) {
+      setErrorMessage('관리자만 삭제할 수 있습니다.');
       return;
     }
 
     // 본인 삭제 불가 체크
-    if (userData && userData.id === userId) {
-      console.log('본인은 삭제할 수 없습니다.');
+    if (isSelf) {
+      setErrorMessage('본인은 삭제할 수 없습니다.');
       return;
     }
 
@@ -114,12 +120,23 @@ export default function ExileUserModal({
             width={24}
             height={24}
           />
-          [{memberName}] 유저를 삭제하시겠어요?
+          {isAdmin && !isSelf && (
+            <span>{memberName} 유저를 삭제하시겠어요?</span>
+          )}
+          {!isAdmin && <span>권한 없음</span>}
         </Modal.Header>
         <Modal.Content fontColor="secondary" fontSize="14" fontArray="center">
-          <p className="mt-[20px]">
-            팀 내에서 멤버를 삭제합니다. 정말로 진행하시겠습니까?
-          </p>
+          {isAdmin && !isSelf && (
+            <p className="mt-[20px]">
+              팀 내에서 멤버를 삭제합니다. 정말로 진행하시겠습니까?
+            </p>
+          )}
+          {!isAdmin && (
+            <p className="mt-[20px]">관리자만 삭제할 수 있습니다.</p>
+          )}
+          {isAdmin && isSelf && (
+            <p className="mt-[20px]">본인은 삭제할 수 없습니다.</p>
+          )}
         </Modal.Content>
       </Modal.Wrapper>
       <Modal.Footer>
@@ -132,9 +149,11 @@ export default function ExileUserModal({
           >
             취소
           </Button>
-          <Button size="full" bgColor="red" onClick={handleDeleteClick}>
-            삭제
-          </Button>
+          {isAdmin && !isSelf && (
+            <Button size="full" bgColor="red" onClick={handleDeleteClick}>
+              삭제
+            </Button>
+          )}
         </div>
       </Modal.Footer>
     </Modal>
