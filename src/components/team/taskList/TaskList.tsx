@@ -1,31 +1,16 @@
 import { useModal } from '@hooks/useModal';
+import { useTeamStore } from '@/src/stores/teamStore';
 import TaskBar from './TaskBar';
 import AddTaskListModal from './AddTaskListModal';
 
-export interface TaskProps {
-  name: string;
-  done: boolean;
-}
-export interface TaskListItem {
-  displayIndex: number;
-  groupId: number;
-  updatedAt: string;
-  createdAt: string;
-  name: string;
-  id: number;
-  tasks: TaskProps[];
-}
-
-interface TaskListProps {
-  taskLists: TaskListItem[];
-}
-
-export default function TaskList({ taskLists }: TaskListProps) {
+export default function TaskList() {
   const {
     isOpen: addListIsOpen,
     onOpen: addListOpenModal,
     onClose: addListCloseModal,
   } = useModal();
+
+  const { taskLists, id } = useTeamStore();
 
   const listCount = taskLists.length;
 
@@ -47,6 +32,7 @@ export default function TaskList({ taskLists }: TaskListProps) {
           <AddTaskListModal
             isOpen={addListIsOpen}
             onClose={addListCloseModal}
+            groupId={id}
           />
         </div>
       </div>
@@ -56,6 +42,7 @@ export default function TaskList({ taskLists }: TaskListProps) {
             key={taskList.id}
             name={taskList.name}
             tasks={taskList.tasks}
+            id={taskList.id}
           />
         ))}
       </div>
