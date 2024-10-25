@@ -4,23 +4,23 @@ import { Modal } from '@components/@shared/Modal';
 
 interface AddTaskListModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
 }
 
 export default function AddTaskListModal({
   isOpen,
-  closeModal,
+  onClose,
 }: AddTaskListModalProps) {
   const handleAddClick = () => {
     console.log('할 일 목록 추가 완료!');
-    closeModal();
+    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"

@@ -10,6 +10,7 @@ export default function NavBar() {
   const [isLogoOnlyPage, setIsLogoOnlyPage] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const { data } = useUserData();
+  
   const handleLogout = () => {
     localStorage.removeItem('userStorage');
     router.push('/signin');

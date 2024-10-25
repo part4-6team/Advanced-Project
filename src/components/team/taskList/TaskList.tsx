@@ -23,8 +23,8 @@ interface TaskListProps {
 export default function TaskList({ taskLists }: TaskListProps) {
   const {
     isOpen: addListIsOpen,
-    openModal: addListOpenModal,
-    closeModal: addListCloseModal,
+    onOpen: addListOpenModal,
+    onClose: addListCloseModal,
   } = useModal();
 
   const listCount = taskLists.length;
@@ -46,7 +46,7 @@ export default function TaskList({ taskLists }: TaskListProps) {
           </button>
           <AddTaskListModal
             isOpen={addListIsOpen}
-            closeModal={addListCloseModal}
+            onClose={addListCloseModal}
           />
         </div>
       </div>

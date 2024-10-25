@@ -1,20 +1,20 @@
+import Image from 'next/image';
 import Button from '@components/@shared/Button';
 import { Modal } from '@components/@shared/Modal';
-import Image from 'next/image';
 
-interface DeleteTaskListModalProps {
+interface DeleteTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
   taskName: string;
 }
 
-export default function DeleteTaskListModal({
+export default function DeleteTaskModal({
   isOpen,
   onClose,
   taskName,
-}: DeleteTaskListModalProps) {
-  const handleDeleteClick = () => {
-    console.log('할 일 목록 삭제 완료!');
+}: DeleteTaskModalProps) {
+  const handleClick = () => {
+    console.log('DeleteTask 성공');
     onClose();
   };
 
@@ -25,15 +25,15 @@ export default function DeleteTaskListModal({
       onClose={onClose}
       array="column"
       padding="default"
-      bgColor="primary"
-      fontSize="16"
+      bgColor="secondary"
       fontArray="center"
-      gap="40"
+      gap="24"
     >
-      <Modal.Wrapper array="column">
+      <Modal.Wrapper array="column" className="gap-3">
         <Modal.Header
+          fontSize="16"
           fontColor="primary"
-          className="flex flex-col items-center gap-[16px]"
+          className="flex flex-col items-center gap-4"
         >
           <Image
             src="/icons/alert.svg"
@@ -41,12 +41,12 @@ export default function DeleteTaskListModal({
             width={24}
             height={24}
           />
-          목록을 삭제하시겠어요?
+          <p className="leading-normal">
+            &apos;{taskName}&apos; <br />할 일을 정말 삭제하시겠어요?
+          </p>
         </Modal.Header>
         <Modal.Content fontColor="secondary" fontSize="14" fontArray="center">
-          <p className="mt-[20px]">
-            [{taskName}] 내의 모든 할 일이 사라집니다. 정말로 삭제하시겠습니까?
-          </p>
+          <p>삭제 후에는 되돌릴 수 없습니다.</p>
         </Modal.Content>
       </Modal.Wrapper>
       <Modal.Footer>
@@ -59,8 +59,8 @@ export default function DeleteTaskListModal({
           >
             취소
           </Button>
-          <Button size="full" bgColor="red" onClick={handleDeleteClick}>
-            삭제
+          <Button size="full" bgColor="red" onClick={handleClick}>
+            삭제하기
           </Button>
         </div>
       </Modal.Footer>

@@ -10,13 +10,10 @@ import { useRouter } from 'next/router';
 
 interface AddTeamModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
 }
 
-export default function AddTeamModal({
-  isOpen,
-  closeModal,
-}: AddTeamModalProps) {
+export default function AddTeamModal({ isOpen, onClose }: AddTeamModalProps) {
   const [teamName, setTeamName] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const router = useRouter();
@@ -29,7 +26,7 @@ export default function AddTeamModal({
       const groupId = data.id; // 성공적으로 생성된 그룹의 ID를 받아온다고 가정
       setTeamName('');
       setImageFile(null);
-      closeModal();
+      onClose();
       console.log(
         `${teamName} 팀이 성공적으로 생성되었습니다. 그룹 ID: ${groupId}`
       );
@@ -76,7 +73,7 @@ export default function AddTeamModal({
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"

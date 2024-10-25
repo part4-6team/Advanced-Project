@@ -9,6 +9,7 @@ export interface MemberProps {
   userImage: string | null;
   userEmail: string;
   userName: string;
+  userId: number;
 }
 
 export default function MemberBox({
@@ -16,13 +17,15 @@ export default function MemberBox({
   userEmail,
   userImage,
   role,
+  userId,
 }: MemberProps) {
-  const { isOpen, openModal, closeModal } = useModal();
+  const { isOpen, onOpen, onClose } = useModal();
   const {
     isOpen: deleteIsOpen,
-    openModal: deleteOpenModal,
-    closeModal: deleteCloseModal,
+    onOpen: deleteOpenModal,
+    onClose: deleteCloseModal,
   } = useModal();
+
   const handleDropdownClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 클릭 이벤트 전파 방지
   };
@@ -33,7 +36,7 @@ export default function MemberBox({
   return (
     <>
       <div
-        onClick={openModal}
+        onClick={onOpen}
         className="flex h-[68px] cursor-pointer items-center justify-between gap-[10px] rounded-[16px] bg-background-secondary px-[24px] hover:brightness-110 active:brightness-105 md:h-[73px] xl:w-[384px]"
       >
         <div className="grid grid-cols-[30px_1fr] grid-rows-2 items-center md:grid-cols-[40px_1fr] md:grid-rows-2 md:gap-[5px]">
@@ -66,7 +69,7 @@ export default function MemberBox({
       </div>
       <GetUserDetailModal
         isOpen={isOpen}
-        closeModal={closeModal}
+        onClose={onClose}
         name={userName}
         email={userEmail}
         img={userImage}
@@ -74,8 +77,9 @@ export default function MemberBox({
       />
       <ExileUserModal
         isOpen={deleteIsOpen}
-        closeModal={deleteCloseModal}
+        onClose={deleteCloseModal}
         memberName={userName}
+        userId={userId}
       />
     </>
   );

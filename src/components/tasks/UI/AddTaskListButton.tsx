@@ -1,5 +1,5 @@
-import AddTaskListModal from '@components/team/taskList/AddTaskListModal';
 import { useModal } from '@hooks/useModal';
+import AddTaskListModal from './AddTaskListModal';
 
 export default function AddTaskListButton() {
   const { isOpen, onOpen, onClose } = useModal();
@@ -14,7 +14,7 @@ export default function AddTaskListButton() {
         + 새로운 목록 추가하기
       </button>
 
-      {isOpen && <AddTaskListModal isOpen={isOpen} closeModal={onClose} />}
+      {isOpen && <AddTaskListModal isOpen={isOpen} onClose={onClose} />}
     </>
   );
 }

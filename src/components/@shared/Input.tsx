@@ -57,7 +57,7 @@ export function SearchInput({
         <Image fill src="/icons/search.svg" alt="돋보기 아이콘" />
       </span>
       <input
-        className="bg-transparent focus:outline-none"
+        className="w-full bg-transparent focus:outline-none"
         id="input"
         placeholder={placeholder}
         {...inputProps}
