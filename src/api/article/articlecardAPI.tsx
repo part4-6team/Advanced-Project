@@ -15,9 +15,23 @@ export const fetchBestCard = async ({
 
 interface FetchCardDetailProps {
   articleId: number;
+  content?: string;
 }
 
 export const fetchCardDetail = async ({ articleId }: FetchCardDetailProps) => {
   const response = await authAxiosInstance.get(`articles/${articleId}`);
+  return response.data;
+};
+
+export const fetchCommentadd = async ({
+  articleId,
+  content,
+}: FetchCardDetailProps) => {
+  const response = await authAxiosInstance.post(
+    `articles/${articleId}/comments`,
+    {
+      content,
+    }
+  );
   return response.data;
 };

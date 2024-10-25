@@ -165,16 +165,13 @@ export default function NavBarTeam({ data }: { data: User }) {
               optionsWrapClass="mt-[30px] flex p-[16px] rounded-[12px]"
               optionClass="px[8px] py-[7px] rounded-[8px] w-[186px] h-[46px] hover:bg-background-tertiary"
             />
-            <AddTeamModal isOpen={addIsOpen} closeModal={addCloseModal} />
+            <AddTeamModal isOpen={addIsOpen} onClose={addCloseModal} />
           </div>
           <Link href="/article">
             <span className="max-md:hidden">자유게시판</span>
           </Link>
-          <EditTeamModal isOpen={editIsOpen} closeModal={editCloseModal} />
-          <DeleteTeamModal
-            isOpen={deleteIsOpen}
-            closeModal={deleteCloseModal}
-          />
+          <EditTeamModal isOpen={editIsOpen} onClose={editCloseModal} />
+          <DeleteTeamModal isOpen={deleteIsOpen} onClose={deleteCloseModal} />
         </>
       )}
     </>

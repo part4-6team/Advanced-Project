@@ -6,6 +6,7 @@ import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import Image from 'next/image';
 import NetworkError from '@components/@shared/NetworkError';
+import CommentForm from './CommentForm';
 
 export default function DetailCard() {
   const router = useRouter();
@@ -58,7 +59,7 @@ export default function DetailCard() {
               </span>
             </div>
             <div className="flex items-center gap-1">
-              <HeartIcon />{' '}
+              <HeartIcon />
               <span className="text-xs-regular text-slate-400 md:text-md-medium">
                 {data?.likeCount}
               </span>
@@ -69,6 +70,9 @@ export default function DetailCard() {
       <p className="break-words text-md-medium text-text-secondary md:text-lg-medium">
         {data?.content}
       </p>
+      <div className="flex flex-col justify-between">
+        <CommentForm articleId={Number(articleId)} />
+      </div>
     </>
   );
 }
