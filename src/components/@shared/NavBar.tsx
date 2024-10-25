@@ -84,12 +84,19 @@ export default function NavBar() {
     },
   ];
 
+  const handleTeamSelet = (groupId: number) => {
+    router.push(`/${groupId}`);
+  };
+
   const teams: Option[] = [
     ...(data?.memberships?.map((membership) => ({
       label: membership.group.name || '',
       component: (
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
+          <div
+            className="flex items-center gap-3"
+            onClick={() => handleTeamSelet(membership.groupId)}
+          >
             <Image
               src={membership.group.image}
               alt="팀 이미지"
