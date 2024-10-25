@@ -10,6 +10,8 @@ import Dropdown, { Option } from '@components/@shared/Dropdown';
 import { User } from '@/src/types/mysetting/settingData';
 import Menu from 'public/icons/menu.svg';
 import Link from 'next/link';
+import EditTeamModal from '@components/team/banner/EditTeamModal';
+import DeleteTeamModal from '@components/team/banner/DeleteTeamModal';
 import Button from './Button';
 
 export default function NavBarTeam({ data }: { data: User }) {
@@ -22,6 +24,18 @@ export default function NavBarTeam({ data }: { data: User }) {
     isOpen: addIsOpen,
     onOpen: addOpenModal,
     onClose: addCloseModal,
+  } = useModal();
+
+  const {
+    isOpen: editIsOpen,
+    onOpen: editOpenModal,
+    onClose: editCloseModal,
+  } = useModal();
+
+  const {
+    isOpen: deleteIsOpen,
+    onOpen: deleteOpenModal,
+    onClose: deleteCloseModal,
   } = useModal();
 
   const handleTeamSelet = (groupId: number) => {
@@ -39,9 +53,35 @@ export default function NavBarTeam({ data }: { data: User }) {
     return null;
   }
 
+  const handleSelect = (option: Option) => {
+    if (option.label === '수정하기') {
+      editOpenModal(); // '수정하기'를 선택했을 때
+    } else {
+      deleteOpenModal();
+    } // '삭제하기'를 선택했을 때
+  };
+
   const basic: Option[] = [
-    { component: <div>수정하기</div> },
-    { component: <div>삭제하기</div> },
+    {
+      label: '수정하기',
+      component: (
+        <div
+          onClick={() => handleSelect({ label: '수정하기', component: null })}
+        >
+          수정하기
+        </div>
+      ),
+    },
+    {
+      label: '삭제하기',
+      component: (
+        <div
+          onClick={() => handleSelect({ label: '삭제하기', component: null })}
+        >
+          삭제하기
+        </div>
+      ),
+    },
   ];
 
   const teams: Option[] = [
@@ -130,6 +170,11 @@ export default function NavBarTeam({ data }: { data: User }) {
           <Link href="/article">
             <span className="max-md:hidden">자유게시판</span>
           </Link>
+          <EditTeamModal isOpen={editIsOpen} closeModal={editCloseModal} />
+          <DeleteTeamModal
+            isOpen={deleteIsOpen}
+            closeModal={deleteCloseModal}
+          />
         </>
       )}
     </>
