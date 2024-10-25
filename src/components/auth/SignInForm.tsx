@@ -1,6 +1,8 @@
 import { useUserStore } from '@/src/stores/useUserStore';
 import Button from '@components/@shared/Button';
 import { IconInput, Input } from '@components/@shared/Input';
+import { Modal } from '@components/@shared/Modal';
+import { useModal } from '@hooks/useModal';
 import NonVisibleIcon from '@icons/visibility_off.svg';
 import VisibleIcon from '@icons/visibility_on.svg';
 import { publicAxiosInstance } from '@libs/axios/axiosInstance';
@@ -11,17 +13,17 @@ import React, { useState } from 'react';
 
 export default function SignInForm() {
   const router = useRouter();
+  const { setTokens, updateUser } = useUserStore();
+  const { isOpen, openModal, closeModal } = useModal();
+
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const { setTokens, updateUser } = useUserStore();
-
-  // 모든 입력값의 유효성을 검사하는 함수
-  const validateForm = () => {
-    return !emailError && !passwordError;
-  };
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [emailSentMessageVisible, setEmailSentMessageVisible] = useState(false);
+  const [modalEmail, setModalEmail] = useState('');
 
   // 이메일 유효성 검사 함수
   const validateEmail = () => {
@@ -32,7 +34,6 @@ export default function SignInForm() {
     } else {
       setEmailError('');
     }
-    validateForm(); // 유효성 검사 후 폼 상태 업데이트
   };
 
   // 비밀번호 유효성 검사 함수
@@ -42,12 +43,15 @@ export default function SignInForm() {
     } else {
       setPasswordError('');
     }
-    validateForm(); // 유효성 검사 후 폼 상태 업데이트
   };
 
+  // 폼 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!validateForm()) return; // 폼이 유효하지 않으면 제출 중지
+    validateEmail();
+    validatePassword();
+
+    if (emailError || passwordError) return;
 
     try {
       const signInResponse = await publicAxiosInstance.post('auth/signIn', {
@@ -64,17 +68,48 @@ export default function SignInForm() {
       router.push('/');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
-        console.error('서버에서 반환된 에러 데이터:', error.response.data);
+        console.error('로그인 에러:', error);
         setEmailError('이메일 혹은 비밀번호를 확인해주세요.');
         setPasswordError('이메일 혹은 비밀번호를 확인해주세요.');
-      } else {
-        console.error('로그인 에러 발생:', error);
       }
+    }
+  };
+
+  // 이메일로 비밀번호 재설정 링크 보내기
+  const handleSubmitEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEmailLoading(true);
+
+    try {
+      const sendEmailResponse = await publicAxiosInstance.post(
+        'user/send-reset-password-email',
+        {
+          email: modalEmail,
+          redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
+        }
+      );
+      if (sendEmailResponse) {
+        console.log(sendEmailResponse.data);
+        setEmailSentMessageVisible(true);
+      }
+    } catch (error) {
+      console.error('비밀번호 재설정 이메일 전송 에러:', error);
+    } finally {
+      setEmailLoading(false);
     }
   };
 
   const togglePasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
+  };
+
+  const handleCloseClick = () => {
+    // 링크가 전송됐을 때 닫기 버튼 누를 시 창 꺼짐
+    if (emailSentMessageVisible) {
+      window.close();
+    } else {
+      closeModal();
+    }
   };
 
   return (
@@ -94,6 +129,7 @@ export default function SignInForm() {
                 value: email,
                 onChange: (e) => {
                   setEmail(e.target.value);
+                  validateEmail();
                 },
                 onBlur: validateEmail,
               }}
@@ -108,6 +144,7 @@ export default function SignInForm() {
                 value: password,
                 onChange: (e) => {
                   setPassword(e.target.value);
+                  validatePassword();
                 },
                 onBlur: validatePassword,
               }}
@@ -120,14 +157,15 @@ export default function SignInForm() {
               }
             />
           </form>
-          <Link
-            href="/reset-password"
+          <button
             className="text-right text-[14px] font-medium leading-6 text-interaction-focus underline md:text-[16px]"
+            type="button"
+            onClick={openModal}
           >
             비밀번호를 잊으셨나요?
-          </Link>
+          </button>
         </div>
-        <Button size="full" onClick={handleSubmit} disabled={!validateForm()}>
+        <Button size="full" onClick={handleSubmit}>
           로그인
         </Button>
       </div>
@@ -137,6 +175,60 @@ export default function SignInForm() {
           가입하기
         </Link>
       </div>
+      <Modal
+        isOpen={isOpen}
+        array="column"
+        padding="default"
+        bgColor="primary"
+        fontSize="16"
+        fontArray="center"
+        gap="24"
+      >
+        <Modal.Wrapper>
+          <Modal.Header fontColor="primary">비밀번호 재설정</Modal.Header>
+          <Modal.Content
+            className="items-center gap-4"
+            array="column"
+            fontColor="secondary"
+            fontSize="14"
+          >
+            <p className="mt-2">비밀번호 재설정 링크를 보내드립니다.</p>
+            <form className="w-[280px]">
+              <Input
+                placeholder="이메일을 입력하세요."
+                inputProps={{
+                  value: modalEmail,
+                  onChange: (e) => setModalEmail(e.target.value),
+                }}
+              />
+            </form>
+            {emailSentMessageVisible && (
+              <div
+                className="flex flex-col items-center justify-center text-brand-primary"
+                onClick={handleCloseClick}
+              >
+                <span>비밀번호 재설정 링크를 보냈습니다</span>
+                <span>이메일을 확인해주세요!</span>
+              </div>
+            )}
+          </Modal.Content>
+        </Modal.Wrapper>
+        <Modal.Footer className="justify-center" array="row">
+          <div className="flex w-[280px] gap-2">
+            <Button
+              onClick={handleCloseClick}
+              bgColor="white"
+              fontColor="green"
+              border="green"
+            >
+              닫기
+            </Button>
+            <Button onClick={handleSubmitEmail} disabled={emailLoading}>
+              링크 보내기
+            </Button>
+          </div>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }
