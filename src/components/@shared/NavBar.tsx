@@ -10,7 +10,7 @@ export default function NavBar() {
   const [isLogoOnlyPage, setIsLogoOnlyPage] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const { data } = useUserData();
-  
+
   const handleLogout = () => {
     localStorage.removeItem('userStorage');
     router.push('/signin');
@@ -55,6 +55,14 @@ export default function NavBar() {
       component: (
         <button type="button" onClick={() => router.push('#')}>
           팀 참여
+        </button>
+      ),
+    },
+    {
+      label: '전체 팀 리스트',
+      component: (
+        <button type="button" onClick={() => router.push('myteam')}>
+          전체 팀 리스트
         </button>
       ),
     },
