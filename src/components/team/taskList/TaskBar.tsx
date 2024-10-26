@@ -54,10 +54,10 @@ export default function TaskBar({ name, tasks, id }: TaskBarProps) {
   return (
     <div className="flex h-[40px] cursor-pointer justify-between bg-background-secondary ">
       <div className="flex items-center justify-between gap-[10px]">
-        <div className="h-full w-[12px] rounded-bl-[12px] rounded-br-[0px] rounded-tl-[12px] rounded-tr-[0px] bg-point-purple">
+        <div className="h-full w-[12px] shrink-0 rounded-bl-[12px] rounded-br-[0px] rounded-tl-[12px] rounded-tr-[0px] bg-point-purple">
           &nbsp;
         </div>
-        <p className="text-md-medium">{name}</p>
+        <p className="break-words break-all text-md-medium">{name}</p>
       </div>
       <div className="mr-[10px] flex items-center gap-[10px]">
         <div className="flex h-[25px] w-[58px] items-center justify-between rounded-[12px] bg-background-primary px-[8px] py-[4px]">

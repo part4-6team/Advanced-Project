@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { getGroupById } from '@/src/api/team/teamAPI';
 import TeamBanner from '@components/team/banner/TeamBanner';
@@ -13,19 +13,18 @@ export default function TeamPage() {
   const { teamid } = router.query;
 
   const teamIdString = Array.isArray(teamid) ? teamid[0] : teamid;
+  const { setTeamData } = useTeamStore();
 
   const { data, isLoading, isError } = useQuery({
     queryKey: ['group', teamIdString],
     queryFn: () => getGroupById(teamIdString as string),
   });
-  const { setTeamData } = useTeamStore();
 
   useEffect(() => {
     if (data) {
-      // 팀 데이터를 Zustand 스토어에 저장
       setTeamData(data);
     }
-  }, [data, setTeamData]);
+  }, [data]);
 
   if (isLoading) return <div>Loading...</div>;
   if (isError) return <div>Error loading data</div>;

@@ -13,3 +13,9 @@ export const inviteMember = async (groupId: number) => {
   const response = await authAxiosInstance.get(`groups/${groupId}/invitation`);
   return response.data;
 };
+
+// 현재 유저의 멤버십 정보를 불러오는 API함수
+export const getMemberships = async () => {
+  const response = await authAxiosInstance.get(`user/memberships`);
+  return response.data;
+};

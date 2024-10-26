@@ -2,6 +2,7 @@ import { useModal } from '@hooks/useModal';
 import { useTeamStore } from '@/src/stores/teamStore';
 import TaskBar from './TaskBar';
 import AddTaskListModal from './AddTaskListModal';
+import Link from 'next/link';
 
 export default function TaskList() {
   const {
