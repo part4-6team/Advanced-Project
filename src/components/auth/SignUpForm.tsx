@@ -110,7 +110,7 @@ export default function SignUpForm() {
       updateUser(user);
 
       // 로그인 성공 후 랜딩 페이지로 이동
-      router.push('/');
+      router.push('/myteam');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         console.error('회원가입 에러:', error.response.data);
