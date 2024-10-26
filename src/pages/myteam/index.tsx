@@ -1,7 +1,7 @@
 import { getMemberships } from '@/src/api/team/memberAPI';
 import Button from '@components/@shared/Button';
-import EmptyTeamPage from '@components/team/EmptyTeamPage';
-import TeamBox from '@components/team/TeamBox';
+import EmptyTeamPage from '@components/team/myteam/EmptyTeamPage';
+import TeamBox from '@components/team/myteam/TeamBox';
 import { useQuery } from '@tanstack/react-query';
 import Link from 'next/link';
 
