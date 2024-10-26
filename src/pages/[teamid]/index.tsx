@@ -37,7 +37,7 @@ export default function TeamPage() {
       <Report />
       <MemberList />
       <Button
-        className="mx-auto mt-[50px] w-full xl:mr-0 xl:mt-[100px] xl:w-[200px]"
+        className="mx-auto mt-[50px] w-full md:mr-0 md:mt-[100px] md:w-[200px]"
         size="full"
         type="button"
         bgColor="transparent"
