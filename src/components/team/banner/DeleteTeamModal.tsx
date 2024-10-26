@@ -24,7 +24,7 @@ export default function DeleteTeamModal({
     onSuccess: () => {
       console.log('팀 정보 삭제 완료!');
       onClose();
-      router.push('/');
+      router.push('/myteam');
     },
     onError: (error) => {
       console.error('팀 삭제 실패:', error);

@@ -44,12 +44,14 @@ export default function TaskList() {
       )}
       <div className="flex flex-col gap-[10px]">
         {taskLists.map((taskList) => (
-          <TaskBar
-            key={taskList.id}
-            name={taskList.name}
-            tasks={taskList.tasks}
-            id={taskList.id}
-          />
+          <Link href={`/${id}/tasks`}>
+            <TaskBar
+              key={taskList.id}
+              name={taskList.name}
+              tasks={taskList.tasks}
+              id={taskList.id}
+            />
+          </Link>
         ))}
       </div>
     </section>

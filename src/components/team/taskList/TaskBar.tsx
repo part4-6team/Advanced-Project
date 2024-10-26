@@ -43,6 +43,10 @@ export default function TaskBar({ name, tasks, id }: TaskBarProps) {
     </div>
   );
 
+  const handleDropdownClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 클릭 이벤트 전파 방지
+  };
+
   // 드롭다운에서 선택된 옵션을 처리하는 함수
   const handleSelect = (option: Option) => {
     if (option.label === 'edit') {
@@ -83,8 +87,9 @@ export default function TaskBar({ name, tasks, id }: TaskBarProps) {
             {doneTasksCount}/{totalTasks}
           </p>
         </div>
-
-        <EditDropdown triggerIcon={moreIcon} onSelect={handleSelect} />
+        <div onClick={handleDropdownClick}>
+          <EditDropdown triggerIcon={moreIcon} onSelect={handleSelect} />
+        </div>
         <EditTaskListModal
           isOpen={editListIsOpen}
           onClose={editListCloseModal}
