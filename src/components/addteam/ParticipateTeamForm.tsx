@@ -8,6 +8,16 @@ import { useState } from 'react';
 export default function ParticipateTeamForm() {
   const router = useRouter();
   const [teamLink, setTeamLink] = useState('');
+  const [linkError, setLinkError] = useState('');
+
+  const validateLink = () => {
+    if (!teamLink) {
+      setLinkError('팀 링크를 입력해주세요.');
+      return false;
+    }
+    setLinkError('');
+    return true;
+  };
 
   // 팀 참여 Mutation
   const { mutate: participateTeam } = useMutation({
@@ -24,15 +34,22 @@ export default function ParticipateTeamForm() {
     },
     onError: (error) => {
       console.error('팀 참여 실패:', error);
+      setLinkError('유효하지 않은 초대입니다.');
     },
   });
 
   const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTeamLink(e.target.value);
+    if (teamLink) {
+      setLinkError('');
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    const isLinkValid = validateLink();
+
+    if (!isLinkValid) return;
 
     const userStorage = localStorage.getItem('userStorage');
     if (userStorage) {
@@ -51,6 +68,8 @@ export default function ParticipateTeamForm() {
         <Input
           label="팀 링크"
           placeholder="팀 링크를 입력해주세요."
+          isError={!!linkError}
+          errorMessage={linkError}
           inputProps={{
             value: teamLink,
             onChange: handleLinkChange,
