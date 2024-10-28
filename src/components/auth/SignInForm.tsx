@@ -100,7 +100,7 @@ export default function SignInForm() {
       const { accessToken, refreshToken, user } = data;
       setTokens(accessToken, refreshToken);
       updateUser(user);
-      router.push('/');
+      router.push('/myteam');
     },
     onError: (error) => {
       console.error('로그인 중 에러 발생', error);
