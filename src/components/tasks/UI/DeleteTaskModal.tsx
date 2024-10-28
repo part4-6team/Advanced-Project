@@ -2,6 +2,10 @@ import Image from 'next/image';
 import Button from '@components/@shared/Button';
 import { Modal } from '@components/@shared/Modal';
 
+import { deleteTask, TaskUrlParams } from '@/src/api/tasks/taskAPI';
+import { useTaskListStore } from '@/src/stores/taskListStore';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+
 interface DeleteTaskModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,9 +17,31 @@ export default function DeleteTaskModal({
   onClose,
   taskName,
 }: DeleteTaskModalProps) {
-  const handleClick = () => {
-    console.log('DeleteTask 성공');
-    onClose();
+  const queryClient = useQueryClient();
+  const { currentTaskId: taskId } = useTaskListStore();
+
+  const { mutate: removeTask } = useMutation({
+    mutationFn: async ({ params }: { params: TaskUrlParams }) => {
+      return deleteTask(params);
+    },
+    onSuccess: () => {
+      onClose();
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks', taskId] });
+    },
+    onError: (error) => {
+      console.error('patchTask 실패:', error);
+    },
+  });
+
+  const handleClick = async () => {
+    try {
+      await removeTask({ params: { taskId } });
+      onClose();
+    } catch (error) {
+      console.error('Error during deletion:', error);
+    }
   };
 
   return (

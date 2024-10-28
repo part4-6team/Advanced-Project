@@ -2,13 +2,16 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Dayjs } from 'dayjs';
 import { useDate } from '@/src/contexts/DateContext';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTaskListStore } from '@/src/stores/taskListStore';
+import { postTask, TaskUrlParams } from '@/src/api/tasks/taskAPI';
 
 import Button from '@components/@shared/Button';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
 import { Input, ScrollTextArea } from '@components/@shared/Input';
-import { REQUEST_INIT } from '@constants/initValues';
+import { TASK_REQUEST_INIT } from '@constants/initValues';
 import ToggleIcon from '@icons/toggle.svg';
-import type { TaskRequestDto } from '@/src/types/tasks/TaskListDto';
+import type { TaskRequestBody } from '@/src/types/tasks/taskDto';
 
 import WeeklySelector from './WeeklySelector';
 import Calender from './Calender';
@@ -25,7 +28,9 @@ const frequencyOptions: Option[] = [
 ];
 
 export default function AddTaskForm({ onClose }: AddTaskFormProps) {
+  const queryClient = useQueryClient();
   const { date: contextDate, getCurrentMonth } = useDate();
+  const { groupId, selectedTaskListId } = useTaskListStore();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFrequency, setSelectedFrequency] = useState<Option>(
     frequencyOptions[0]
@@ -35,35 +40,79 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
     handleSubmit,
     setValue,
     formState: { errors, isValid },
-  } = useForm<TaskRequestDto>({
+  } = useForm<TaskRequestBody['post']>({
     mode: 'onChange',
     defaultValues: {
-      ...REQUEST_INIT.TASK,
+      ...TASK_REQUEST_INIT.POST,
       startDate: contextDate.toISOString(),
     },
   });
 
-  /* 폼 제출 처리 */
-  const onSubmit = async (data: TaskRequestDto) => {
-    console.log(data);
+  // 폼 데이터 필터링
+  const filterTaskData = (
+    data: TaskRequestBody['post']
+  ): TaskRequestBody['post'] => {
+    const taskData: TaskRequestBody['post'] = {
+      name: data.name,
+      description: data.description,
+      startDate: data.startDate,
+      frequency: data.frequency,
+    };
+    if (selectedFrequency.label === 'WEEKLY') {
+      if (data.weekDays) {
+        taskData.weekDays = data.weekDays;
+      }
+    } else if (selectedFrequency.label === 'MONTHLY') {
+      taskData.monthDay = data.monthDay;
+    }
+    return taskData;
+  };
 
-    // TODO: post apiCall 추가
+  const { mutate: createTask } = useMutation({
+    mutationFn: async ({
+      params,
+      data,
+    }: {
+      params: TaskUrlParams;
+      data: TaskRequestBody['post'];
+    }) => {
+      return postTask(params, data);
+    },
+    onSuccess: () => {
+      onClose();
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries({ queryKey: ['tasks', groupId] });
+    },
+    onError: (error) => {
+      console.error('createTask 실패:', error);
+    },
+  });
+
+  // 폼 데이터 제출 처리
+  const onSubmit = async (data: any) => {
+    const taskData = filterTaskData(data);
+    await createTask({
+      params: { groupId, taskListId: selectedTaskListId },
+      data: taskData,
+    });
+    console.log('taskData:', taskData, groupId, selectedTaskListId);
     onClose();
   };
 
-  /* 설정된 값 초기화 */
+  // 설정된 값 초기화
   const resetValues = (frequency: string | undefined) => {
-    if (frequency !== 'WEEKLY') {
+    if (frequency === 'WEEKLY') {
+      setValue('weekDays', []);
+    } else {
       setValue('weekDays', [0]);
     }
     if (frequency === 'MONTHLY') {
       setValue('monthDay', getCurrentMonth());
-    } else {
-      setValue('monthDay', 0);
     }
   };
 
-  /* 이벤트 핸들러 */
+  // 이벤트 핸들러
   const handleFrequencySelect = (option: Option) => {
     setSelectedFrequency(option);
     setValue('frequency', option.label || '', { shouldValidate: true });
@@ -115,7 +164,12 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
         />
       </div>
       {selectedFrequency.label === 'WEEKLY' && (
-        <WeeklySelector onChange={handleWeeklyDaysChange} />
+        <WeeklySelector
+          onChange={handleWeeklyDaysChange}
+          register={register('weekDays', {
+            required: '요일을 선택해야 합니다.',
+          })}
+        />
       )}
       <ScrollTextArea
         label="할 일 메모"
