@@ -28,10 +28,10 @@ export const useCommentAdd = () => {
       content: string;
     }) => fetchCommentadd({ articleId, content }),
     onSuccess: () => {
-      console.log('댓글등록 완료 ');
+      console.log('게시글등록 완료 ');
     },
     onError: (error) => {
-      console.error('댓글 등록안됨', error);
+      console.error('게시글 등록안됨', error);
     },
   });
 };

@@ -6,6 +6,7 @@ interface FetchCommentCardProps {
   nextCursor: number | null;
 }
 
+// 댓글 리스트 가져오는 API 함수
 export const fetchCommentCard = async ({
   limit,
   nextCursor = null,
