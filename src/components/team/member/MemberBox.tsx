@@ -45,6 +45,7 @@ export default function MemberBox({
               src={userImage || '/icons/profile_large.svg'}
               alt="프로필 사진"
               fill
+              style={{ objectFit: 'cover' }}
             />
           </div>
 
@@ -55,6 +56,7 @@ export default function MemberBox({
                 alt="왕관 이미지"
                 width={15}
                 height={15}
+                quality={100}
               />
             )}
             {userName}

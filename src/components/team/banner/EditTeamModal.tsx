@@ -5,8 +5,10 @@ import Button from '@components/@shared/Button';
 import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import ProfileImageInput from '@components/@shared/ProfileImageInput';
+import { useValidation } from '@hooks/useValidation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import { UserData } from '../member/ExileUserModal';
 
 interface EditTeamModalProps {
   isOpen: boolean;
@@ -15,31 +17,47 @@ interface EditTeamModalProps {
 
 export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
-  const { teamId, teamName, imageUrl, setTeamName } = useTeamStore();
+  const { id, teamName, imageUrl, setTeamName } = useTeamStore();
   // 모달 내부에서 관리할 임시 상태
   const [localTeamName, setLocalTeamName] = useState(teamName);
   const queryClient = useQueryClient();
+  const {
+    errors,
+    setError,
+    validateOnBlur,
+    validateValueOnSubmit,
+    clearError,
+  } = useValidation();
 
   // 입력값을 로컬 상태로 업데이트
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setLocalTeamName(e.target.value);
+    const value = e.target.value;
+    if (value.length <= 30) {
+      setLocalTeamName(value);
+      clearError('teamName');
+    } else {
+      setError('teamName', true, '30자 이하로 입력해주세요.');
+    }
   };
 
   const handleFileChange = (imgFile: File | null) => {
     setImageFile(imgFile);
   };
+  const userData = queryClient.getQueryData<UserData>(['user']);
+  const TeamNames =
+    userData?.memberships.map((membership) => membership.group.name) || [];
 
   // 그룹 수정 Mutation
   const { mutate: editGroup } = useMutation({
     mutationFn: ({
-      id,
+      groupId,
       image,
       name,
     }: {
-      id: string;
+      groupId: string;
       image: string;
       name: string;
-    }) => patchGroupById(id, image, name),
+    }) => patchGroupById(groupId, image, name),
     onSuccess: () => {
       onClose();
       console.log(`${teamName} 팀 정보가 성공적으로 수정되었습니다.`);
@@ -47,10 +65,11 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
 
     onSettled: () => {
       // 쿼리 무효화 및 리패치
-      queryClient.invalidateQueries({ queryKey: ['group', teamId] });
+      queryClient.invalidateQueries({ queryKey: ['group', id] });
     },
     onError: (error) => {
       console.error('그룹 생성 실패:', error);
+      setLocalTeamName(teamName);
     },
   });
 
@@ -59,7 +78,9 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
     mutationFn: (file: File) => postImage(file),
     onSuccess: (imgUrl: string) => {
       // 이미지 URL을 성공적으로 받으면 그룹 수정 요청
-      editGroup({ id: teamId, image: imgUrl, name: localTeamName });
+      if (validateValueOnSubmit('teamName', TeamNames, localTeamName)) {
+        editGroup({ groupId: id, image: imgUrl, name: localTeamName });
+      }
     },
     onError: (error) => {
       console.error('이미지 업로드 실패:', error);
@@ -73,14 +94,15 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
       uploadImageMutate.mutate(imageFile);
     } else {
       // 파일이 없으면 기존 URL로 그룹 수정
-      editGroup({ id: teamId, image: imageUrl, name: localTeamName });
+      editGroup({ groupId: id, image: imageUrl, name: localTeamName });
     }
   };
 
   // 모달이 열릴 때 teamName을 로컬 상태에 설정
   useEffect(() => {
     if (isOpen) {
-      setLocalTeamName(teamName); // 처음 열릴 때만 초기화
+      setLocalTeamName(teamName);
+      clearError('teamName');
     }
   }, [isOpen, teamName]);
 
@@ -102,15 +124,22 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
       <p className="mt-[20px] text-lg-medium">팀 이름</p>
       <Input
         placeholder="팀 이름을 입력해주세요."
+        onBlur={() => validateOnBlur('teamName', teamName)}
         inputProps={{
           value: localTeamName,
           onChange: handleChange,
         }}
         className="mb-[30px] mt-[15px]"
+        errorMessage={errors.teamName?.message}
+        isError={errors.teamName?.isError}
       />
 
       <Modal.Footer>
-        <Button size="full" onClick={handlePatchClick}>
+        <Button
+          size="full"
+          onClick={handlePatchClick}
+          disabled={localTeamName === ''}
+        >
           수정하기
         </Button>
       </Modal.Footer>

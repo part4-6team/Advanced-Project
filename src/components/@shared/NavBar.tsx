@@ -58,6 +58,14 @@ export default function NavBar() {
       ),
     },
     {
+      label: '전체 팀 리스트',
+      component: (
+        <button type="button" onClick={() => router.push('myteam')}>
+          전체 팀 리스트
+        </button>
+      ),
+    },
+    {
       label: '로그아웃',
       component: (
         <button type="button" onClick={handleLogout}>

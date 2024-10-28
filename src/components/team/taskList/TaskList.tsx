@@ -1,31 +1,17 @@
 import { useModal } from '@hooks/useModal';
+import { useTeamStore } from '@/src/stores/teamStore';
 import TaskBar from './TaskBar';
 import AddTaskListModal from './AddTaskListModal';
+import Link from 'next/link';
 
-export interface TaskProps {
-  name: string;
-  done: boolean;
-}
-export interface TaskListItem {
-  displayIndex: number;
-  groupId: number;
-  updatedAt: string;
-  createdAt: string;
-  name: string;
-  id: number;
-  tasks: TaskProps[];
-}
-
-interface TaskListProps {
-  taskLists: TaskListItem[];
-}
-
-export default function TaskList({ taskLists }: TaskListProps) {
+export default function TaskList() {
   const {
     isOpen: addListIsOpen,
     onOpen: addListOpenModal,
     onClose: addListCloseModal,
   } = useModal();
+
+  const { taskLists, id } = useTeamStore();
 
   const listCount = taskLists.length;
 
@@ -47,16 +33,25 @@ export default function TaskList({ taskLists }: TaskListProps) {
           <AddTaskListModal
             isOpen={addListIsOpen}
             onClose={addListCloseModal}
+            groupId={id}
           />
         </div>
       </div>
+      {listCount === 0 && (
+        <p className="my-[100px] text-center text-md-medium text-text-default">
+          아직 할 일 목록이 없습니다.
+        </p>
+      )}
       <div className="flex flex-col gap-[10px]">
         {taskLists.map((taskList) => (
-          <TaskBar
-            key={taskList.id}
-            name={taskList.name}
-            tasks={taskList.tasks}
-          />
+          <Link href={`/${id}/tasks`}>
+            <TaskBar
+              key={taskList.id}
+              name={taskList.name}
+              tasks={taskList.tasks}
+              id={taskList.id}
+            />
+          </Link>
         ))}
       </div>
     </section>

@@ -1,10 +1,11 @@
+import { patchResetPassword } from '@/src/api/auth/authAPI';
 import Button from '@components/@shared/Button';
 import { IconInput } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import { useModal } from '@hooks/useModal';
 import NonVisibleIcon from '@icons/visibility_off.svg';
 import VisibleIcon from '@icons/visibility_on.svg';
-import { publicAxiosInstance } from '@libs/axios/axiosInstance';
+import { useMutation } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
 
@@ -48,6 +49,22 @@ export default function SignUpForm() {
     }
   };
 
+  const handlePasswordChnage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (password) {
+      setPasswordError('');
+    }
+  };
+
+  const handlePasswordConfirmationChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPasswordConfirmation(e.target.value);
+    if (passwordConfirmation) {
+      setPasswordConfirmationError('');
+    }
+  };
+
   const toggleNewPasswordVisibility = () => {
     setIsPasswordVisible((prev) => !prev);
   };
@@ -55,6 +72,31 @@ export default function SignUpForm() {
   const toggleConfirmPasswordVisibility = () => {
     setIsConfirmPasswordVisible((prev) => !prev);
   };
+
+  const handleModalButtonClick = () => {
+    router.push('/signin');
+    onClose();
+  };
+
+  // 비밀번호 재설정 Mutation
+  const resetPasswordMutation = useMutation({
+    mutationFn: async () => {
+      const resetPasswordResponse = await patchResetPassword(
+        passwordConfirmation,
+        password,
+        token
+      );
+      return resetPasswordResponse; // 비밀번호 재설정 응답
+    },
+    onSuccess: (data) => {
+      // 비밀번호 재설정 성공 시
+      console.log(data);
+      onOpen();
+    },
+    onError: (error) => {
+      console.error('비밀번호 재설정 에러:', error);
+    },
+  });
 
   // 받은 링크의 토큰을 가지고 비밀번호 재설정하기
   const handleResetPassword = async (e: React.FormEvent) => {
@@ -64,27 +106,7 @@ export default function SignUpForm() {
 
     if (passwordError || passwordConfirmationError) return;
 
-    try {
-      const resetPasswordResponse = await publicAxiosInstance.patch(
-        'user/reset-password',
-        {
-          passwordConfirmation,
-          password,
-          token,
-        }
-      );
-      if (resetPasswordResponse) {
-        console.log(resetPasswordResponse.data);
-        onOpen();
-      }
-    } catch (error) {
-      console.error('비밀번호 재설정 에러:', error);
-    }
-  };
-
-  const handleModalButtonClick = () => {
-    router.push('/signin');
-    onClose();
+    resetPasswordMutation.mutate(); // 비밀번호 재설정 API 호출
   };
 
   return (
@@ -101,10 +123,7 @@ export default function SignUpForm() {
           inputProps={{
             type: isPasswordVisible ? 'text' : 'password',
             value: password,
-            onChange: (e) => {
-              setPassword(e.target.value);
-              validatePassword();
-            },
+            onChange: handlePasswordChnage,
             onBlur: validatePassword,
           }}
           actionIcon={
@@ -123,10 +142,7 @@ export default function SignUpForm() {
           inputProps={{
             type: isConfirmPasswordVisible ? 'text' : 'password',
             value: passwordConfirmation,
-            onChange: (e) => {
-              setPasswordConfirmation(e.target.value);
-              validatePasswordConfirmation();
-            },
+            onChange: handlePasswordConfirmationChange,
             onBlur: validatePasswordConfirmation,
           }}
           actionIcon={
@@ -154,7 +170,9 @@ export default function SignUpForm() {
         <Modal.Wrapper className="w-[280px]">
           <Modal.Header fontColor="primary">비밀번호 재설정 완료</Modal.Header>
           <Modal.Content array="column" fontColor="secondary" fontSize="14">
-            <p className="mt-2">변경된 비밀번호로 로그인해주세요!</p>
+            <p className="mt-2 text-brand-primary">
+              변경된 비밀번호로 로그인해주세요!
+            </p>
           </Modal.Content>
         </Modal.Wrapper>
         <Modal.Footer>

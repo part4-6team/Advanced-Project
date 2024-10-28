@@ -15,7 +15,7 @@ export default function DeleteTeamModal({
   isOpen,
   onClose,
 }: DeleteTeamModalProps) {
-  const { teamId } = useTeamStore();
+  const { id } = useTeamStore();
   const router = useRouter();
 
   // 그룹 삭제 Mutation
@@ -24,7 +24,7 @@ export default function DeleteTeamModal({
     onSuccess: () => {
       console.log('팀 정보 삭제 완료!');
       onClose();
-      router.push('/');
+      router.push('/myteam');
     },
     onError: (error) => {
       console.error('팀 삭제 실패:', error);
@@ -32,7 +32,7 @@ export default function DeleteTeamModal({
   });
 
   const handleDeleteClick = () => {
-    deleteGroup(teamId as string);
+    deleteGroup(id as string);
   };
 
   return (

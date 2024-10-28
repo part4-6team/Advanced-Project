@@ -1,28 +1,23 @@
 import { useModal } from '@hooks/useModal';
 import { Option } from '@components/@shared/Dropdown';
+import { TaskProps, useTeamStore } from '@/src/stores/teamStore';
 import Image from 'next/image';
 import CircleGraph from '../CircleGraph';
 import EditDropdown from '../EditDropdown';
 import DeleteTaskListModal from './DeleteTaskListModal';
 import EditTaskListModal from './EditTaskListModal';
 
-export interface TaskProps {
-  name: string;
-  done: boolean;
-}
-
 interface TaskBarProps {
   name: string;
   tasks: TaskProps[];
+  id: number;
 }
 
-export default function TaskBar({ name, tasks }: TaskBarProps) {
+export default function TaskBar({ name, tasks, id }: TaskBarProps) {
   // 1. 총 task의 개수
   const totalTasks = tasks.length;
-
-  // 2. done이 true인 task의 개수
-  const doneTasksCount = tasks.filter((task) => task.done).length;
-
+  // 2. doneAt이 null이 아닌 task의 개수
+  const doneTasksCount = tasks.filter((task) => task.doneAt !== null).length;
   // 3. 진척도
   const doneRate = totalTasks === 0 ? 0 : (doneTasksCount / totalTasks) * 100;
 
@@ -48,6 +43,10 @@ export default function TaskBar({ name, tasks }: TaskBarProps) {
     </div>
   );
 
+  const handleDropdownClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 클릭 이벤트 전파 방지
+  };
+
   // 드롭다운에서 선택된 옵션을 처리하는 함수
   const handleSelect = (option: Option) => {
     if (option.label === 'edit') {
@@ -59,10 +58,10 @@ export default function TaskBar({ name, tasks }: TaskBarProps) {
   return (
     <div className="flex h-[40px] cursor-pointer justify-between bg-background-secondary ">
       <div className="flex items-center justify-between gap-[10px]">
-        <div className="h-full w-[12px] rounded-bl-[12px] rounded-br-[0px] rounded-tl-[12px] rounded-tr-[0px] bg-point-purple">
+        <div className="h-full w-[12px] shrink-0 rounded-bl-[12px] rounded-br-[0px] rounded-tl-[12px] rounded-tr-[0px] bg-point-purple">
           &nbsp;
         </div>
-        <p className="text-md-medium">{name}</p>
+        <p className="break-words break-all text-md-medium">{name}</p>
       </div>
       <div className="mr-[10px] flex items-center gap-[10px]">
         <div className="flex h-[25px] w-[58px] items-center justify-between rounded-[12px] bg-background-primary px-[8px] py-[4px]">
@@ -88,16 +87,19 @@ export default function TaskBar({ name, tasks }: TaskBarProps) {
             {doneTasksCount}/{totalTasks}
           </p>
         </div>
-
-        <EditDropdown triggerIcon={moreIcon} onSelect={handleSelect} />
+        <div onClick={handleDropdownClick}>
+          <EditDropdown triggerIcon={moreIcon} onSelect={handleSelect} />
+        </div>
         <EditTaskListModal
           isOpen={editListIsOpen}
           onClose={editListCloseModal}
           initialTaskListName={name}
+          taskListId={id}
         />
         <DeleteTaskListModal
           isOpen={deleteListIsOpen}
           onClose={deleteListCloseModal}
+          taskListId={id}
           taskName={name}
         />
       </div>
