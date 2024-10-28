@@ -19,6 +19,13 @@ export default function ParticipateTeamForm() {
     return true;
   };
 
+  const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTeamLink(e.target.value);
+    if (teamLink) {
+      setLinkError('');
+    }
+  };
+
   // 팀 참여 Mutation
   const { mutate: participateTeam } = useMutation({
     mutationFn: ({ userEmail, token }: { userEmail: string; token: string }) =>
@@ -37,13 +44,6 @@ export default function ParticipateTeamForm() {
       setLinkError('유효하지 않은 초대입니다.');
     },
   });
-
-  const handleLinkChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTeamLink(e.target.value);
-    if (teamLink) {
-      setLinkError('');
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

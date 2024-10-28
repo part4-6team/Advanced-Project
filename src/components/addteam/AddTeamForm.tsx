@@ -57,13 +57,19 @@ export default function AddTeamForm() {
       return false;
     }
 
-    // ADMIN 역할을 가진 그룹 이름 중복 체크
-    const adminGroupNames =
-      userData?.memberships
-        .filter((membership: Membership) => membership.role === 'ADMIN')
-        .map((membership) => membership.group.name) || [];
+    // 팀 이름은 30자 이내로
+    if (teamName.length > 30) {
+      setNameError('팀 이름은 30자 이내로 작성해주세요.');
+      return false;
+    }
 
-    if (adminGroupNames.includes(teamName)) {
+    // 유저가 속해있는 모든 그룹 이름 중복 체크
+    const allGroupNames =
+      userData?.memberships.map(
+        (membership: Membership) => membership.group.name
+      ) || [];
+
+    if (allGroupNames.includes(teamName)) {
       setNameError('이미 존재하는 이름입니다.');
       return false;
     }
@@ -84,6 +90,22 @@ export default function AddTeamForm() {
     // 에러가 없을 경우
     setProfileError('');
     return true;
+  };
+
+  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setTeamName(e.target.value);
+    // 에러 메시지가 있을 때 이름을 입력하면 에러 메시지 사라지도록
+    if (teamName) {
+      setNameError('');
+    }
+  };
+
+  const handleFileChange = (file: File | null) => {
+    setTeamProfileFile(file);
+    // 에러 메시지가 있을 때 파일을 업로드 했을 때 에러 메시지 사라지도록
+    if (file) {
+      setProfileError('');
+    }
   };
 
   // 팀 생성 Mutation
@@ -116,22 +138,6 @@ export default function AddTeamForm() {
       console.error('이미지 업로드 실패:', error);
     },
   });
-
-  const handleNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTeamName(e.target.value);
-    // 에러 메시지가 있을 때 이름을 입력하면 에러 메시지 사라지도록
-    if (teamName) {
-      setNameError('');
-    }
-  };
-
-  const handleFileChange = (file: File | null) => {
-    setTeamProfileFile(file);
-    // 에러 메시지가 있을 때 파일을 업로드 했을 때 에러 메시지 사라지도록
-    if (file) {
-      setProfileError('');
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

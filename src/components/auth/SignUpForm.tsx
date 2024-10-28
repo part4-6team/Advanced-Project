@@ -1,9 +1,10 @@
+import { postSignIn, postSignUp } from '@/src/api/auth/authAPI';
 import { useUserStore } from '@/src/stores/useUserStore';
 import Button from '@components/@shared/Button';
 import { IconInput, Input } from '@components/@shared/Input';
 import NonVisibleIcon from '@icons/visibility_off.svg';
 import VisibleIcon from '@icons/visibility_on.svg';
-import { publicAxiosInstance } from '@libs/axios/axiosInstance';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -73,9 +74,87 @@ export default function SignUpForm() {
     }
   };
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (email) {
+      setEmailError('');
+    }
+  };
+
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+    if (nickname) {
+      setNicknameError('');
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (password) {
+      setPasswordError('');
+    }
+  };
+
+  const handlePasswordConfirmationChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPasswordConfirmation(e.target.value);
+    if (passwordConfirmation) {
+      setPasswordConfirmationError('');
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setIsConfirmPasswordVisible((prev) => !prev);
+  };
+
+  // 로그인 mutation
+  const signInMutation = useMutation({
+    mutationFn: async () => {
+      const signInResponse = await postSignIn(email, password);
+      return signInResponse; // 로그인 응답 반환
+    },
+    onSuccess: (data) => {
+      // 로그인 성공 시 토큰 저장 및 사용자 정보 업데이트
+      const { accessToken, refreshToken, user } = data;
+      setTokens(accessToken, refreshToken);
+      updateUser(user);
+      router.push('/myteam');
+    },
+    onError: (error) => {
+      console.error('로그인 중 에러 발생:', error);
+    },
+  });
+
+  // 회원가입 mutation
+  const signUpMutation = useMutation({
+    mutationFn: async () => {
+      await postSignUp(email, nickname, password, passwordConfirmation);
+    },
+    onSuccess: () => {
+      // 회원가입 성공 시 로그인 시도
+      signInMutation.mutate();
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.data.message === '이미 사용중인 이메일입니다.') {
+          setEmailError('이미 사용중인 이메일입니다.');
+        }
+        if (error.response?.data.message === '이미 사용중인 닉네임입니다.') {
+          setNicknameError('이미 사용중인 닉네임입니다.');
+        }
+        console.error('회원가입 중 에러 발생:', error);
+      }
+    },
+  });
+
   // 폼 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+    e.preventDefault(); // 새로고침 방지
     validateEmail();
     validateNickname();
     validatePassword();
@@ -89,41 +168,7 @@ export default function SignUpForm() {
     )
       return;
 
-    try {
-      const signUpResponse = await publicAxiosInstance.post('/auth/signUp', {
-        email,
-        nickname,
-        password,
-        passwordConfirmation,
-      });
-      console.log('회원가입 성공', signUpResponse.data);
-
-      const signInResponse = await publicAxiosInstance.post('/auth/signIn', {
-        email,
-        password,
-      });
-
-      console.log('로그인 성공', signInResponse.data);
-
-      const { accessToken, refreshToken, user } = signInResponse.data;
-      setTokens(accessToken, refreshToken);
-      updateUser(user);
-
-      // 로그인 성공 후 랜딩 페이지로 이동
-      router.push('/myteam');
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        console.error('회원가입 에러:', error.response.data);
-      }
-    }
-  };
-
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible((prev) => !prev);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setIsConfirmPasswordVisible((prev) => !prev);
+    signUpMutation.mutate(); // 회원가입 API 호출
   };
 
   return (
@@ -139,10 +184,7 @@ export default function SignUpForm() {
           errorMessage={nicknameError}
           inputProps={{
             value: nickname,
-            onChange: (e) => {
-              setNickname(e.target.value);
-              validateNickname();
-            },
+            onChange: handleNicknameChange,
             onBlur: validateNickname,
           }}
         />
@@ -153,10 +195,7 @@ export default function SignUpForm() {
           errorMessage={emailError}
           inputProps={{
             value: email,
-            onChange: (e) => {
-              setEmail(e.target.value);
-              validateEmail();
-            },
+            onChange: handleEmailChange,
             onBlur: validateEmail,
           }}
         />
@@ -168,10 +207,7 @@ export default function SignUpForm() {
           inputProps={{
             type: isPasswordVisible ? 'text' : 'password',
             value: password,
-            onChange: (e) => {
-              setPassword(e.target.value);
-              validatePassword();
-            },
+            onChange: handlePasswordChange,
             onBlur: validatePassword,
           }}
           actionIcon={
@@ -190,10 +226,7 @@ export default function SignUpForm() {
           inputProps={{
             type: isConfirmPasswordVisible ? 'text' : 'password',
             value: passwordConfirmation,
-            onChange: (e) => {
-              setPasswordConfirmation(e.target.value);
-              validatePasswordConfirmation();
-            },
+            onChange: handlePasswordConfirmationChange,
             onBlur: validatePasswordConfirmation,
           }}
           actionIcon={
