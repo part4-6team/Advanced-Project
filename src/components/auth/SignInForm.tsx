@@ -228,7 +228,7 @@ export default function SignInForm() {
             fontSize="14"
           >
             <p className="mt-2">비밀번호 재설정 링크를 보내드립니다.</p>
-            <form className="flex w-[280px] justify-start">
+            <form className="w-[280px]">
               <Input
                 placeholder="이메일을 입력하세요."
                 isError={!!modalError}
