@@ -57,6 +57,12 @@ export default function AddTeamForm() {
       return false;
     }
 
+    // 팀 이름은 30자 이내로
+    if (teamName.length > 30) {
+      setNameError('팀 이름은 30자 이내로 작성해주세요.');
+      return false;
+    }
+
     // 유저가 속해있는 모든 그룹 이름 중복 체크
     const allGroupNames =
       userData?.memberships.map(
