@@ -1,24 +1,35 @@
-import { useState, useEffect } from 'react';
-import { useTaskListContext } from '@/src/contexts/TaskListContext';
-import type { TaskListDto, TaskDto } from '@/src/types/tasks/TaskListDto';
-
+import { useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { getTaskList } from '@/src/api/tasks/taskListAPI';
+import { useDate } from '@/src/contexts/DateContext';
+import { useTaskListStore } from '@/src/stores/taskListStore';
+import type { TaskListDto } from '@/src/types/tasks/taskListDto';
 import TaskCard from '../TaskCard';
-import { MockData } from '../mockdata';
 
 interface TaskListProps {
   initialTaskListId?: number;
 }
 
-export default function TaskList({ initialTaskListId = 1 }: TaskListProps) {
-  const [selectedTasks, setSelectedTasks] = useState<TaskDto[]>([]);
-  const [selectedTaskListId, setSelectedTaskListId] = useState<number | null>(
-    null
-  );
+export default function TaskList({ initialTaskListId }: TaskListProps) {
+  const {
+    taskLists,
+    selectedTaskListId,
+    setSelectedTaskListId,
+    selectedTasks,
+    setSelectedTasks,
+  } = useTaskListStore();
+  const { date, toKSTISOString } = useDate();
 
-  // 컴포넌트가 마운트될 때 또는 initialTaskListId가 변경될 때 해당 taskList 선택
+  // 초기 initialTaskListId 적용
   useEffect(() => {
-    if (initialTaskListId) {
-      const selectedList = MockData.find(
+    setSelectedTaskListId(initialTaskListId);
+  }, [initialTaskListId]);
+
+  // 선택된 taskList의 tasks[] 가져오기
+  const handleButtonClick = (initialTaskListId: number) => {
+    // 다른 taskList를 선택한 경우
+    if (selectedTaskListId !== initialTaskListId) {
+      const selectedList = taskLists.find(
         (taskList: TaskListDto) => taskList.id === initialTaskListId
       );
       if (selectedList) {
@@ -26,52 +37,70 @@ export default function TaskList({ initialTaskListId = 1 }: TaskListProps) {
         setSelectedTaskListId(initialTaskListId);
       }
     }
-  }, [initialTaskListId]);
-
-  // 선택된 taskList의 tasks[] 가져오기
-  const handleButtonClick = (taskListId: number) => {
-    if (selectedTaskListId === taskListId) {
-      // 이미 선택된 taskList를 클릭한 경우, 선택 해제
-      setSelectedTasks([]);
-      setSelectedTaskListId(null);
-    } else {
-      // 새로운 taskList를 선택한 경우
-      const selectedList = MockData.find(
-        (taskList: TaskListDto) => taskList.id === taskListId
-      );
-      if (selectedList) {
-        setSelectedTasks(selectedList.tasks);
-        setSelectedTaskListId(taskListId);
-      }
-    }
   };
+
+  // get, 선택된 목록의 할 일들
+  const {
+    data: tasksData,
+    isLoading: tasksLoading,
+    isError: tasksError,
+  } = useQuery({
+    queryKey: ['tasks', selectedTaskListId, toKSTISOString(date)],
+    queryFn: () =>
+      getTaskList({
+        id: selectedTaskListId,
+        date: toKSTISOString(date),
+      }),
+    enabled: !!selectedTaskListId && !!date,
+  });
+
+  // 선택된 Tasks[] 데이터 업데이트
+  useEffect(() => {
+    if (tasksData) {
+      setSelectedTasks(tasksData);
+    }
+  }, [tasksData]);
 
   return (
     <section className="flex flex-col gap-4">
-      <ul className="flex gap-3">
-        {MockData.map((taskList: TaskListDto) => (
-          <li
-            key={taskList.id}
-            className={
-              selectedTaskListId === taskList.id
-                ? 'border-b-[1px] border-b-white text-white'
-                : 'text-text-default'
-            }
-          >
-            <button
-              type="button"
-              onClick={() => handleButtonClick(taskList.id)}
-              className="pb-1"
+      {taskLists.length > 0 ? (
+        <ul className="flex gap-3">
+          {taskLists.map((taskList: TaskListDto) => (
+            <li
+              key={taskList.id}
+              className={
+                selectedTaskListId === taskList.id
+                  ? 'border-b-[1px] border-b-white text-white'
+                  : 'text-text-default'
+              }
             >
-              {taskList.name}
-            </button>
-          </li>
-        ))}
-      </ul>
-      <ul className="flex flex-col gap-4">
-        {selectedTasks.length > 0 &&
-          selectedTasks.map((task) => <TaskCard key={task.id} task={task} />)}
-      </ul>
+              <button
+                type="button"
+                onClick={() => handleButtonClick(taskList.id)}
+                className="pb-1"
+              >
+                {taskList.name}
+              </button>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="mt-text-center text-text-md mt-96 text-text-default sm:mt-56">
+          <p>아직 할 일 목록이 없습니다.</p>
+          <p>새로운 목록을 추가해보세요.</p>
+        </div>
+      )}
+      {selectedTasks.length > 0 ? (
+        <ul className="flex flex-col gap-4">
+          {selectedTasks.length > 0 &&
+            selectedTasks.map((task) => <TaskCard key={task.id} task={task} />)}
+        </ul>
+      ) : (
+        <div className="text-text-md mt-80 text-center text-text-default sm:mt-48">
+          <p>아직 할 일이 없습니다.</p>
+          <p>할 일을 추가해주세요.</p>
+        </div>
+      )}
     </section>
   );
 }
