@@ -1,8 +1,9 @@
 import { patchTaskList } from '@/src/api/tasks/taskListAPI';
-import { useTeamStore } from '@/src/stores/teamStore';
+import { TeamStore, useTeamStore } from '@/src/stores/teamStore';
 import Button from '@components/@shared/Button';
 import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
+import { useValidation } from '@hooks/useValidation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 
@@ -21,19 +22,32 @@ export default function EditTaskListModal({
 }: EditTaskListModalProps) {
   const [TaskListName, setTaskListName] = useState(initialTaskListName);
   const { id } = useTeamStore();
+  const queryClient = useQueryClient();
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTaskListName(e.target.value);
+  const {
+    errors,
+    setError,
+    validateOnBlur,
+    validateValueOnSubmit,
+    clearError,
+  } = useValidation();
+
+  const teamData = queryClient.getQueryData<TeamStore>(['group', id]);
+
+  // onBlur 시 이름이 비어 있는지 검사
+  const handleBlurName = () => {
+    validateOnBlur('taskListName', TaskListName);
   };
 
-  // 모달이 닫힐 때 TaskListName을 초기값으로 리셋
-  useEffect(() => {
-    if (!isOpen) {
-      setTaskListName(initialTaskListName);
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    if (value.length <= 30) {
+      setTaskListName(value);
+      clearError('taskListName');
+    } else {
+      setError('taskListName', true, '30자 이하로 입력해주세요.');
     }
-  }, [isOpen, initialTaskListName]);
-
-  const queryClient = useQueryClient();
+  };
 
   // 할 일 목록 수정 Mutation
   const { mutate: editGroup } = useMutation({
@@ -48,7 +62,6 @@ export default function EditTaskListModal({
     }) => patchTaskList(groupId, taskListId, name),
     onSuccess: () => {
       onClose();
-      console.log(`${TaskListName} 팀 정보가 성공적으로 수정되었습니다.`);
     },
 
     onSettled: () => {
@@ -60,13 +73,27 @@ export default function EditTaskListModal({
     },
   });
 
+  // 제출 시 중복된 이름 검사
+  const taskListNames =
+    teamData?.taskLists.map((taskList) => taskList.name) || [];
+
   const handlePatchClick = () => {
-    editGroup({
-      groupId: Number(id),
-      taskListId: String(taskListId),
-      name: TaskListName,
-    });
+    if (validateValueOnSubmit('taskListName', taskListNames, TaskListName)) {
+      editGroup({
+        groupId: Number(id),
+        taskListId: String(taskListId),
+        name: TaskListName,
+      });
+    }
   };
+
+  // 모달이 닫힐 때 TaskListName을 초기값으로 리셋
+  useEffect(() => {
+    if (!isOpen) {
+      setTaskListName(initialTaskListName);
+      clearError('taskListName');
+    }
+  }, [isOpen, initialTaskListName]);
 
   return (
     <Modal
@@ -90,6 +117,9 @@ export default function EditTaskListModal({
           onChange: handleChange,
         }}
         className="mb-[30px] mt-[15px]"
+        onBlur={handleBlurName}
+        errorMessage={errors.taskListName?.message}
+        isError={errors.taskListName?.isError}
       />
 
       <Modal.Footer>

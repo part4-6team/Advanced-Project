@@ -2,7 +2,8 @@ import Image from 'next/image';
 import ProfileEditIcon from 'public/icons/profile_edit.svg';
 import { useEffect, useRef, useState } from 'react';
 
-interface ProfileImageInputProps {
+interface ProfileImageInputProps
+  extends React.InputHTMLAttributes<HTMLInputElement> {
   onFileChange: (file: File | null) => void;
   initialFile?: string | null;
 }

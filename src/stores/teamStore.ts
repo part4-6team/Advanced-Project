@@ -64,7 +64,7 @@ export interface TeamDataProps {
   taskLists: TaskListProps[];
 }
 
-interface TeamStore {
+export interface TeamStore {
   id: string;
   teamName: string;
   imageUrl: string;

@@ -2,6 +2,7 @@ import { useModal } from '@hooks/useModal';
 import { useTeamStore } from '@/src/stores/teamStore';
 import TaskBar from './TaskBar';
 import AddTaskListModal from './AddTaskListModal';
+import Link from 'next/link';
 
 export default function TaskList() {
   const {
@@ -43,12 +44,14 @@ export default function TaskList() {
       )}
       <div className="flex flex-col gap-[10px]">
         {taskLists.map((taskList) => (
-          <TaskBar
-            key={taskList.id}
-            name={taskList.name}
-            tasks={taskList.tasks}
-            id={taskList.id}
-          />
+          <Link href={`/${id}/tasks`}>
+            <TaskBar
+              key={taskList.id}
+              name={taskList.name}
+              tasks={taskList.tasks}
+              id={taskList.id}
+            />
+          </Link>
         ))}
       </div>
     </section>
