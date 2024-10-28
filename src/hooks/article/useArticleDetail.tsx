@@ -14,6 +14,7 @@ export const useDetailCard = ({ articleId }: FetchCardDetailProps) => {
   return useQuery<Article>({
     queryKey: ['DetailCard'],
     queryFn: () => fetchCardDetail({ articleId }),
+    enabled: !!articleId,
   });
 };
 

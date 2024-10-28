@@ -37,7 +37,7 @@ export default function DetailCard() {
         <div className="flex items-center justify-between">
           <div className="flex items-center">
             <Image
-              src={data?.image || 'public/icons/profile_large.svg'}
+              src={data?.image || '/icons/profile_large.svg'}
               width={32}
               height={32}
               alt="게시글 이미지"
