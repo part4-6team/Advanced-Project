@@ -9,6 +9,7 @@ interface TaskListStore {
   selectedTasks: TaskDto[]; // 선택된 taskList의 tasks[] 데이터
   currentTask?: TaskDto; // 선택된 task 데이터
   currentTaskId?: number; // 선택된 taskID
+  isSidebarOpen: boolean; // task의 sidebar 상태
   taskCompletionStatus: Record<number, boolean>; // 각 작업의 완료 상태
   setTaskLists: (taskLists: TaskListDto[]) => void;
   setSelectedTaskListId: (id: number | undefined) => void;
@@ -16,6 +17,7 @@ interface TaskListStore {
   setCurrentTask: (task: TaskDto | undefined) => void;
   setCurrentTaskId: (taskId: number | undefined) => void;
   setTaskCompletionStatus: (taskId: number, doneAt: string | null) => void; // Task의 완료 상태 설정
+  setSidebarOpen: (isOpen: boolean) => void;
 }
 
 const initialTaskLists: TaskListDto[] = [
@@ -121,6 +123,7 @@ export const useTaskListStore = create<TaskListStore>((set) => ({
   currentTask: initialTask,
   currentTaskId: undefined,
   taskCompletionStatus: {},
+  isSidebarOpen: false,
 
   setData: (data: any) =>
     set({
@@ -148,4 +151,5 @@ export const useTaskListStore = create<TaskListStore>((set) => ({
       },
     }));
   },
+  setSidebarOpen: (isOpen) => set({ isSidebarOpen: isOpen }),
 }));
