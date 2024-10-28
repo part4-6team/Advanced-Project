@@ -8,6 +8,7 @@ import React, {
 
 export interface Option {
   label?: string;
+  id?: number;
   component: ReactNode;
 }
 

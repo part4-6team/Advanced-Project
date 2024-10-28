@@ -66,6 +66,7 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
     onSettled: () => {
       // 쿼리 무효화 및 리패치
       queryClient.invalidateQueries({ queryKey: ['group', id] });
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
       console.error('그룹 생성 실패:', error);
@@ -83,6 +84,10 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
       ) {
         editGroup({ groupId: id, image: imgUrl, name: localTeamName });
       }
+    },
+    onSettled: () => {
+      // 쿼리 무효화 및 리패치
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
       console.error('이미지 업로드 실패:', error);
