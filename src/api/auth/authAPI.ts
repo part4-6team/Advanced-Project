@@ -47,3 +47,18 @@ export const postOAuthProvider = async (
   });
   return response.data;
 };
+
+// 비밀번호 재설정 이메일 전송 API
+export const postSendResetPasswordEmail = async (
+  email: string,
+  redirectUrl: string
+) => {
+  const response = await publicAxiosInstance.post(
+    'user/send-reset-password-email',
+    {
+      email,
+      redirectUrl,
+    }
+  );
+  return response.data;
+};

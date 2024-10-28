@@ -26,46 +26,6 @@ export default function SignUpForm() {
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
 
-  // 로그인 mutation
-  const signInMutation = useMutation({
-    mutationFn: async () => {
-      const signInResponse = await postSignIn(email, password);
-      return signInResponse; // 로그인 응답 반환
-    },
-    onSuccess: (data) => {
-      // 로그인 성공 시 토큰 저장 및 사용자 정보 업데이트
-      const { accessToken, refreshToken, user } = data;
-      setTokens(accessToken, refreshToken);
-      updateUser(user);
-      router.push('/');
-    },
-    onError: (error) => {
-      console.error('로그인 중 에러 발생:', error);
-    },
-  });
-
-  // 회원가입 mutation
-  const signUpMutation = useMutation({
-    mutationFn: async () => {
-      await postSignUp(email, nickname, password, passwordConfirmation);
-    },
-    onSuccess: () => {
-      // 회원가입 성공 시 로그인 시도
-      signInMutation.mutate();
-    },
-    onError: (error) => {
-      if (axios.isAxiosError(error)) {
-        if (error.response?.data.message === '이미 사용중인 이메일입니다.') {
-          setEmailError('이미 사용중인 이메일입니다.');
-        }
-        if (error.response?.data.message === '이미 사용중인 닉네임입니다.') {
-          setNicknameError('이미 사용중인 닉네임입니다.');
-        }
-        console.error('회원가입 중 에러 발생:', error);
-      }
-    },
-  });
-
   // 이메일 유효성 검사 함수
   const validateEmail = () => {
     if (!email) {
@@ -114,6 +74,84 @@ export default function SignUpForm() {
     }
   };
 
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (email) {
+      setEmailError('');
+    }
+  };
+
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setNickname(e.target.value);
+    if (nickname) {
+      setNicknameError('');
+    }
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (password) {
+      setPasswordError('');
+    }
+  };
+
+  const handlePasswordConfirmationChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPasswordConfirmation(e.target.value);
+    if (passwordConfirmation) {
+      setPasswordConfirmationError('');
+    }
+  };
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible((prev) => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setIsConfirmPasswordVisible((prev) => !prev);
+  };
+
+  // 로그인 mutation
+  const signInMutation = useMutation({
+    mutationFn: async () => {
+      const signInResponse = await postSignIn(email, password);
+      return signInResponse; // 로그인 응답 반환
+    },
+    onSuccess: (data) => {
+      // 로그인 성공 시 토큰 저장 및 사용자 정보 업데이트
+      const { accessToken, refreshToken, user } = data;
+      setTokens(accessToken, refreshToken);
+      updateUser(user);
+      router.push('/');
+    },
+    onError: (error) => {
+      console.error('로그인 중 에러 발생:', error);
+    },
+  });
+
+  // 회원가입 mutation
+  const signUpMutation = useMutation({
+    mutationFn: async () => {
+      await postSignUp(email, nickname, password, passwordConfirmation);
+    },
+    onSuccess: () => {
+      // 회원가입 성공 시 로그인 시도
+      signInMutation.mutate();
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        if (error.response?.data.message === '이미 사용중인 이메일입니다.') {
+          setEmailError('이미 사용중인 이메일입니다.');
+        }
+        if (error.response?.data.message === '이미 사용중인 닉네임입니다.') {
+          setNicknameError('이미 사용중인 닉네임입니다.');
+        }
+        console.error('회원가입 중 에러 발생:', error);
+      }
+    },
+  });
+
   // 폼 제출 핸들러
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); // 새로고침 방지
@@ -131,41 +169,6 @@ export default function SignUpForm() {
       return;
 
     signUpMutation.mutate(); // 회원가입 API 호출
-  };
-
-  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    if (email) {
-      setEmailError('');
-    }
-  };
-  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setNickname(e.target.value);
-    if (nickname) {
-      setNicknameError('');
-    }
-  };
-  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(e.target.value);
-    if (password) {
-      setPasswordError('');
-    }
-  };
-  const handlePasswordConfirmationChange = (
-    e: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setPasswordConfirmation(e.target.value);
-    if (passwordConfirmation) {
-      setPasswordConfirmationError('');
-    }
-  };
-
-  const togglePasswordVisibility = () => {
-    setIsPasswordVisible((prev) => !prev);
-  };
-
-  const toggleConfirmPasswordVisibility = () => {
-    setIsConfirmPasswordVisible((prev) => !prev);
   };
 
   return (

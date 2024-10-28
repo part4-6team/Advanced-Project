@@ -1,3 +1,4 @@
+import { postSendResetPasswordEmail, postSignIn } from '@/src/api/auth/authAPI';
 import { useUserStore } from '@/src/stores/useUserStore';
 import Button from '@components/@shared/Button';
 import { IconInput, Input } from '@components/@shared/Input';
@@ -5,8 +6,7 @@ import { Modal } from '@components/@shared/Modal';
 import { useModal } from '@hooks/useModal';
 import NonVisibleIcon from '@icons/visibility_off.svg';
 import VisibleIcon from '@icons/visibility_on.svg';
-import { publicAxiosInstance } from '@libs/axios/axiosInstance';
-import axios from 'axios';
+import { useMutation } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import React, { useState } from 'react';
@@ -21,9 +21,12 @@ export default function SignInForm() {
   const [emailError, setEmailError] = useState('');
   const [passwordError, setPasswordError] = useState('');
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [emailLoading, setEmailLoading] = useState(false);
-  const [emailSentMessageVisible, setEmailSentMessageVisible] = useState(false);
+
   const [modalEmail, setModalEmail] = useState('');
+  const [modalMessage, setModalMessage] = useState('');
+  const [modalError, setModalError] = useState('');
+  const [emailSentMessageVisible, setEmailSentMessageVisible] = useState(false);
+  const [emailLoading, setEmailLoading] = useState(false);
 
   // 이메일 유효성 검사 함수
   const validateEmail = () => {
@@ -45,57 +48,33 @@ export default function SignInForm() {
     }
   };
 
-  // 폼 제출 핸들러
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    validateEmail();
-    validatePassword();
-
-    if (emailError || passwordError) return;
-
-    try {
-      const signInResponse = await publicAxiosInstance.post('auth/signIn', {
-        email,
-        password,
-      });
-      console.log('로그인 성공', signInResponse.data);
-
-      const { accessToken, refreshToken, user } = signInResponse.data;
-      setTokens(accessToken, refreshToken);
-      updateUser(user);
-
-      // 로그인 성공 후 랜딩 페이지로 이동
-      router.push('/');
-    } catch (error) {
-      if (axios.isAxiosError(error) && error.response) {
-        console.error('로그인 에러:', error);
-        setEmailError('이메일 혹은 비밀번호를 확인해주세요.');
-        setPasswordError('이메일 혹은 비밀번호를 확인해주세요.');
-      }
+  // 모달 이메일 유효성 검사 함수
+  const validateModalEmail = () => {
+    if (!modalEmail) {
+      setModalError('이메일을 입력해주세요.');
+    } else {
+      setPasswordError('');
     }
   };
 
-  // 이메일로 비밀번호 재설정 링크 보내기
-  const handleSubmitEmail = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setEmailLoading(true);
+  const handleEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(e.target.value);
+    if (email) {
+      setEmailError('');
+    }
+  };
 
-    try {
-      const sendEmailResponse = await publicAxiosInstance.post(
-        'user/send-reset-password-email',
-        {
-          email: modalEmail,
-          redirectUrl: `${process.env.NEXT_PUBLIC_BASE_URL}`,
-        }
-      );
-      if (sendEmailResponse) {
-        console.log(sendEmailResponse.data);
-        setEmailSentMessageVisible(true);
-      }
-    } catch (error) {
-      console.error('비밀번호 재설정 이메일 전송 에러:', error);
-    } finally {
-      setEmailLoading(false);
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPassword(e.target.value);
+    if (password) {
+      setPasswordError('');
+    }
+  };
+
+  const handleModalEmailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setModalEmail(e.target.value);
+    if (modalEmail) {
+      setModalError('');
     }
   };
 
@@ -104,11 +83,73 @@ export default function SignInForm() {
   };
 
   const handleCloseClick = () => {
-    // 링크가 전송됐을 때 닫기 버튼 누를 시 창 꺼짐
-    if (emailSentMessageVisible) {
-      window.close();
-    } else {
-      onClose();
+    setModalEmail('');
+    setModalMessage('');
+    setModalError('');
+    onClose();
+  };
+
+  // 로그인 Mutation
+  const signInMutation = useMutation({
+    mutationFn: async () => {
+      const signInResponse = await postSignIn(email, password);
+      return signInResponse; // 로그인 응답 반환
+    },
+    onSuccess: (data) => {
+      // 로그인 성공 시 토큰 저장 및 사용자 정보 업데이트
+      const { accessToken, refreshToken, user } = data;
+      setTokens(accessToken, refreshToken);
+      updateUser(user);
+      router.push('/');
+    },
+    onError: (error) => {
+      console.error('로그인 중 에러 발생', error);
+      setEmailError('이메일 혹은 비밀번호를 확인해주세요.');
+      setPasswordError('이메일 혹은 비밀번호를 확인해주세요.');
+    },
+  });
+
+  // 비밀번호 재설정 이메일 전송 Mutation
+  const sendResetPasswordEmailMutation = useMutation({
+    mutationFn: async () => {
+      const redirectUrl = `${process.env.NEXT_PUBLIC_BASE_URL}`;
+      const sendResetPasswordEmailResponse = await postSendResetPasswordEmail(
+        modalEmail,
+        redirectUrl
+      );
+      return sendResetPasswordEmailResponse; // 비밀번호 재설정 이메일 전송 응답 반환
+    },
+    onSuccess: (data) => {
+      // 이메일 전송 성공 시 모달에 안내 메시지 생성 및 로딩 중지
+      console.log(data);
+      setModalMessage(data.message);
+      setEmailSentMessageVisible(true);
+      setEmailLoading(false);
+    },
+    onError: (error) => {
+      console.error('비밀번호 재설정 이메일 전송 에러:', error);
+      setModalError('잘못된 이메일입니다.');
+      setEmailLoading(false);
+    },
+  });
+
+  // 폼 제출 핸들러
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    validateEmail();
+    validatePassword();
+
+    if (emailError || passwordError) return;
+
+    signInMutation.mutate();
+  };
+
+  // 이메일로 비밀번호 재설정 링크 보내기
+  const handleSubmitEmail = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!modalError) {
+      setEmailLoading(true);
+      sendResetPasswordEmailMutation.mutate();
     }
   };
 
@@ -127,10 +168,7 @@ export default function SignInForm() {
               errorMessage={emailError}
               inputProps={{
                 value: email,
-                onChange: (e) => {
-                  setEmail(e.target.value);
-                  validateEmail();
-                },
+                onChange: handleEmailChange,
                 onBlur: validateEmail,
               }}
             />
@@ -142,10 +180,7 @@ export default function SignInForm() {
               inputProps={{
                 type: isPasswordVisible ? 'text' : 'password',
                 value: password,
-                onChange: (e) => {
-                  setPassword(e.target.value);
-                  validatePassword();
-                },
+                onChange: handlePasswordChange,
                 onBlur: validatePassword,
               }}
               actionIcon={
@@ -193,12 +228,15 @@ export default function SignInForm() {
             fontSize="14"
           >
             <p className="mt-2">비밀번호 재설정 링크를 보내드립니다.</p>
-            <form className="w-[280px]">
+            <form className="flex w-[280px] justify-start">
               <Input
                 placeholder="이메일을 입력하세요."
+                isError={!!modalError}
+                errorMessage={modalError}
                 inputProps={{
                   value: modalEmail,
-                  onChange: (e) => setModalEmail(e.target.value),
+                  onChange: handleModalEmailChange,
+                  onBlur: validateModalEmail,
                 }}
               />
             </form>
@@ -207,8 +245,7 @@ export default function SignInForm() {
                 className="flex flex-col items-center justify-center text-brand-primary"
                 onClick={handleCloseClick}
               >
-                <span>비밀번호 재설정 링크를 보냈습니다</span>
-                <span>이메일을 확인해주세요!</span>
+                <p>{modalMessage}</p>
               </div>
             )}
           </Modal.Content>
