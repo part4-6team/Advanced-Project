@@ -6,6 +6,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { TeamStore } from '@/src/stores/teamStore';
 import { useValidation } from '@hooks/useValidation';
+import { tagColors } from './tagColors';
 
 interface AddTaskListModalProps {
   isOpen: boolean;
@@ -53,6 +54,42 @@ export default function AddTaskListModal({
   const handleAddClick = () => {
     if (validateValueOnSubmit('taskListName', taskListNames, taskListName)) {
       createTaskList({ id: newGroupId, name: taskListName });
+
+      const taskListData = {
+        name: taskListName,
+        color: selectedColor,
+      };
+      // 로컬 스토리지에서 기존 TaskLists 가져오기 (없으면 빈 배열)
+      const existingTaskListsString = localStorage.getItem(
+        `TaskLists_${newGroupId}`
+      );
+
+      let existingTaskLists = [];
+      if (existingTaskListsString) {
+        try {
+          existingTaskLists = JSON.parse(existingTaskListsString);
+
+          // JSON 파싱 후 배열인지 확인
+          if (!Array.isArray(existingTaskLists)) {
+            existingTaskLists = []; // 배열이 아닐 경우 빈 배열로 초기화
+          }
+        } catch (error) {
+          console.error(
+            '로컬 스토리지에서 TaskLists를 파싱하는 중 오류 발생:',
+            error
+          );
+          existingTaskLists = []; // 파싱 오류 발생 시 빈 배열로 초기화
+        }
+      }
+
+      // 새로운 taskListData 추가
+      existingTaskLists.push(taskListData);
+
+      // 업데이트된 배열을 로컬 스토리지에 저장
+      localStorage.setItem(
+        `TaskLists_${newGroupId}`,
+        JSON.stringify(existingTaskLists)
+      );
     }
   };
 
@@ -77,8 +114,15 @@ export default function AddTaskListModal({
     if (!isOpen) {
       setTaskListName('');
       clearError('taskListName');
+      setSelectedColor('#A533FF');
     }
   }, [isOpen]);
+
+  const [selectedColor, setSelectedColor] = useState('#A533FF');
+
+  const handleColorClick = (color: string) => {
+    setSelectedColor(color); // 선택한 색상 저장
+  };
 
   return (
     <Modal
@@ -106,6 +150,20 @@ export default function AddTaskListModal({
             errorMessage={errors.taskListName?.message}
             isError={errors.taskListName?.isError}
           />
+          <div className="mt-[30px] flex justify-between md:gap-[4px]">
+            {tagColors.map((tagColor) => (
+              <button
+                type="button"
+                key={tagColor.label}
+                style={{ backgroundColor: tagColor.color }}
+                className={`h-[25px] w-[25px] shrink-0 rounded-full hover:scale-105 ${selectedColor === tagColor.color ? 'scale-105 border-2 border-[#ffffff]' : ''}`}
+                onClick={() => handleColorClick(tagColor.color)}
+                value={tagColor.color}
+              >
+                &nbsp;
+              </button>
+            ))}
+          </div>
         </Modal.Content>
       </Modal.Wrapper>
       <Modal.Footer>

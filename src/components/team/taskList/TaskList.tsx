@@ -1,10 +1,28 @@
 import { useModal } from '@hooks/useModal';
 import { useTeamStore } from '@/src/stores/teamStore';
+import {
+  DndContext,
+  closestCenter,
+  useSensor,
+  useSensors,
+  PointerSensor,
+  DragEndEvent,
+} from '@dnd-kit/core';
+import {
+  arrayMove,
+  SortableContext,
+  sortableKeyboardCoordinates,
+  verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import TaskBar from './TaskBar';
 import AddTaskListModal from './AddTaskListModal';
-import Link from 'next/link';
+import SortableItem from './SortableItem';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { patchTaskListOrder } from '@/src/api/tasks/taskListAPI';
 
 export default function TaskList() {
+  const queryClient = useQueryClient();
+
   const {
     isOpen: addListIsOpen,
     onOpen: addListOpenModal,
@@ -42,16 +60,14 @@ export default function TaskList() {
           아직 할 일 목록이 없습니다.
         </p>
       )}
+
       <div className="flex flex-col gap-[10px]">
         {taskLists.map((taskList) => (
-          <Link href={`/${id}/tasks`}>
-            <TaskBar
-              key={taskList.id}
-              name={taskList.name}
-              tasks={taskList.tasks}
-              id={taskList.id}
-            />
-          </Link>
+          <TaskBar
+            name={taskList.name}
+            tasks={taskList.tasks}
+            id={taskList.id}
+          />
         ))}
       </div>
     </section>
