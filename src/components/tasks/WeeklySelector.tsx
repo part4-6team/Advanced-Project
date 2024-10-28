@@ -12,6 +12,7 @@ const daysOfWeek = [
 ];
 interface WeeklySelectorProps {
   onChange: (selectedWeeklyDays: number[]) => void;
+  register: { name: string; onChange: (value: any) => void };
 }
 
 export default function WeeklySelector({ onChange }: WeeklySelectorProps) {
