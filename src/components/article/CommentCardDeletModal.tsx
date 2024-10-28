@@ -4,7 +4,7 @@ import { useArticleDelete } from '@hooks/article/useArticleDelet';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-interface EditTeamModalProps {
+interface EditArticleModalProps {
   isOpen: boolean;
   onClose: () => void;
   articleId: string | string[] | undefined;
@@ -14,7 +14,7 @@ export default function CardDeleteModal({
   isOpen,
   onClose,
   articleId,
-}: EditTeamModalProps) {
+}: EditArticleModalProps) {
   const mutation = useArticleDelete();
   const router = useRouter();
 

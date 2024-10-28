@@ -15,7 +15,7 @@ export const fetchCommentCard = async ({
   const response = await authAxiosInstance.get(
     `articles/${articleId}/comments`,
     {
-      params: { limit, nextCursor },
+      params: { limit, cursor: nextCursor },
     }
   );
   return response.data;
