@@ -12,7 +12,7 @@ import {
 import ProfileImageInput from '@components/@shared/ProfileImageInput';
 
 export default function Test() {
-  const { isOpen, openModal, closeModal } = useModal();
+  const { isOpen, onOpen, onClose } = useModal();
 
   const NonVisibleIcon = (
     <img src="/icons/visibility_off.svg" alt="Action Icon" />
@@ -45,7 +45,7 @@ export default function Test() {
       {/* 모달 테스트, 공통 버튼 적용 전 */}
       <button
         type="button"
-        onClick={openModal}
+        onClick={onOpen}
         className="mt-4 rounded bg-blue-500 px-4 py-2 text-white hover:bg-blue-600"
       >
         모달 열기
@@ -53,7 +53,7 @@ export default function Test() {
       <Modal
         isOpen={isOpen}
         isXButton
-        onClose={closeModal}
+        onClose={onClose}
         array="column"
         padding="default"
         bgColor="primary"
@@ -73,7 +73,7 @@ export default function Test() {
           {/* 공통 버튼 적용 전 */}
           <button
             type="button"
-            onClick={closeModal}
+            onClick={onClose}
             className="w-full rounded bg-gray-300 px-4 py-2 hover:bg-gray-400"
           >
             닫기

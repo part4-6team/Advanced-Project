@@ -1,25 +1,42 @@
 import Button from '@components/@shared/Button';
 import { Modal } from '@components/@shared/Modal';
+import { inviteMember } from '@/src/api/team/memberAPI';
+import { useQuery } from '@tanstack/react-query';
+import { useTeamStore } from '@/src/stores/teamStore';
 
 interface InvitationModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
 }
 
 export default function InvitationModal({
   isOpen,
-  closeModal,
+  onClose,
 }: InvitationModalProps) {
-  const handleCopyClick = () => {
-    console.log('클립보드에 복사 완료!');
-    closeModal();
+  const { id } = useTeamStore();
+
+  const { data } = useQuery({
+    queryKey: ['inviteMember', id],
+    queryFn: () => inviteMember(Number(id)),
+  });
+
+  const handleCopyClick = (text: string) => {
+    navigator.clipboard
+      .writeText(text)
+      .then(() => {
+        console.log('복사한 토큰: ', data);
+      })
+      .catch((err) => {
+        console.error('복사에 실패했습니다!: ', err);
+      });
+    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"
@@ -34,7 +51,7 @@ export default function InvitationModal({
         </Modal.Content>
       </Modal.Wrapper>
       <Modal.Footer>
-        <Button size="full" onClick={handleCopyClick}>
+        <Button size="full" onClick={() => handleCopyClick(data)}>
           링크 복사하기
         </Button>
       </Modal.Footer>
