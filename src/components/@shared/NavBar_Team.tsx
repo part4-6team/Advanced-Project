@@ -3,7 +3,7 @@ import { useModal } from '@hooks/useModal';
 import AddTeamModal from '@components/team/AddTeamModal';
 import { useRouter } from 'next/router';
 import PCLogo from 'public/images/logo_pc.png';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
 import { User } from '@/src/types/mysetting/settingData';
@@ -47,41 +47,42 @@ export default function NavBarTeam({ data }: { data: User }) {
     }
   }, [data]); // data가 변경될 때마다 실행
 
-  const teams: Option[] = [
-    ...(data?.memberships?.map((membership) => ({
-      label: membership.group.name || '',
-      id: membership.group.id,
-      component: (
-        <div
-          className="flex items-center justify-between overflow-hidden "
-          onClick={() => handleTeamSelect(membership.groupId)}
-        >
-          <div className="flex items-center justify-between gap-3 overflow-hidden text-ellipsis whitespace-nowrap">
-            <div className="v relative h-[30px] w-[30px] shrink-0">
-              <Image
-                src={membership.group.image}
-                alt="팀 이미지"
-                fill
-                className="rounded-md object-cover"
-              />
+  const teams: Option[] = useMemo(() => {
+    return [
+      ...(data?.memberships?.map((membership) => ({
+        label: membership.group.name || '',
+        id: membership.group.id,
+        component: (
+          <div
+            className="flex items-center justify-between overflow-hidden "
+            onClick={() => handleTeamSelect(membership.groupId)}
+          >
+            <div className="flex items-center justify-between gap-3 overflow-hidden text-ellipsis whitespace-nowrap">
+              <div className="v relative h-[30px] w-[30px] shrink-0">
+                <Image
+                  src={membership.group.image}
+                  alt="팀 이미지"
+                  fill
+                  className="rounded-md object-cover"
+                />
+              </div>
+              <p className="overflow-hidden text-ellipsis whitespace-nowrap">
+                {membership.group.name}
+              </p>
             </div>
-            <p className="overflow-hidden text-ellipsis whitespace-nowrap">
-              {membership.group.name}
-            </p>
           </div>
-        </div>
-      ),
-    })) || []),
-    {
-      label: '팀 메뉴',
-      component: (
-        <Button bgColor="transparent" border="white" size="full" height={40}>
-          + 팀 추가하기
-        </Button>
-      ),
-    },
-  ];
-
+        ),
+      })) || []),
+      {
+        label: '팀 메뉴',
+        component: (
+          <Button bgColor="transparent" border="white" size="full" height={40}>
+            + 팀 추가하기
+          </Button>
+        ),
+      },
+    ];
+  }, [data]);
   // teams 배열을 useEffect로 설정
   useEffect(() => {
     // 현재 ID에 해당하는 팀을 찾습니다.
