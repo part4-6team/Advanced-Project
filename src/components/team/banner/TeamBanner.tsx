@@ -11,14 +11,14 @@ export default function TeamBanner() {
 
   const {
     isOpen: editIsOpen,
-    openModal: editOpenModal,
-    closeModal: editCloseModal,
+    onOpen: editOpenModal,
+    onClose: editCloseModal,
   } = useModal();
 
   const {
     isOpen: deleteIsOpen,
-    openModal: deleteOpenModal,
-    closeModal: deleteCloseModal,
+    onOpen: deleteOpenModal,
+    onClose: deleteCloseModal,
   } = useModal();
 
   const gearIcon = (
@@ -33,17 +33,22 @@ export default function TeamBanner() {
     } // '삭제하기'를 선택했을 때
   };
   return (
-    <div className="flex items-center justify-between rounded-[12px] border border-border-primary border-opacity-10 bg-slate-50 bg-opacity-10 bg-[url('/images/thumbnail_team.png')] bg-contain bg-[90%] bg-no-repeat p-[24px]">
+    <div className="flex items-center justify-between rounded-[12px] border border-border-primary border-opacity-10 bg-slate-50 bg-opacity-10 bg-[url('/images/thumbnail_team.png')] bg-contain bg-[90%] bg-no-repeat px-[24px] py-[15px]">
       <div className="flex items-center gap-[15px]">
-        <div className="relative h-[45px] w-[45px] rounded-[16px] bg-border-primary">
-          <Image src={imageUrl} alt="팀 프로필 이미지" fill />
+        <div className="relative h-[45px] w-[45px] shrink-0 rounded-[16px] bg-border-primary">
+          <Image
+            src={imageUrl || '/icons/profile_default.png'}
+            alt="팀 프로필 이미지"
+            fill
+            style={{ objectFit: 'cover' }}
+          />
         </div>
-        <p className="text-xl-bold">{teamName}</p>
+        <p className="break-words break-all text-xl-bold">{teamName}</p>
       </div>
 
       <EditDropdown triggerIcon={gearIcon} onSelect={handleSelect} />
-      <EditTeamModal isOpen={editIsOpen} closeModal={editCloseModal} />
-      <DeleteTeamModal isOpen={deleteIsOpen} closeModal={deleteCloseModal} />
+      <EditTeamModal isOpen={editIsOpen} onClose={editCloseModal} />
+      <DeleteTeamModal isOpen={deleteIsOpen} onClose={deleteCloseModal} />
     </div>
   );
 }
