@@ -62,3 +62,17 @@ export const postSendResetPasswordEmail = async (
   );
   return response.data;
 };
+
+// 비밀번호 재설정 API
+export const patchResetPassword = async (
+  passwordConfirmation: string,
+  password: string,
+  token: string | string[] | undefined
+) => {
+  const response = await publicAxiosInstance.patch('user/reset-password', {
+    passwordConfirmation,
+    password,
+    token,
+  });
+  return response.data;
+};

@@ -141,7 +141,7 @@ export default function SignInForm() {
 
     if (emailError || passwordError) return;
 
-    signInMutation.mutate();
+    signInMutation.mutate(); // 로그인 API 호출
   };
 
   // 이메일로 비밀번호 재설정 링크 보내기
@@ -149,7 +149,7 @@ export default function SignInForm() {
     e.preventDefault();
     if (!modalError) {
       setEmailLoading(true);
-      sendResetPasswordEmailMutation.mutate();
+      sendResetPasswordEmailMutation.mutate(); // 비밀번호 재설정 이메일 전송 API 호출
     }
   };
 
@@ -242,7 +242,7 @@ export default function SignInForm() {
             </form>
             {emailSentMessageVisible && (
               <div
-                className="flex flex-col items-center justify-center text-brand-primary"
+                className="flex w-[280px] flex-col items-center justify-center text-brand-primary"
                 onClick={handleCloseClick}
               >
                 <p>{modalMessage}</p>
