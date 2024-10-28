@@ -1,43 +1,63 @@
-import { axiosInstance } from '@libs/axios/axiosInstance';
+import type { TaskListRequestBody } from '@/src/types/tasks/taskListDto';
+import { apiCall } from './apiCall';
 
-// 특정 날짜에 해당하는 할 일 목록
-// 날짜 기본 값 당일
-export const getTaskList = async (id: number, date: string) => {
-  const response = await axiosInstance.get(
-    `groups/{groupId}/task-lists/${id}`,
-    {
-      params: { date },
-    }
-  );
-  return response.data;
-};
+/**
+ * @파라미터
+ * - TaskList URL에 groupId가 파라미터로 작성되어 있지만, 받지 않는 경우가 있습니다.
+ * - get, delete의 경우 필요하지 않습니다.
+ */
 
-export const patchTaskList = async (groupId: number, id: number) => {
-  const response = await axiosInstance.patch(
-    `groups/${groupId}/task-lists/${id}`
-  );
-  return response.data;
-};
+export interface TaskListUrlParams {
+  groupId?: number; // group 식별자
+  id?: number; // taskList 식별자
+  date?: string;
+  name?: string;
+  displayIndex?: number;
+}
 
-export const deleteTaskList = async (id: number) => {
-  await axiosInstance.delete(`groups/{groupId}/task-lists/${id}`);
-};
+// 공통 경로
+const getTaskListPath = (groupId?: number | null) =>
+  `groups/${groupId === undefined ? 'groupId' : groupId}/task-lists`;
 
-export const postTaskList = async (groupId: number, name: string) => {
-  const response = await axiosInstance.post(`groups/${groupId}/task-lists`, {
-    name,
+// 요청: groupId X
+export const getTaskList = async (params: TaskListUrlParams) => {
+  const { id, date } = params;
+  return apiCall('get', `${getTaskListPath(undefined)}/${id}`, {
+    params: { date },
   });
-  return response.data;
+};
+
+export const deleteTaskList = async (params: TaskListUrlParams) => {
+  const { id } = params;
+  return apiCall('delete', `${getTaskListPath(undefined)}/${id}`);
+};
+
+// 요청: groupId O
+export const getTaskLists = async (params: TaskListUrlParams) => {
+  const { groupId } = params;
+  return apiCall('get', `groups/${groupId}`);
+};
+
+export const postTaskList = async (
+  params: TaskListUrlParams,
+  data: TaskListRequestBody['post']
+) => {
+  const { groupId } = params;
+  return apiCall('post', getTaskListPath(groupId), data);
+};
+
+export const patchTaskList = async (
+  params: TaskListUrlParams,
+  data: TaskListRequestBody['patch']
+) => {
+  const { groupId, id } = params;
+  return apiCall('patch', `${getTaskListPath(groupId)}/${id}`, data);
 };
 
 export const patchTaskListOrder = async (
-  groupId: number,
-  id: number,
-  displayIndex: number
+  params: TaskListUrlParams,
+  data: TaskListRequestBody['patchOrder']
 ) => {
-  const response = await axiosInstance.patch(
-    `groups/${groupId}/task-lists/${id}/order`,
-    { displayIndex }
-  );
-  return response.data;
+  const { groupId, id } = params;
+  return apiCall('patch', `${getTaskListPath(groupId)}/${id}/order`, data);
 };
