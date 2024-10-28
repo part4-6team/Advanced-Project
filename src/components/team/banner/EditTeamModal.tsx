@@ -78,7 +78,9 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
     mutationFn: (file: File) => postImage(file),
     onSuccess: (imgUrl: string) => {
       // 이미지 URL을 성공적으로 받으면 그룹 수정 요청
-      if (validateValueOnSubmit('teamName', TeamNames, localTeamName)) {
+      if (
+        validateValueOnSubmit('teamName', TeamNames, localTeamName, teamName)
+      ) {
         editGroup({ groupId: id, image: imgUrl, name: localTeamName });
       }
     },
