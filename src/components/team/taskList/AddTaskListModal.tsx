@@ -82,8 +82,17 @@ export default function AddTaskListModal({
         }
       }
 
-      // 새로운 taskListData 추가
-      existingTaskLists.push(taskListData);
+      // 기존 이름과 겹치는지 확인
+      const existingTaskIndex = existingTaskLists.findIndex(
+        (task) => task.name === taskListData.name
+      );
+
+      // 기존 이름이 있는 경우 색상 업데이트, 없으면 새로 추가
+      if (existingTaskIndex !== -1) {
+        existingTaskLists[existingTaskIndex].color = taskListData.color;
+      } else {
+        existingTaskLists.push(taskListData);
+      }
 
       // 업데이트된 배열을 로컬 스토리지에 저장
       localStorage.setItem(
