@@ -9,7 +9,7 @@ import { apiCall } from './apiCall';
 
 export interface TaskListUrlParams {
   groupId?: number; // group 식별자
-  id?: number; // taskList 식별자
+  id?: number | string; // taskList 식별자
   date?: string;
   name?: string;
   displayIndex?: number;
