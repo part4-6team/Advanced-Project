@@ -167,7 +167,7 @@ export default function SignUpForm() {
       passwordConfirmationError
     )
       return;
-    
+
     signUpMutation.mutate(); // 회원가입 API 호출
   };
 
