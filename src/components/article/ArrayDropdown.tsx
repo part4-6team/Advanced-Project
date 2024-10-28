@@ -2,11 +2,20 @@ import Dropdown, { Option } from '@components/@shared/Dropdown';
 import Toggle from '@icons/toggle.svg';
 import { useState } from 'react';
 
-export default function ArrayDropdown() {
+interface ArrayDropdownProps {
+  onSelect: (value: string) => void;
+}
+
+export default function ArrayDropdown({ onSelect }: ArrayDropdownProps) {
   const [selectedFilter, setSelectedFilter] = useState<Option | null>(null);
 
   const handleSelectFilter = (option: Option) => {
     setSelectedFilter(option);
+    if (option.label === '최신순') {
+      onSelect('recent');
+    } else if (option.label === '인기순') {
+      onSelect('like');
+    }
   };
 
   const filter: Option[] = [

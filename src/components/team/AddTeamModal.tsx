@@ -2,24 +2,37 @@ import Button from '@components/@shared/Button';
 import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import ProfileImageInput from '@components/@shared/ProfileImageInput';
-import { useState } from 'react';
-import { useMutation } from '@tanstack/react-query';
+import { useEffect, useState } from 'react';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postGroupById } from '@/src/api/team/teamAPI';
 import { postImage } from '@/src/api/imageAPI';
 import { useRouter } from 'next/router';
+import { useValidation } from '@hooks/useValidation';
+import { UserData } from './member/ExileUserModal';
 
 interface AddTeamModalProps {
   isOpen: boolean;
-  closeModal: () => void;
+  onClose: () => void;
 }
 
-export default function AddTeamModal({
-  isOpen,
-  closeModal,
-}: AddTeamModalProps) {
+export default function AddTeamModal({ isOpen, onClose }: AddTeamModalProps) {
   const [teamName, setTeamName] = useState('');
   const [imageFile, setImageFile] = useState<File | null>(null);
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const userData = queryClient.getQueryData<UserData>(['user']);
+  const {
+    errors,
+    setError,
+    validateOnBlur,
+    validateValueOnSubmit,
+    clearError,
+  } = useValidation();
+
+  const isAllInputFilled = imageFile !== null && teamName !== '';
+
+  const TeamNames =
+    userData?.memberships.map((membership) => membership.group.name) || [];
 
   // 그룹 생성 Mutation
   const { mutate: createGroup } = useMutation({
@@ -29,7 +42,7 @@ export default function AddTeamModal({
       const groupId = data.id; // 성공적으로 생성된 그룹의 ID를 받아온다고 가정
       setTeamName('');
       setImageFile(null);
-      closeModal();
+      onClose();
       console.log(
         `${teamName} 팀이 성공적으로 생성되었습니다. 그룹 ID: ${groupId}`
       );
@@ -49,7 +62,10 @@ export default function AddTeamModal({
     mutationFn: (file: File) => postImage(file),
     onSuccess: (imageUrl: string) => {
       // 이미지 URL을 성공적으로 받으면 그룹 생성 요청
-      createGroup({ image: imageUrl, name: teamName });
+      // 제출 시 중복된 이름 검사
+      if (validateValueOnSubmit('teamName', TeamNames, teamName)) {
+        createGroup({ image: imageUrl, name: teamName });
+      }
     },
     onError: (error) => {
       console.error('이미지 업로드 실패:', error);
@@ -57,7 +73,13 @@ export default function AddTeamModal({
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setTeamName(e.target.value);
+    const value = e.target.value;
+    if (value.length <= 30) {
+      setTeamName(value);
+      clearError('teamName');
+    } else {
+      setError('teamName', true, '30자 이하로 입력해주세요.');
+    }
   };
 
   const handleAddClick = () => {
@@ -72,11 +94,18 @@ export default function AddTeamModal({
     setImageFile(imgFile);
   };
 
+  useEffect(() => {
+    if (!isOpen) {
+      setTeamName('');
+      clearError('teamName');
+    }
+  }, [isOpen]);
+
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={closeModal}
+      onClose={onClose}
       array="column"
       padding="default"
       bgColor="primary"
@@ -84,6 +113,9 @@ export default function AddTeamModal({
       <p className="mb-[40px] text-center text-2xl-semibold">팀 생성하기</p>
       <p className="mb-[15px] text-lg-medium">팀 프로필</p>
       <ProfileImageInput onFileChange={handleFileChange} />
+      {!imageFile && (
+        <p className="text-point-cyan">팀 이미지를 등록해주세요.</p>
+      )}
       <p className="mt-[20px] text-lg-medium">팀 이름</p>
       <Input
         placeholder="팀 이름을 입력해주세요."
@@ -92,10 +124,17 @@ export default function AddTeamModal({
           onChange: handleChange,
         }}
         className="mb-[30px] mt-[15px]"
+        onBlur={() => validateOnBlur('teamName', teamName)}
+        errorMessage={errors.teamName?.message}
+        isError={errors.teamName?.isError}
       />
 
       <Modal.Footer>
-        <Button size="full" onClick={handleAddClick}>
+        <Button
+          size="full"
+          onClick={handleAddClick}
+          disabled={!isAllInputFilled}
+        >
           생성하기
         </Button>
         <p className="mt-[20px] text-md-regular ">
