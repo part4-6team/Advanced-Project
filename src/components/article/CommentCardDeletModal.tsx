@@ -1,38 +1,27 @@
-import { deleteGroupById } from '@/src/api/team/teamAPI';
-import { useTeamStore } from '@/src/stores/teamStore';
 import Button from '@components/@shared/Button';
 import { Modal } from '@components/@shared/Modal';
-import { useMutation } from '@tanstack/react-query';
+import { useArticleDelete } from '@hooks/article/useArticleDelet';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 
-interface DeleteTeamModalProps {
+interface EditArticleModalProps {
   isOpen: boolean;
   onClose: () => void;
+  articleId: string | string[] | undefined;
 }
 
-export default function DeleteTeamModal({
+export default function CardDeleteModal({
   isOpen,
   onClose,
-}: DeleteTeamModalProps) {
-  const { id } = useTeamStore();
+  articleId,
+}: EditArticleModalProps) {
+  const mutation = useArticleDelete();
   const router = useRouter();
 
-  // 그룹 삭제 Mutation
-  const { mutate: deleteGroup } = useMutation({
-    mutationFn: (groupId: string) => deleteGroupById(groupId),
-    onSuccess: () => {
-      console.log('팀 정보 삭제 완료!');
-      onClose();
-      router.push('/myteam');
-    },
-    onError: (error) => {
-      console.error('팀 삭제 실패:', error);
-    },
-  });
-
-  const handleDeleteClick = () => {
-    deleteGroup(id as string);
+  const handleArticleDelete = () => {
+    mutation.mutate(articleId);
+    onClose();
+    router.push('/article');
   };
 
   return (
@@ -58,11 +47,11 @@ export default function DeleteTeamModal({
             width={24}
             height={24}
           />
-          팀을 삭제하시겠어요?
+          게시글을 삭제하시겠어요?
         </Modal.Header>
         <Modal.Content fontColor="secondary" fontSize="14" fontArray="center">
           <p className="mt-[20px]">
-            팀과 관련된 모든 정보가 사라집니다. 정말로 삭제하시겠습니까?
+            게시글과 관련된 모든 정보가 사라집니다. 정말로 삭제하시겠습니까?
           </p>
         </Modal.Content>
       </Modal.Wrapper>
@@ -76,7 +65,7 @@ export default function DeleteTeamModal({
           >
             취소
           </Button>
-          <Button size="full" bgColor="red" onClick={handleDeleteClick}>
+          <Button size="full" bgColor="red" onClick={handleArticleDelete}>
             삭제
           </Button>
         </div>

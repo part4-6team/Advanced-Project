@@ -35,7 +35,7 @@ export default function Banner() {
       />
       <div className="absolute top-[55px] flex w-full flex-col items-center gap-1 text-center md:top-[100px] md:gap-2 xl:top-[84px] xl:gap-5">
         <div className="flex h-full items-center gap-1 md:gap-4 xl:gap-6">
-          <h1 className="xl:text-5xl-semibold md:text-4xl-semibold text-xl-semibold text-teal-50">
+          <h1 className="text-xl-semibold text-teal-50 md:text-4xl-semibold xl:text-5xl-semibold">
             함께 만들어가는 투두 리스트
           </h1>
           <Image
@@ -46,7 +46,7 @@ export default function Banner() {
             className="h-7 w-7 md:h-12 md:w-12 xl:h-14 xl:w-14"
           />
         </div>
-        <h1 className="gradient-text-brand md:text-5xl-semibold text-3xl-semibold xl:h-40 xl:text-[64px]">
+        <h1 className="gradient-text-brand text-3xl-semibold md:text-5xl-semibold xl:h-40 xl:text-[64px]">
           CoTRAIN
         </h1>
       </div>

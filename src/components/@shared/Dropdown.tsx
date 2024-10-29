@@ -5,9 +5,11 @@ import React, {
   useRef,
   useState,
 } from 'react';
+import styles from '../../styles/scroll.module.css';
 
 export interface Option {
   label?: string;
+  id?: number;
   component: ReactNode;
 }
 
@@ -93,7 +95,7 @@ export default function Dropdown({
       {isOpen && (
         <div
           ref={dropdownRef}
-          className={`${optionsWrapClass} absolute z-50 flex flex-col bg-background-secondary text-text-primary`}
+          className={`${optionsWrapClass} absolute z-50 flex max-h-[200px] flex-col overflow-y-auto bg-background-secondary text-text-primary ${styles.dropdownScroll}`}
         >
           {options.map((option) => (
             <button

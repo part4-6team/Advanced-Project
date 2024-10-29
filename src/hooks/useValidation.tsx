@@ -36,8 +36,13 @@ export const useValidation = () => {
   const validateValueOnSubmit = (
     field: string,
     list: string[],
-    item: string
+    item: string,
+    currentName?: string
   ) => {
+    // 현재 이름과 같다면 중복 체크 생략
+    if (item === currentName) {
+      return true;
+    }
     if (list.includes(item)) {
       setError(field, true, '이미 존재하는 이름입니다.');
       return false;

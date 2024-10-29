@@ -5,13 +5,15 @@ import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import { useValidation } from '@hooks/useValidation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
+import { tagColors } from './tagColors';
 
 interface EditTaskListModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialTaskListName?: string;
   taskListId: number;
+  taskListColor: string;
 }
 
 export default function EditTaskListModal({
@@ -19,6 +21,7 @@ export default function EditTaskListModal({
   onClose,
   initialTaskListName = '',
   taskListId,
+  taskListColor = '#A533FF',
 }: EditTaskListModalProps) {
   const [TaskListName, setTaskListName] = useState(initialTaskListName);
   const { id } = useTeamStore();
@@ -34,13 +37,20 @@ export default function EditTaskListModal({
 
   const teamData = queryClient.getQueryData<TeamStore>(['group', id]);
 
+  // 바 색상 설정
+  const [selectedColor, setSelectedColor] = useState(taskListColor);
+
+  const handleColorClick = (color: string) => {
+    setSelectedColor(color); // 선택한 색상 저장
+  };
+
   // onBlur 시 이름이 비어 있는지 검사
   const handleBlurName = () => {
     validateOnBlur('taskListName', TaskListName);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     if (value.length <= 30) {
       setTaskListName(value);
       clearError('taskListName');
@@ -53,11 +63,11 @@ export default function EditTaskListModal({
   const { mutate: editGroup } = useMutation({
     mutationFn: ({
       groupId,
-      taskListId,
+      listId,
       name,
     }: {
       groupId: number;
-      taskListId: string;
+      listId: string;
       name: string;
     }) => patchTaskList({ groupId, id: taskListId }, { name }),
     onSuccess: () => {
@@ -78,28 +88,77 @@ export default function EditTaskListModal({
     teamData?.taskLists.map((taskList) => taskList.name) || [];
 
   const handlePatchClick = () => {
-    if (validateValueOnSubmit('taskListName', taskListNames, TaskListName)) {
+    if (
+      validateValueOnSubmit(
+        'taskListName',
+        taskListNames,
+        TaskListName,
+        initialTaskListName
+      )
+    ) {
       editGroup({
         groupId: Number(id),
-        taskListId: String(taskListId),
+        listId: String(taskListId),
         name: TaskListName,
       });
+
+      const taskListData = {
+        name: TaskListName,
+        color: selectedColor,
+      };
+      // 로컬 스토리지에서 기존 TaskLists 가져오기 (없으면 빈 배열)
+      const existingTaskListsString = localStorage.getItem(`TaskLists_${id}`);
+
+      let existingTaskLists = [];
+      if (existingTaskListsString) {
+        try {
+          existingTaskLists = JSON.parse(existingTaskListsString);
+
+          // JSON 파싱 후 배열인지 확인
+          if (!Array.isArray(existingTaskLists)) {
+            existingTaskLists = []; // 배열이 아닐 경우 빈 배열로 초기화
+          }
+        } catch (error) {
+          console.error(
+            '로컬 스토리지에서 TaskLists를 파싱하는 중 오류 발생:',
+            error
+          );
+          existingTaskLists = []; // 파싱 오류 발생 시 빈 배열로 초기화
+        }
+      }
+
+      // 기존과 동일한 name이 있는지 확인
+      const existingTaskIndex = existingTaskLists.findIndex(
+        (task) => task.name === TaskListName
+      );
+
+      // 동일한 name이 있으면 color만 업데이트, 없으면 새로 추가
+      if (existingTaskIndex !== -1) {
+        existingTaskLists[existingTaskIndex].color = selectedColor;
+      } else {
+        existingTaskLists.push(taskListData);
+      }
+
+      // 업데이트된 배열을 로컬 스토리지에 저장
+      localStorage.setItem(
+        `TaskLists_${id}`,
+        JSON.stringify(existingTaskLists)
+      );
     }
   };
 
-  // 모달이 닫힐 때 TaskListName을 초기값으로 리셋
-  useEffect(() => {
-    if (!isOpen) {
-      setTaskListName(initialTaskListName);
-      clearError('taskListName');
-    }
-  }, [isOpen, initialTaskListName]);
+  const handleClose = () => {
+    setTaskListName('');
+    clearError('taskListName');
+    setSelectedColor(taskListColor);
+    onClose();
+  };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={onClose}
+      onClose={handleClose}
       array="column"
       padding="default"
       bgColor="primary"
@@ -121,6 +180,19 @@ export default function EditTaskListModal({
         errorMessage={errors.taskListName?.message}
         isError={errors.taskListName?.isError}
       />
+      <div className="mb-[30px] flex justify-between md:gap-[4px]">
+        {tagColors.map((tagColor) => (
+          <div
+            key={tagColor.label}
+            style={{ backgroundColor: tagColor.color }}
+            className={`h-[25px] w-[25px] shrink-0 rounded-full hover:scale-105 ${selectedColor === tagColor.color ? 'scale-105 border-2 border-[#ffffff]' : ''}`}
+            onClick={() => handleColorClick(tagColor.color)}
+            data-value={tagColor.color}
+          >
+            &nbsp;
+          </div>
+        ))}
+      </div>
 
       <Modal.Footer>
         <Button size="full" onClick={handlePatchClick}>
