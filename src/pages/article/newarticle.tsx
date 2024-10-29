@@ -1,7 +1,9 @@
 import Button from '@components/@shared/Button';
 import { Input, ScrollTextArea } from '@components/@shared/Input';
+import { Modal } from '@components/@shared/Modal';
 import ArticleImageInput from '@components/article/NewArticleImage';
 import { useNewArticle } from '@hooks/article/useNewArticle';
+import { useModal } from '@hooks/useModal';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -10,7 +12,7 @@ export default function NewArticle() {
   const [title, setTitle] = useState<string>('');
   const [image, setImage] = useState<string>('');
   const router = useRouter();
-
+  const { isOpen, onOpen, onClose } = useModal();
   const mutation = useNewArticle();
 
   const handleSubmit = () => {
@@ -18,7 +20,7 @@ export default function NewArticle() {
       mutation.mutate({ title, content, image });
       router.push('/article');
     } else {
-      console.log('제목 내용 이미지 넣어주세요');
+      onOpen();
     }
   };
 
@@ -82,6 +84,35 @@ export default function NewArticle() {
             등록
           </Button>
         </div>
+
+        <Modal
+          isOpen={isOpen}
+          isXButton
+          onClose={onClose}
+          array="column"
+          padding="default"
+          bgColor="primary"
+          fontSize="16"
+          fontArray="center"
+          gap="40"
+        >
+          <Modal.Wrapper
+            array="column"
+            className="flex flex-col items-center justify-center gap-4"
+          >
+            <Modal.Header fontColor="primary" className="text-2xl-bold">
+              필드값을 입력해 주세요.
+            </Modal.Header>
+            <Modal.Content fontColor="secondary" fontSize="14" fontArray="left">
+              <p>제목, 내용, 이미지 모두 작성해주세요.</p>
+            </Modal.Content>
+          </Modal.Wrapper>
+          <Modal.Footer>
+            <Button bgColor="red" onClick={onClose}>
+              닫기
+            </Button>
+          </Modal.Footer>
+        </Modal>
       </main>
     </div>
   );
