@@ -142,8 +142,6 @@ export default function NavBarTeam({ data }: { data: User }) {
     }
   };
 
-  console.log(id, selectedTeam);
-
   const handleAddTeam = () => {
     addOpenModal();
     setIsLeftOpen(false);
