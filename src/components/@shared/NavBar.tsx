@@ -33,6 +33,7 @@ export default function NavBar() {
         <button
           type="button"
           onClick={() => router.push(`/myhistory/${data?.id}`)}
+          className="w-full"
         >
           마이 히스토리
         </button>
@@ -44,6 +45,7 @@ export default function NavBar() {
         <button
           type="button"
           onClick={() => router.push(`/mysetting/${data?.id}`)}
+          className="w-full"
         >
           계정 설정
         </button>
@@ -52,7 +54,11 @@ export default function NavBar() {
     {
       label: '팀 참여',
       component: (
-        <button type="button" onClick={() => router.push('#')}>
+        <button
+          type="button"
+          onClick={() => router.push('/addteam/participate')}
+          className="w-full"
+        >
           팀 참여
         </button>
       ),
@@ -60,7 +66,11 @@ export default function NavBar() {
     {
       label: '전체 팀 리스트',
       component: (
-        <button type="button" onClick={() => router.push('myteam')}>
+        <button
+          type="button"
+          onClick={() => router.push('/myteam')}
+          className="w-full"
+        >
           전체 팀 리스트
         </button>
       ),
@@ -68,7 +78,7 @@ export default function NavBar() {
     {
       label: '로그아웃',
       component: (
-        <button type="button" onClick={handleLogout}>
+        <button type="button" onClick={handleLogout} className="w-full">
           로그아웃
         </button>
       ),

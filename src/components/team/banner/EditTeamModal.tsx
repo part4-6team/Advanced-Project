@@ -66,6 +66,7 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
     onSettled: () => {
       // 쿼리 무효화 및 리패치
       queryClient.invalidateQueries({ queryKey: ['group', id] });
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
       console.error('그룹 생성 실패:', error);
@@ -78,9 +79,15 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
     mutationFn: (file: File) => postImage(file),
     onSuccess: (imgUrl: string) => {
       // 이미지 URL을 성공적으로 받으면 그룹 수정 요청
-      if (validateValueOnSubmit('teamName', TeamNames, localTeamName)) {
+      if (
+        validateValueOnSubmit('teamName', TeamNames, localTeamName, teamName)
+      ) {
         editGroup({ groupId: id, image: imgUrl, name: localTeamName });
       }
+    },
+    onSettled: () => {
+      // 쿼리 무효화 및 리패치
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
       console.error('이미지 업로드 실패:', error);

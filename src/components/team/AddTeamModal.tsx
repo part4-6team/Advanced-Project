@@ -52,6 +52,10 @@ export default function AddTeamModal({ isOpen, onClose }: AddTeamModalProps) {
         router.push(`/${groupId}`); // 해당 그룹 페이지로 리다이렉트
       }
     },
+    onSettled: () => {
+      // 쿼리 무효화 및 리패치
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
     onError: (error) => {
       console.error('그룹 생성 실패:', error);
     },
@@ -66,6 +70,10 @@ export default function AddTeamModal({ isOpen, onClose }: AddTeamModalProps) {
       if (validateValueOnSubmit('teamName', TeamNames, teamName)) {
         createGroup({ image: imageUrl, name: teamName });
       }
+    },
+    onSettled: () => {
+      // 쿼리 무효화 및 리패치
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
       console.error('이미지 업로드 실패:', error);
