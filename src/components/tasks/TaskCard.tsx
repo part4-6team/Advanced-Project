@@ -1,9 +1,9 @@
-import { useEffect } from 'react';
 import CalenderIcon from '@icons/calendar_large.svg';
 import CommentIcon from '@icons/comment.svg';
 import RepeatIcon from '@icons/repeat.svg';
 import type { TaskDto } from '@/src/types/tasks/taskDto';
 
+import { formatTaskCardDate } from '@utils/getFormattedDate';
 import { useModal } from '@hooks/useModal';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import useDropdownModals from '@hooks/useDropdownModals';
@@ -59,18 +59,20 @@ export default function TaskCard({ task }: TaskCardProps) {
             <CommentIcon />
             <span>{task.commentCount}</span>
           </div>
-          <EditDropdown
-            triggerIcon={
-              <Image
-                src="/icons/kebab_large.svg"
-                alt="더보기 아이콘"
-                width={10}
-                height={10}
-                className="h-3"
-              />
-            }
-            onSelect={handleDropdownSelection}
-          />
+          {!isSidebarOpen && (
+            <EditDropdown
+              triggerIcon={
+                <Image
+                  src="/icons/kebab_large.svg"
+                  alt="더보기 아이콘"
+                  width={10}
+                  height={10}
+                  className="h-3"
+                />
+              }
+              onSelect={handleDropdownSelection}
+            />
+          )}
           {editModal.isOpen && (
             <EditTaskModal
               isOpen={editModal.isOpen}
@@ -89,7 +91,7 @@ export default function TaskCard({ task }: TaskCardProps) {
       </div>
       <div className="flex items-center gap-[10px] text-xs-regular">
         <CalenderIcon />
-        <span>{task.date}</span>
+        <span>{formatTaskCardDate(task.date)}</span>
         <div className="h-3 border-[1px] border-slate-700" />
         <RepeatIcon />
         <span>{task.frequency}</span>
