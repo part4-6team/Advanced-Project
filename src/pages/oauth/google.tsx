@@ -10,7 +10,7 @@ export default function GoogleSignUp() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
 
-  const fetchGoogleAccessToken = async (
+  const fetchGoogleOauthToken = async (
     code: string
   ): Promise<string | null> => {
     try {
@@ -29,7 +29,7 @@ export default function GoogleSignUp() {
           },
         }
       );
-      return response.data.id_token; // 반환된 id_token만 사용
+      return response.data.id_token; // Google의 경우에는 Google Id 토큰(JWT)을 token으로 사용
     } catch (fetchTokenError) {
       console.error('ID 토큰 가져오기 실패:', fetchTokenError);
       return null;
@@ -42,9 +42,9 @@ export default function GoogleSignUp() {
 
       if (typeof code === 'string') {
         try {
-          const googleAccessToken = await fetchGoogleAccessToken(code);
-          if (!googleAccessToken) {
-            setErrorMessage('googleAccessToken 가져오기 실패');
+          const googleOauthToken = await fetchGoogleOauthToken(code);
+          if (!googleOauthToken) {
+            setErrorMessage('googleOauthToken 가져오기 실패');
             setLoading(false);
             return;
           }
@@ -69,7 +69,7 @@ export default function GoogleSignUp() {
             }
           };
 
-          await signInWithGoogle(googleAccessToken);
+          await signInWithGoogle(googleOauthToken); // Google Id 토큰(JWT)을 가지고 간편 로그인
         } catch (error) {
           setErrorMessage('로그인 중 오류 발생');
           console.error('로그인 처리 중 에러 발생:', error);

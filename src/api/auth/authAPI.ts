@@ -48,9 +48,9 @@ export const postSignInGoogle = async (
 };
 
 // 카카오 로그인 API
-export const postSigninKakao = async (
-  redirectUri: string,
-  token: string | string[],
+export const postSignInKakao = async (
+  redirectUri: string | undefined,
+  token: string | string[] | undefined,
   state?: string
 ) => {
   const response = await publicAxiosInstance.post('auth/signIn/KAKAO', {
