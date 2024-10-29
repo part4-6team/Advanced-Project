@@ -19,7 +19,7 @@ export default function Footer() {
   return (
     <footer className="relative h-[640px] w-full md:h-[940px] xl:h-[1080px]">
       <div className="absolute top-1/4 flex w-full flex-col items-center gap-4 text-center text-text-primary md:gap-6">
-        <h3 className="md:text-4xl-semibold text-2xl-semibold">
+        <h3 className="text-2xl-semibold md:text-4xl-semibold">
           지금 바로 시작해보세요
         </h3>
         <p className=" text-lg-medium md:text-2xl-medium">

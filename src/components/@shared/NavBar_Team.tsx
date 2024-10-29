@@ -2,8 +2,9 @@ import ArrowDown from 'public/icons/arrow_down.svg';
 import { useModal } from '@hooks/useModal';
 import AddTeamModal from '@components/team/AddTeamModal';
 import { useRouter } from 'next/router';
+import { useTeamStore } from '@/src/stores/teamStore';
 import PCLogo from 'public/images/logo_pc.png';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
 import { User } from '@/src/types/mysetting/settingData';
@@ -11,7 +12,12 @@ import Menu from 'public/icons/menu.svg';
 import Link from 'next/link';
 import Button from './Button';
 import SideBar from './SideBar';
-import { useTeamStore } from '@/src/stores/teamStore';
+import TeamItem from './TeamItem';
+
+interface Team {
+  id: number;
+  name: string;
+}
 
 export default function NavBarTeam({ data }: { data: User }) {
   const [selectedTeam, setSelectedTeam] = useState<Option | null>(null);
@@ -27,10 +33,13 @@ export default function NavBarTeam({ data }: { data: User }) {
     onClose: addCloseModal,
   } = useModal();
 
-  const handleTeamSelect = (groupId: number) => {
-    router.push(`/${groupId}`);
-    setIsLeftOpen(false);
-  };
+  const handleTeamSelect = useCallback(
+    (groupId: number) => {
+      router.push(`/${groupId}`);
+      setIsLeftOpen(false);
+    },
+    [router]
+  );
 
   const [teamArray, setTeamArray] = useState<Team[]>([]);
 
@@ -82,7 +91,7 @@ export default function NavBarTeam({ data }: { data: User }) {
         ),
       },
     ];
-  }, [data]);
+  }, [data, handleTeamSelect]);
   // teams 배열을 useEffect로 설정
   useEffect(() => {
     // 현재 ID에 해당하는 팀을 찾습니다.
@@ -105,43 +114,15 @@ export default function NavBarTeam({ data }: { data: User }) {
     return null;
   }
 
-  interface Team {
-    id: number;
-    name: string;
-  }
-
-  // 단순히 image와 name을 표시하는 TeamItem 컴포넌트
-  function TeamItem({
-    id,
-    name,
-    isActive,
-  }: {
-    id: number;
-    name: string;
-    isActive: boolean;
-  }) {
-    return (
-      <div
-        onClick={() => handleTeamSelect(id)}
-        className="flex h-[40px] cursor-pointer items-center gap-3 overflow-hidden rounded-[12px] px-[16px] hover:bg-[#ffffff17]"
-      >
-        <p
-          className={`overflow-hidden text-ellipsis whitespace-nowrap ${isActive ? 'text-brand-primary' : ''}`}
-        >
-          {name}
-        </p>
-      </div>
-    );
-  }
-
   const handleSelectTeam = (option: Option) => {
     if (option.label === '팀 메뉴') {
       addOpenModal();
-    } else {
-      // 현재 팀 ID와 선택한 팀의 ID가 다를 경우에만 상태 업데이트
-      if (option.id !== Number(id)) {
-        setSelectedTeam(option);
-      }
+      return;
+    }
+
+    // 현재 팀 ID와 선택한 팀의 ID가 다를 경우에만 상태 업데이트
+    if (option.id !== Number(id)) {
+      setSelectedTeam(option);
     }
   };
 
@@ -169,14 +150,12 @@ export default function NavBarTeam({ data }: { data: User }) {
           <nav>
             <div className="flex flex-col gap-[5px] px-[10px]">
               {teamArray.map((team) => (
-                <>
-                  <TeamItem
-                    id={team.id}
-                    key={team.id}
-                    name={team.name}
-                    isActive={team.id === Number(id)}
-                  />
-                </>
+                <TeamItem
+                  key={team.id}
+                  name={team.name}
+                  isActive={team.id === Number(id)}
+                  onClick={() => handleTeamSelect(team.id)}
+                />
               ))}
               <Button
                 bgColor="transparent"

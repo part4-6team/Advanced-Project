@@ -1,28 +1,9 @@
 import { useModal } from '@hooks/useModal';
 import { useTeamStore } from '@/src/stores/teamStore';
-import {
-  DndContext,
-  closestCenter,
-  useSensor,
-  useSensors,
-  PointerSensor,
-  DragEndEvent,
-} from '@dnd-kit/core';
-import {
-  arrayMove,
-  SortableContext,
-  sortableKeyboardCoordinates,
-  verticalListSortingStrategy,
-} from '@dnd-kit/sortable';
 import TaskBar from './TaskBar';
 import AddTaskListModal from './AddTaskListModal';
-import SortableItem from './SortableItem';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { patchTaskListOrder } from '@/src/api/tasks/taskListAPI';
 
 export default function TaskList() {
-  const queryClient = useQueryClient();
-
   const {
     isOpen: addListIsOpen,
     onOpen: addListOpenModal,
@@ -64,6 +45,7 @@ export default function TaskList() {
       <div className="flex flex-col gap-[10px]">
         {taskLists.map((taskList) => (
           <TaskBar
+            key={taskList.id}
             name={taskList.name}
             tasks={taskList.tasks}
             id={taskList.id}

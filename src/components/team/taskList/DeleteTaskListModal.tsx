@@ -32,7 +32,7 @@ export default function DeleteTaskListModal({
 
   // 목록 삭제 Mutation
   const { mutate: deleteList } = useMutation({
-    mutationFn: (id: number) => deleteTaskList(id),
+    mutationFn: (listId: number) => deleteTaskList(listId),
     onSuccess: () => {
       onClose();
     },

@@ -5,7 +5,7 @@ import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import { useValidation } from '@hooks/useValidation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { tagColors } from './tagColors';
 
 interface EditTaskListModalProps {
@@ -37,13 +37,20 @@ export default function EditTaskListModal({
 
   const teamData = queryClient.getQueryData<TeamStore>(['group', id]);
 
+  // 바 색상 설정
+  const [selectedColor, setSelectedColor] = useState(taskListColor);
+
+  const handleColorClick = (color: string) => {
+    setSelectedColor(color); // 선택한 색상 저장
+  };
+
   // onBlur 시 이름이 비어 있는지 검사
   const handleBlurName = () => {
     validateOnBlur('taskListName', TaskListName);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     if (value.length <= 30) {
       setTaskListName(value);
       clearError('taskListName');
@@ -56,13 +63,13 @@ export default function EditTaskListModal({
   const { mutate: editGroup } = useMutation({
     mutationFn: ({
       groupId,
-      taskListId,
+      listId,
       name,
     }: {
       groupId: number;
-      taskListId: string;
+      listId: string;
       name: string;
-    }) => patchTaskList(groupId, taskListId, name),
+    }) => patchTaskList(groupId, listId, name),
     onSuccess: () => {
       onClose();
     },
@@ -91,7 +98,7 @@ export default function EditTaskListModal({
     ) {
       editGroup({
         groupId: Number(id),
-        taskListId: String(taskListId),
+        listId: String(taskListId),
         name: TaskListName,
       });
 
@@ -140,27 +147,18 @@ export default function EditTaskListModal({
     }
   };
 
-  // 모달이 닫힐 때 TaskListName을 초기값으로 리셋
-  useEffect(() => {
-    if (!isOpen) {
-      setTaskListName(initialTaskListName);
-      clearError('taskListName');
-      setSelectedColor(taskListColor);
-    }
-  }, [isOpen, initialTaskListName]);
-
-  // 바 색상 설정
-  const [selectedColor, setSelectedColor] = useState(taskListColor);
-
-  const handleColorClick = (color: string) => {
-    setSelectedColor(color); // 선택한 색상 저장
+  const handleClose = () => {
+    setTaskListName('');
+    clearError('taskListName');
+    setSelectedColor(taskListColor);
+    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={onClose}
+      onClose={handleClose}
       array="column"
       padding="default"
       bgColor="primary"
@@ -184,16 +182,15 @@ export default function EditTaskListModal({
       />
       <div className="mb-[30px] flex justify-between md:gap-[4px]">
         {tagColors.map((tagColor) => (
-          <button
-            type="button"
+          <div
             key={tagColor.label}
             style={{ backgroundColor: tagColor.color }}
             className={`h-[25px] w-[25px] shrink-0 rounded-full hover:scale-105 ${selectedColor === tagColor.color ? 'scale-105 border-2 border-[#ffffff]' : ''}`}
             onClick={() => handleColorClick(tagColor.color)}
-            value={tagColor.color}
+            data-value={tagColor.color}
           >
             &nbsp;
-          </button>
+          </div>
         ))}
       </div>
 

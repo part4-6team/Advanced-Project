@@ -20,7 +20,7 @@ export default function DeleteTeamModal({
 
   // 그룹 삭제 Mutation
   const { mutate: deleteGroup } = useMutation({
-    mutationFn: (id: string) => deleteGroupById(id),
+    mutationFn: (groupId: string) => deleteGroupById(groupId),
     onSuccess: () => {
       console.log('팀 정보 삭제 완료!');
       onClose();

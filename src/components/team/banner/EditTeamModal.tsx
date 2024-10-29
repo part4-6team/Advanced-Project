@@ -31,7 +31,7 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
 
   // 입력값을 로컬 상태로 업데이트
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     if (value.length <= 30) {
       setLocalTeamName(value);
       clearError('teamName');
@@ -111,7 +111,7 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
       setLocalTeamName(teamName);
       clearError('teamName');
     }
-  }, [isOpen, teamName]);
+  }, [isOpen, teamName, clearError]);
 
   return (
     <Modal

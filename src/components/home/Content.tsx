@@ -17,7 +17,7 @@ export default function Content() {
         </Button>
         {/* </Link> */}
       </div>
-      <div className="gradient-border rounded-40 flex w-full flex-col px-[54px] shadow-[0_0_12px_2px_rgba(255,255,255,0.5)] md:px-[81px] xl:px-[174px] ">
+      <div className="gradient-border flex w-full flex-col rounded-40 px-[54px] shadow-[0_0_12px_2px_rgba(255,255,255,0.5)] md:px-[81px] xl:px-[174px] ">
         <div className="mx-auto flex flex-col items-center md:w-full md:flex-row md:justify-around">
           <div className="flex-start my-12 flex w-full flex-col gap-4 md:order-2 md:w-40 xl:w-52">
             <Image
@@ -40,7 +40,7 @@ export default function Content() {
           />
         </div>
       </div>
-      <div className="rounded-40 flex w-full border-[1px] border-[rgba(248,250,252,0.1)] bg-background-secondary px-[54px] md:px-[81px] xl:px-[174px]">
+      <div className="flex w-full rounded-40 border-[1px] border-[rgba(248,250,252,0.1)] bg-background-secondary px-[54px] md:px-[81px] xl:px-[174px]">
         <div className="mx-auto flex flex-col items-center md:w-full md:flex-row md:justify-around">
           <Image
             alt="멤버 초대 기능 랜딩이미지"
@@ -63,7 +63,7 @@ export default function Content() {
           </div>
         </div>
       </div>
-      <div className="rounded-40 flex w-full bg-slate-950 px-[54px] md:px-[81px] xl:px-[174px]">
+      <div className="flex w-full rounded-40 bg-slate-950 px-[54px] md:px-[81px] xl:px-[174px]">
         <div className="mx-auto flex flex-col items-center md:w-full md:flex-row md:justify-around">
           <Image
             alt="투두 기능 랜딩이미지"

@@ -2,11 +2,11 @@ import { useModal } from '@hooks/useModal';
 import { Option } from '@components/@shared/Dropdown';
 import { TaskProps, useTeamStore } from '@/src/stores/teamStore';
 import Image from 'next/image';
+import Link from 'next/link';
 import CircleGraph from '../CircleGraph';
 import EditDropdown from '../EditDropdown';
 import DeleteTaskListModal from './DeleteTaskListModal';
 import EditTaskListModal from './EditTaskListModal';
-import Link from 'next/link';
 
 interface TaskBarProps {
   name: string;

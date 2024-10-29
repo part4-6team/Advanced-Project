@@ -3,7 +3,7 @@ import Button from '@components/@shared/Button';
 import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { TeamStore } from '@/src/stores/teamStore';
 import { useValidation } from '@hooks/useValidation';
 import { tagColors } from './tagColors';
@@ -32,13 +32,19 @@ export default function AddTaskListModal({
 
   const teamData = queryClient.getQueryData<TeamStore>(['group', groupId]);
 
+  const [selectedColor, setSelectedColor] = useState('#A533FF');
+
+  const handleColorClick = (color: string) => {
+    setSelectedColor(color); // 선택한 색상 저장
+  };
+
   // onBlur 시 이름이 비어 있는지 검사
   const handleBlurName = () => {
     validateOnBlur('taskListName', taskListName);
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     if (value.length <= 30) {
       setTaskListName(value);
       clearError('taskListName');
@@ -46,6 +52,23 @@ export default function AddTaskListModal({
       setError('taskListName', true, '30자 이하로 입력해주세요.');
     }
   };
+
+  // 그룹 생성 Mutation
+  const { mutate: createTaskList } = useMutation({
+    mutationFn: ({ id, name }: { id: number; name: string }) =>
+      postTaskList(id, name),
+    onSuccess: () => {
+      setTaskListName('');
+      onClose();
+    },
+    onSettled: () => {
+      // 쿼리 무효화 및 리패치
+      queryClient.invalidateQueries({ queryKey: ['group', groupId] });
+    },
+    onError: (error) => {
+      console.error('목록 생성 실패:', error);
+    },
+  });
 
   // 제출 시 중복된 이름 검사
   const taskListNames =
@@ -102,42 +125,18 @@ export default function AddTaskListModal({
     }
   };
 
-  // 그룹 생성 Mutation
-  const { mutate: createTaskList } = useMutation({
-    mutationFn: ({ id, name }: { id: number; name: string }) =>
-      postTaskList(id, name),
-    onSuccess: () => {
-      setTaskListName('');
-      onClose();
-    },
-    onSettled: () => {
-      // 쿼리 무효화 및 리패치
-      queryClient.invalidateQueries({ queryKey: ['group', groupId] });
-    },
-    onError: (error) => {
-      console.error('목록 생성 실패:', error);
-    },
-  });
-
-  useEffect(() => {
-    if (!isOpen) {
-      setTaskListName('');
-      clearError('taskListName');
-      setSelectedColor('#A533FF');
-    }
-  }, [isOpen]);
-
-  const [selectedColor, setSelectedColor] = useState('#A533FF');
-
-  const handleColorClick = (color: string) => {
-    setSelectedColor(color); // 선택한 색상 저장
+  const handleClose = () => {
+    setTaskListName('');
+    clearError('taskListName');
+    setSelectedColor('#A533FF');
+    onClose();
   };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={onClose}
+      onClose={handleClose}
       array="column"
       padding="default"
       bgColor="primary"
@@ -161,16 +160,15 @@ export default function AddTaskListModal({
           />
           <div className="mt-[30px] flex justify-between md:gap-[4px]">
             {tagColors.map((tagColor) => (
-              <button
-                type="button"
+              <div
                 key={tagColor.label}
                 style={{ backgroundColor: tagColor.color }}
                 className={`h-[25px] w-[25px] shrink-0 rounded-full hover:scale-105 ${selectedColor === tagColor.color ? 'scale-105 border-2 border-[#ffffff]' : ''}`}
                 onClick={() => handleColorClick(tagColor.color)}
-                value={tagColor.color}
+                data-value={tagColor.color}
               >
                 &nbsp;
-              </button>
+              </div>
             ))}
           </div>
         </Modal.Content>

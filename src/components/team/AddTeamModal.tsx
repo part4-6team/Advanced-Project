@@ -2,7 +2,7 @@ import Button from '@components/@shared/Button';
 import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import ProfileImageInput from '@components/@shared/ProfileImageInput';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postGroupById } from '@/src/api/team/teamAPI';
 import { postImage } from '@/src/api/imageAPI';
@@ -81,7 +81,7 @@ export default function AddTeamModal({ isOpen, onClose }: AddTeamModalProps) {
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     if (value.length <= 30) {
       setTeamName(value);
       clearError('teamName');
@@ -102,18 +102,17 @@ export default function AddTeamModal({ isOpen, onClose }: AddTeamModalProps) {
     setImageFile(imgFile);
   };
 
-  useEffect(() => {
-    if (!isOpen) {
-      setTeamName('');
-      clearError('teamName');
-    }
-  }, [isOpen]);
+  const handleClose = () => {
+    setTeamName('');
+    clearError('teamName');
+    onClose();
+  };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={onClose}
+      onClose={handleClose}
       array="column"
       padding="default"
       bgColor="primary"
