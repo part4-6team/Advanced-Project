@@ -3,7 +3,7 @@ import { useUserStore } from '@/src/stores/useUserStore';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-export default function KakaoSignUp() {
+export default function KakaoOauth() {
   const router = useRouter();
   const { setTokens, updateUser } = useUserStore();
   const [loading, setLoading] = useState(true);

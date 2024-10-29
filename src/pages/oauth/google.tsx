@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 
-export default function GoogleSignUp() {
+export default function GoogleOauth() {
   const router = useRouter();
   const { setTokens, updateUser } = useUserStore();
   const [loading, setLoading] = useState(true);
