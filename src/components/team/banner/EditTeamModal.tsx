@@ -7,7 +7,7 @@ import { Modal } from '@components/@shared/Modal';
 import ProfileImageInput from '@components/@shared/ProfileImageInput';
 import { useValidation } from '@hooks/useValidation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { UserData } from '../member/ExileUserModal';
 
 interface EditTeamModalProps {
@@ -105,19 +105,18 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
     }
   };
 
-  // 모달이 열릴 때 teamName을 로컬 상태에 설정
-  useEffect(() => {
-    if (isOpen) {
-      setLocalTeamName(teamName);
-      clearError('teamName');
-    }
-  }, [isOpen, teamName, clearError]);
+  // onClose 핸들러 수정: 모달이 닫힐 때 상태 초기화
+  const handleModalClose = () => {
+    setLocalTeamName(teamName); // 또는 원하는 초기값
+    clearError('teamName');
+    onClose();
+  };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={onClose}
+      onClose={handleModalClose}
       array="column"
       padding="default"
       bgColor="primary"
