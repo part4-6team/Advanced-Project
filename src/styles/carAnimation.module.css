@@ -2,8 +2,6 @@
   position: absolute;
   top: 10%; /* 원하는 위치에 맞게 조정 */
   right: 10%; /* 시작 위치를 화면 오른쪽으로 설정 */
-  width: 289px;
-  height: 226px;
   animation: moveLeft 3s linear infinite;
 }
 
@@ -12,6 +10,8 @@
     moveLeft 5s linear infinite,
     shake 0.5s linear infinite;
   position: absolute; /* 이동을 위해 절대 위치 지정 */
+  height: 240px;
+  width: 289px;
 }
 
 /* 오른쪽에서 왼쪽으로 이동하는 애니메이션 */
