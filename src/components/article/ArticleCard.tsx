@@ -70,7 +70,7 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
       </div>
 
       {cards?.pages.map((page) => (
-        <div className="mb-4" key={Math.random()}>
+        <div className="mb-4" key={page[0].id}>
           <ul className="grid gap-4 xl:grid-cols-2">
             {page.map((card: Card) => (
               <li key={card.id}>
