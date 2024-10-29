@@ -148,7 +148,7 @@ export default function EditTaskListModal({
   };
 
   const handleClose = () => {
-    setTaskListName('');
+    setTaskListName(initialTaskListName);
     clearError('taskListName');
     setSelectedColor(taskListColor);
     onClose();

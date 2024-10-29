@@ -7,7 +7,7 @@ import { Modal } from '@components/@shared/Modal';
 import ProfileImageInput from '@components/@shared/ProfileImageInput';
 import { useValidation } from '@hooks/useValidation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { UserData } from '../member/ExileUserModal';
 
 interface EditTeamModalProps {
@@ -18,9 +18,8 @@ interface EditTeamModalProps {
 export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
   const [imageFile, setImageFile] = useState<File | null>(null);
   const { id, teamName, imageUrl, setTeamName } = useTeamStore();
-  // 모달 내부에서 관리할 임시 상태
-  const [localTeamName, setLocalTeamName] = useState(teamName);
   const queryClient = useQueryClient();
+  const [localTeamName, setLocalTeamName] = useState(teamName);
   const {
     errors,
     setError,
@@ -107,10 +106,15 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
 
   // onClose 핸들러 수정: 모달이 닫힐 때 상태 초기화
   const handleModalClose = () => {
-    setLocalTeamName(teamName); // 또는 원하는 초기값
     clearError('teamName');
     onClose();
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      setLocalTeamName(teamName);
+    }
+  }, [isOpen, teamName]);
 
   return (
     <Modal
