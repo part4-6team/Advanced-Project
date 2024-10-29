@@ -1,19 +1,22 @@
+import { useRouter } from 'next/router';
 import { useModal } from '@hooks/useModal';
 import { useTeamStore } from '@/src/stores/teamStore';
 import TaskBar from './TaskBar';
 import AddTaskListModal from './AddTaskListModal';
-import Link from 'next/link';
 
 export default function TaskList() {
+  const router = useRouter();
   const {
     isOpen: addListIsOpen,
     onOpen: addListOpenModal,
     onClose: addListCloseModal,
   } = useModal();
-
-  const { taskLists, id } = useTeamStore();
-
+  const { taskLists, id: teamid } = useTeamStore();
   const listCount = taskLists.length;
+
+  const handleTaskListClick = (taskListId: number) => {
+    router.push(`/${teamid}/tasks?taskListId=${taskListId}`);
+  };
 
   return (
     <section>
@@ -33,7 +36,7 @@ export default function TaskList() {
           <AddTaskListModal
             isOpen={addListIsOpen}
             onClose={addListCloseModal}
-            groupId={id}
+            groupId={teamid}
           />
         </div>
       </div>
@@ -44,14 +47,17 @@ export default function TaskList() {
       )}
       <div className="flex flex-col gap-[10px]">
         {taskLists.map((taskList) => (
-          <Link href={`/${id}/tasks`}>
+          <div
+            key={taskList.id}
+            onClick={() => handleTaskListClick(taskList.id)}
+          >
             <TaskBar
               key={taskList.id}
               name={taskList.name}
               tasks={taskList.tasks}
               id={taskList.id}
             />
-          </Link>
+          </div>
         ))}
       </div>
     </section>
