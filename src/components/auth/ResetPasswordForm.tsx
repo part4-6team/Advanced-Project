@@ -88,14 +88,10 @@ export default function SignUpForm() {
       );
       return resetPasswordResponse; // 비밀번호 재설정 응답
     },
-    onSuccess: (data) => {
-      // 비밀번호 재설정 성공 시
-      console.log(data);
+    onSuccess: () => {
       onOpen();
     },
-    onError: (error) => {
-      console.error('비밀번호 재설정 에러:', error);
-    },
+    // 여기에 비밀번호 설정시 에러 모달 넣어야함@@@
   });
 
   // 받은 링크의 토큰을 가지고 비밀번호 재설정하기

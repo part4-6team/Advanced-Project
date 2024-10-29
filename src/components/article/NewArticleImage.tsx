@@ -68,9 +68,10 @@ export default function ArticleImageInput({
                   alt="게시글 이미지"
                 />
               </div>
-              <img
+              <Image
                 src={profileImage}
                 alt="프로필 이미지"
+                layout="fill"
                 className="absolute z-10 h-full w-full rounded-lg object-cover"
               />
             </div>

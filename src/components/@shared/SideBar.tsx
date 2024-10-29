@@ -91,7 +91,7 @@ export default function SideBar({
           <XIcon />
         </button>
       </div>
-      <div className={`mt-10 h-full`}>{children}</div>
+      <div className="mt-10 h-full">{children}</div>
       <div className={classes.completeButtonWrapper}>
         {button === 'completebutton' ? (
           <Button width={138} height={40} shape="round">

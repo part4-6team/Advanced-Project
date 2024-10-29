@@ -1,5 +1,8 @@
+import Button from '@components/@shared/Button';
 import { ScrollTextArea } from '@components/@shared/Input';
+import { Modal } from '@components/@shared/Modal';
 import { useCommentAdd } from '@hooks/article/useArticleDetail';
+import { useModal } from '@hooks/useModal';
 import { useState } from 'react';
 
 interface CommentFromProps {
@@ -8,7 +11,7 @@ interface CommentFromProps {
 
 export default function CommentForm({ articleId }: CommentFromProps) {
   const [content, setContent] = useState('');
-
+  const { isOpen, onOpen, onClose } = useModal();
   const { mutate } = useCommentAdd();
 
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -21,7 +24,7 @@ export default function CommentForm({ articleId }: CommentFromProps) {
       mutate({ articleId, content });
       setContent('');
     } else {
-      alert('댓글을 입력해주세요');
+      onOpen();
     }
   };
 
@@ -44,6 +47,31 @@ export default function CommentForm({ articleId }: CommentFromProps) {
           등록
         </button>
       </div>
+      <Modal
+        isOpen={isOpen}
+        isXButton
+        onClose={onClose}
+        array="column"
+        padding="default"
+        bgColor="primary"
+        fontSize="16"
+        fontArray="center"
+        gap="40"
+      >
+        <Modal.Wrapper
+          array="column"
+          className="flex flex-col items-center justify-center gap-4"
+        >
+          <Modal.Header fontColor="primary" className="text-2xl-bold">
+            댓글을 입력해 주세요.
+          </Modal.Header>
+        </Modal.Wrapper>
+        <Modal.Footer>
+          <Button bgColor="red" onClick={onClose}>
+            닫기
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

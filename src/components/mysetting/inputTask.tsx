@@ -35,8 +35,6 @@ export default function InputTask() {
       { image: file },
       {
         onSuccess: (response) => {
-          console.log('Image upload response:', response);
-          // 성공적으로 URL이 변경된 경우, 해당 URL로 PETCH 요청 보내기
           if (response.url) {
             handelImageChange(response.url);
           }
