@@ -1,0 +1,53 @@
+/* Webkit 기반 브라우저에서 스크롤바 스타일 */
+.textarea::-webkit-scrollbar {
+  width: 5px; /* 스크롤바 너비 */
+}
+
+.textarea::-webkit-scrollbar-thumb {
+  background-color: #10b981; /* 스크롤바 색상 */
+  border-radius: 10px; /* 둥글게 만들기 */
+}
+
+.textarea::-webkit-scrollbar-track {
+  background: transparent; /* 스크롤바 트랙 색상 */
+}
+
+/* Webkit 기반 브라우저에서 스크롤바 스타일 */
+.autoTextarea::-webkit-scrollbar {
+  width: 5px; /* 스크롤바 너비 */
+}
+
+.autoTextarea::-webkit-scrollbar-thumb {
+  background-color: transparent; /* 스크롤바 색상 */
+  border-radius: 10px; /* 둥글게 만들기 */
+}
+
+.autoTextarea::-webkit-scrollbar-track {
+  background: transparent; /* 스크롤바 트랙 색상 */
+}
+
+.sidebarScroll::-webkit-scrollbar {
+  width: 5px; /* 스크롤바 너비 */
+}
+
+.sidebarScroll::-webkit-scrollbar-thumb {
+  background-color: #10b981; /* 스크롤바 색상 */
+  border-radius: 10px; /* 둥글게 만들기 */
+}
+
+.sidebarScroll::-webkit-scrollbar-track {
+  background: transparent; /* 스크롤바 트랙 색상 */
+}
+
+.dropdownScroll::-webkit-scrollbar {
+  width: 5px; /* 스크롤바 너비 */
+}
+
+.dropdownScroll::-webkit-scrollbar-thumb {
+  background-color: #10b981; /* 스크롤바 색상 */
+  border-radius: 10px; /* 둥글게 만들기 */
+}
+
+.dropdownScroll::-webkit-scrollbar-track {
+  background: transparent; /* 스크롤바 트랙 색상 */
+}
