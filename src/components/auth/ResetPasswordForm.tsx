@@ -88,9 +88,8 @@ export default function SignUpForm() {
       );
       return resetPasswordResponse; // 비밀번호 재설정 응답
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       // 비밀번호 재설정 성공 시 알림 모달 열기
-      console.log(data);
       onOpen();
     },
     onError: (error) => {
