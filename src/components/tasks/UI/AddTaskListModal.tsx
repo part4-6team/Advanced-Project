@@ -43,10 +43,10 @@ export default function AddTaskListModal({
       return postTaskList(params, data);
     },
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', groupId],
+      });
       onClose();
-    },
-    onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['taskList', groupId] });
     },
     onError: (error) => {
       console.error('createTaskList 실패:', error);

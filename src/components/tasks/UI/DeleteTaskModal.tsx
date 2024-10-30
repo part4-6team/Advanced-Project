@@ -18,7 +18,7 @@ export default function DeleteTaskModal({
   taskName,
 }: DeleteTaskModalProps) {
   const queryClient = useQueryClient();
-  const { currentTaskId: taskId } = useTaskListStore();
+  const { taskListId, taskId } = useTaskListStore();
 
   const { mutate: removeTask } = useMutation({
     mutationFn: async ({ params }: { params: TaskUrlParams }) => {
@@ -28,7 +28,7 @@ export default function DeleteTaskModal({
       onClose();
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['tasks', taskListId] });
     },
     onError: (error) => {
       console.error('patchTask 실패:', error);
@@ -38,9 +38,8 @@ export default function DeleteTaskModal({
   const handleClick = async () => {
     try {
       await removeTask({ params: { taskId } });
-      onClose();
     } catch (error) {
-      console.error('Error during deletion:', error);
+      console.error('removeTask 에러:', error);
     }
   };
 
@@ -55,7 +54,7 @@ export default function DeleteTaskModal({
       fontArray="center"
       gap="24"
     >
-      <Modal.Wrapper array="column" className="gap-3">
+      <Modal.Wrapper array="column" className=" gap-3">
         <Modal.Header
           fontSize="16"
           fontColor="primary"
@@ -68,7 +67,7 @@ export default function DeleteTaskModal({
             height={24}
           />
           <p className="leading-normal">
-            &apos;{taskName}&apos; <br />할 일을 정말 삭제하시겠어요?
+            &apos;{taskName}&apos; <br />할 일을 삭제하시겠어요?
           </p>
         </Modal.Header>
         <Modal.Content fontColor="secondary" fontSize="14" fontArray="center">

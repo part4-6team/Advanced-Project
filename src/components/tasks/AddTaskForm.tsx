@@ -5,6 +5,7 @@ import { useDate } from '@/src/contexts/DateContext';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import { postTask, TaskUrlParams } from '@/src/api/tasks/taskAPI';
+import { toKSTISOString } from '@utils/toKSTISOString';
 
 import Button from '@components/@shared/Button';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
@@ -30,7 +31,7 @@ const frequencyOptions: Option[] = [
 export default function AddTaskForm({ onClose }: AddTaskFormProps) {
   const queryClient = useQueryClient();
   const { date: contextDate, getCurrentMonth } = useDate();
-  const { groupId, selectedTaskListId } = useTaskListStore();
+  const { groupId, taskListId } = useTaskListStore();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedFrequency, setSelectedFrequency] = useState<Option>(
     frequencyOptions[0]
@@ -44,28 +45,28 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
     mode: 'onChange',
     defaultValues: {
       ...TASK_REQUEST_INIT.POST,
-      startDate: contextDate.toISOString(),
+      startDate: toKSTISOString(contextDate),
     },
   });
 
   // 폼 데이터 필터링
-  const filterTaskData = (
+  const filterTaskFormData = (
     data: TaskRequestBody['post']
   ): TaskRequestBody['post'] => {
-    const taskData: TaskRequestBody['post'] = {
+    const taskFormData: TaskRequestBody['post'] = {
       name: data.name,
       description: data.description,
       startDate: data.startDate,
-      frequency: data.frequency,
+      frequencyType: selectedFrequency.label || 'ONCE',
     };
     if (selectedFrequency.label === 'WEEKLY') {
       if (data.weekDays) {
-        taskData.weekDays = data.weekDays;
+        taskFormData.weekDays = data.weekDays;
       }
     } else if (selectedFrequency.label === 'MONTHLY') {
-      taskData.monthDay = data.monthDay;
+      taskFormData.monthDay = data.monthDay;
     }
-    return taskData;
+    return taskFormData;
   };
 
   const { mutate: createTask } = useMutation({
@@ -79,10 +80,11 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
       return postTask(params, data);
     },
     onSuccess: () => {
+      console.log(contextDate);
       onClose();
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks', groupId] });
+      queryClient.invalidateQueries({ queryKey: ['tasks', taskListId] });
     },
     onError: (error) => {
       console.error('createTask 실패:', error);
@@ -91,12 +93,11 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
 
   // 폼 데이터 제출 처리
   const onSubmit = async (data: any) => {
-    const taskData = filterTaskData(data);
+    const taskFormData = filterTaskFormData(data);
     await createTask({
-      params: { groupId, taskListId: selectedTaskListId },
-      data: taskData,
+      params: { groupId, taskListId },
+      data: taskFormData,
     });
-    console.log('taskData:', taskData, groupId, selectedTaskListId);
     onClose();
   };
 
@@ -115,7 +116,7 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
   // 이벤트 핸들러
   const handleFrequencySelect = (option: Option) => {
     setSelectedFrequency(option);
-    setValue('frequency', option.label || '', { shouldValidate: true });
+    setValue('frequencyType', option.label || '', { shouldValidate: true });
 
     resetValues(option.label);
   };

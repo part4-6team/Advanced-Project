@@ -1,41 +1,41 @@
 import { create } from 'zustand';
 import type { TaskListDto } from '../types/tasks/taskListDto';
 import type { TaskDto } from '../types/tasks/taskDto';
+import type { CommentDto } from '../types/tasks/commentDto';
 
 interface TaskListStore {
   groupId?: number;
+  taskListId: number | undefined;
   taskLists: TaskListDto[];
-  selectedTaskListId?: number; // 선택된 taskListId
-  selectedTasks: TaskDto[]; // 선택된 taskList의 tasks[] 데이터
-  currentTask?: TaskDto; // 선택된 task 데이터
-  currentTaskId?: number; // 선택된 taskID
+  tasks: TaskDto[]; // 선택된 taskList의 tasks[] 데이터
+  task?: TaskDto; // 선택된 task 데이터
+  taskId?: number | undefined; // 선택된 taskID
   isSidebarOpen: boolean; // task의 sidebar 상태
+  comments: CommentDto[]; // task의 comments[] 데이터
+  commentId: number;
+  SelectedCommentId: number;
   taskCompletionStatus: Record<number, boolean>; // 각 작업의 완료 상태
-  setTaskLists: (taskLists: TaskListDto[]) => void;
-  setSelectedTaskListId: (id: number | undefined) => void;
-  setSelectedTasks: (tasks: TaskDto[]) => void;
-  setCurrentTask: (task: TaskDto | undefined) => void;
-  setCurrentTaskId: (taskId: number | undefined) => void;
+
+  setGroupId: (groupId: number) => void;
+  setTaskLists: (taskLists: any) => void;
+  setTaskListId: (id: number | undefined) => void;
+  setTasks: (tasks: TaskDto[]) => void;
+  setTask: (task: TaskDto) => void;
+  setTaskId: (taskId: number | undefined) => void;
   setTaskCompletionStatus: (taskId: number, doneAt: string | null) => void; // Task의 완료 상태 설정
   setSidebarOpen: (isOpen: boolean) => void;
+  setComments: (comments: CommentDto[]) => void;
+  setCommentId: (commentId: number) => void;
+  setSelectedCommentId: (commentId: number) => void;
 }
 
 const initialTaskLists: TaskListDto[] = [
   {
-    groupId: 1,
-    id: 1,
-    name: 'TaskList1',
-    createdAt: '2024-10-01T10:00:00+09:00',
-    updatedAt: '2024-10-01T12:00:00+09:00',
-    displayIndex: 0,
-    tasks: [],
-  },
-  {
-    groupId: 1,
-    id: 2,
-    name: 'TaskList2',
-    createdAt: '2024-10-02T10:00:00+09:00',
-    updatedAt: '2024-10-02T12:00:00+09:00',
+    groupId: 0,
+    id: 0,
+    name: '',
+    createdAt: '',
+    updatedAt: '',
     displayIndex: 0,
     tasks: [],
   },
@@ -43,33 +43,33 @@ const initialTaskLists: TaskListDto[] = [
 
 const initialSelectedTasks: TaskDto[] = [
   {
-    id: 12141,
-    updatedAt: '2024-10-24T15:19:31+09:00',
-    date: '2024-10-24T09:00:00+09:00',
+    id: 0,
+    updatedAt: '',
+    date: '',
     doneAt: null,
-    recurringId: 3023,
-    name: '제로주 오늘 할 일',
-    description: '산더미',
+    recurringId: 0,
+    name: '',
+    description: '',
     frequency: 'ONCE',
     deletedAt: null,
     displayIndex: 0,
     recurring: {
-      id: 3023,
-      name: '제로주 오늘 할 일',
-      description: '산더미',
-      createdAt: '2024-10-24T15:15:42+09:00',
-      updatedAt: '2024-10-24T15:15:42+09:00',
-      startDate: '2024-10-24T09:00:00+09:00',
+      id: 0,
+      name: '',
+      description: '',
+      createdAt: '',
+      updatedAt: '',
+      startDate: '',
       frequencyType: 'ONCE',
       weekDays: [],
       monthDay: null,
-      taskListId: 1,
-      groupId: 1,
-      writerId: 1003,
+      taskListId: 0,
+      groupId: 0,
+      writerId: 0,
     },
     writer: {
-      id: 1003,
-      nickname: '제로주',
+      id: 0,
+      nickname: '',
       image: null,
     },
     doneBy: {
@@ -80,33 +80,33 @@ const initialSelectedTasks: TaskDto[] = [
 ];
 
 const initialTask: TaskDto = {
-  id: 12141,
-  updatedAt: '2024-10-24T15:19:31+09:00',
-  date: '2024-10-24T09:00:00+09:00',
+  id: 0,
+  updatedAt: '',
+  date: '',
   doneAt: null,
-  recurringId: 3023,
-  name: '제로주 오늘 할 일',
-  description: '산더미',
+  recurringId: 0,
+  name: '',
+  description: '',
   frequency: 'ONCE',
   deletedAt: null,
   displayIndex: 0,
   recurring: {
-    id: 3023,
-    name: '제로주 오늘 할 일',
-    description: '산더미',
-    createdAt: '2024-10-24T15:15:42+09:00',
-    updatedAt: '2024-10-24T15:15:42+09:00',
-    startDate: '2024-10-24T09:00:00+09:00',
+    id: 0,
+    name: '',
+    description: '',
+    createdAt: '',
+    updatedAt: '',
+    startDate: '',
     frequencyType: 'ONCE',
     weekDays: [],
     monthDay: null,
-    taskListId: 1,
-    groupId: 1,
-    writerId: 1003,
+    taskListId: 0,
+    groupId: 0,
+    writerId: 0,
   },
   writer: {
-    id: 1003,
-    nickname: '제로주',
+    id: 0,
+    nickname: '',
     image: null,
   },
   doneBy: {
@@ -115,33 +115,43 @@ const initialTask: TaskDto = {
   commentCount: 0,
 };
 
+const initialComments = [
+  {
+    id: 0,
+    writer: {
+      image: null,
+      nickname: '',
+      id: 0,
+    },
+    content: '',
+    createdAt: '',
+    updatedAt: '',
+  },
+];
+
 export const useTaskListStore = create<TaskListStore>((set) => ({
   groupId: undefined,
   taskLists: initialTaskLists,
-  selectedTaskListId: undefined,
-  selectedTasks: initialSelectedTasks,
-  currentTask: initialTask,
-  currentTaskId: undefined,
+  taskListId: undefined,
+  tasks: initialSelectedTasks,
+  taskId: 0,
+  task: initialTask,
   taskCompletionStatus: {},
   isSidebarOpen: false,
+  comments: initialComments,
+  commentId: 0,
+  SelectedCommentId: 0,
 
-  setData: (data: any) =>
-    set({
-      groupId: data.id,
-      taskLists: data.taskLists,
-    }),
-
-  setTaskLists: (taskLists: TaskListDto[]) => set({ taskLists }),
-  setSelectedTaskListId: (id: number | undefined) =>
-    set({ selectedTaskListId: id }),
-  setSelectedTasks: (tasks: TaskDto[]) => set({ selectedTasks: tasks }),
-  setCurrentTask: (task: TaskDto | undefined) => set({ currentTask: task }),
-  setCurrentTaskId: (taskId: number | undefined) =>
-    set({ currentTaskId: taskId }),
+  setGroupId: (groupId: number) => set({ groupId: groupId }),
+  setTaskLists: (taskLists) => set({ taskLists: taskLists }),
+  setTaskListId: (id: number | undefined) => set({ taskListId: id }),
+  setTasks: (tasks: TaskDto[]) => set({ tasks: tasks }),
+  setTask: (task: TaskDto | undefined) => set({ task }),
+  setTaskId: (taskId: number | undefined) => set({ taskId: taskId }),
   setTaskCompletionStatus: (taskId, doneAt) => {
     const isDone = doneAt !== null;
     set((state) => ({
-      selectedTasks: state.selectedTasks.map(
+      tasks: state.tasks.map(
         (task) =>
           task.id === taskId ? { ...task, doneAt, done: isDone } : task // done 값을 업데이트
       ),
@@ -152,4 +162,7 @@ export const useTaskListStore = create<TaskListStore>((set) => ({
     }));
   },
   setSidebarOpen: (isOpen) => set({ isSidebarOpen: isOpen }),
+  setComments: (comments: CommentDto[]) => set({ comments }),
+  setCommentId: (commentId: number) => set({ commentId: commentId }),
+  setSelectedCommentId: (commentId: number) => set({ taskId: commentId }),
 }));

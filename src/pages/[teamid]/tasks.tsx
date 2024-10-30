@@ -1,49 +1,75 @@
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
+import { useDate } from '@/src/contexts/DateContext';
 import { useQuery } from '@tanstack/react-query';
 import { useTaskListStore } from '@/src/stores/taskListStore';
-import { getTaskLists } from '@/src/api/tasks/taskListAPI';
+import { getTaskLists, getTaskList } from '@/src/api/tasks/taskListAPI';
 import TaskDate from '@components/tasks/Layout/TaskDate';
 import TaskList from '@components/tasks/Layout/TaskList';
 import AddTaskButton from '@components/tasks/UI/AddTaskButton';
-import { DateProvider } from '@/src/contexts/DateContext';
+import { toKSTISOString } from '@utils/toKSTISOString';
 
 export default function TasksPage() {
   const router = useRouter();
-  const { teamid, taskListId } = router.query;
-  const groupId = typeof teamid === 'string' ? parseInt(teamid, 10) : undefined;
-  const parsedTaskListId =
-    typeof taskListId === 'string' ? parseInt(taskListId, 10) : undefined;
-  const { setTaskLists } = useTaskListStore();
+  const { teamid } = router.query;
+  const { date } = useDate();
+  const taskListId = parseInt(teamid as string, 10) || undefined;
 
-  // get, 팀의 모든 목록
+  const { groupId, setTasks, setGroupId, setTaskLists, setTaskListId } =
+    useTaskListStore();
+
+  // GET, taskList 및 tasks[]
+  const {
+    data: taskListData,
+    isLoading: taskListLoading,
+    isError: taskListError,
+  } = useQuery({
+    queryKey: ['tasks', taskListId, toKSTISOString(date)],
+    queryFn: () =>
+      getTaskList({
+        id: taskListId,
+        date: toKSTISOString(date),
+      }),
+    enabled: !!taskListId && !!date,
+    refetchOnWindowFocus: true,
+  });
+
+  // store, taskListData
+  useEffect(() => {
+    if (taskListData) {
+      setGroupId(taskListData.groupId);
+      setTaskListId(taskListData.id);
+      setTasks(taskListData.tasks);
+    }
+  }, [taskListData]);
+
+  // GET, group의 taskLists
   const {
     data: taskListsData,
     isLoading: taskListsLoading,
     isError: taskListsError,
   } = useQuery({
-    queryKey: ['taskList', groupId],
+    queryKey: ['tasks', groupId],
     queryFn: () => getTaskLists({ groupId }),
     enabled: !!groupId,
+    refetchOnWindowFocus: true,
   });
 
-  // store
+  // store, taskListsData
   useEffect(() => {
     if (taskListsData) {
-      setTaskLists(taskListsData);
+      setTaskLists(taskListsData.taskLists);
     }
-  }, [taskListsData, setTaskLists]);
+  }, [taskListsData]);
 
   if (taskListsLoading) return <div>리스트 페이지 로딩 중...</div>;
   if (taskListsError) return <div>리스트 페이지 로딩 에러</div>;
 
   return (
-    <DateProvider>
-      <main className="flex flex-col gap-6 px-4 pt-6 text-left md:px-6 xl:mx-auto xl:max-w-[1200px] xl:px-0 xl:pt-10">
-        <TaskDate />
-        <TaskList initialTaskListId={parsedTaskListId} />
-        <AddTaskButton />
-      </main>
-    </DateProvider>
+    <main className="flex flex-col gap-6 px-4 pt-6 text-left md:px-6 xl:mx-auto xl:max-w-[1200px] xl:px-0 xl:pt-10">
+      <TaskDate />
+      <TaskList />
+      <AddTaskButton />
+    </main>
   );
 }

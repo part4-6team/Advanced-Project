@@ -20,6 +20,6 @@ export interface TaskListDto {
   updatedAt: string;
   createdAt: string;
   name: string;
-  id: number;
+  id: number | undefined;
   tasks: TaskDto[];
 }

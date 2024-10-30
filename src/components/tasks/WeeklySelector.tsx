@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Button from '@components/@shared/Button';
 
 const daysOfWeek = [
-  { label: '일', value: 7 },
+  { label: '일', value: 0 },
   { label: '월', value: 1 },
   { label: '화', value: 2 },
   { label: '수', value: 3 },

@@ -4,7 +4,7 @@ export interface TaskRequestBody {
     name: string; // 제목
     description: string | null; // 메모
     startDate: string; // 시작 날짜
-    frequency: string; // 반복 주기
+    frequencyType: string; // 반복 주기
     weekDays?: number[]; // 주 반복, 요일 값
     monthDay?: number | null; // 월 반복, 월의 날짜 값
   };
@@ -27,14 +27,14 @@ export interface UserDto {
 
 export interface TaskDto {
   doneBy: {
-    user: string | null;
+    user: null | UserDto;
   };
   writer: UserDto;
   displayIndex: number;
   commentCount: number;
   deletedAt: string | null;
   recurringId: number;
-  recurring: RecurringDto;
+  recurring?: RecurringDto;
   frequency: 'DAILY' | 'WEEKLY' | 'MONTHLY' | 'ONCE';
   updatedAt: string;
   doneAt: string | null;

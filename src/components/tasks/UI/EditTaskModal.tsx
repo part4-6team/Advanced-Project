@@ -21,7 +21,7 @@ export default function EditTaskModal({
   done,
 }: EditTaskModal) {
   const queryClient = useQueryClient();
-  const { currentTaskId: taskId } = useTaskListStore();
+  const { taskListId, taskId } = useTaskListStore();
   const {
     register,
     handleSubmit,
@@ -48,7 +48,7 @@ export default function EditTaskModal({
       onClose();
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks', taskId] });
+      queryClient.invalidateQueries({ queryKey: ['tasks', taskListId] });
     },
     onError: (error) => {
       console.error('patchTask 실패:', error);
@@ -80,7 +80,7 @@ export default function EditTaskModal({
         <Modal.Header array="column" className="gap-3">
           <h1 className="text-lg-medium text-text-primary">할 일 수정하기</h1>
           <p className="text-md-medium text-text-secondary">
-            제목과 메모한 내용을{' '}
+            제목과 메모 내용을{' '}
             <span className="mt-1 flex flex-grow justify-center md:inline">
               변경할 수 있습니다.
             </span>
