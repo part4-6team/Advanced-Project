@@ -11,17 +11,13 @@ export default function Content() {
   const router = useRouter();
 
   const handleRedirect = () => {
-    console.log('User:', user);
     if (user) {
-      if (user.teamId) {
-        // 로그인 O, 소속된 팀 O
-        router.push(`/${user.teamId}`); // 팀 목록 페이지 추가 예정
+      if (user.id) {
+        router.push(`/myteam`);
       } else {
-        // 로그인 O, 소속된 팀 X
         router.push('/addteam');
       }
     } else {
-      // 로그인 X
       router.push('/signin');
     }
   };
