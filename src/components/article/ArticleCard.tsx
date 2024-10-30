@@ -1,6 +1,5 @@
 import Image from 'next/image';
 import ProfileIcon from 'public/icons/profile_large.svg';
-import HeartIcon from 'public/icons/heart.svg';
 import ArrayDropdown from '@components/article/ArrayDropdown';
 import { useCards } from '@hooks/article/useArticleCard';
 import NetworkError from '@components/@shared/NetworkError';
@@ -9,6 +8,7 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
+import Heart from './Heart';
 
 interface ArticleCardProps {
   keyword: string;
@@ -76,14 +76,14 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
             <ul className="grid gap-4 xl:grid-cols-2">
               {page.map((card: Card) => (
                 <li key={card.id}>
-                  <article className="h-[178px] w-full rounded-xl border border-background-tertiary bg-background-secondary">
+                  <article className="relative h-[178px] w-full rounded-xl border border-background-tertiary bg-background-secondary">
                     <div
-                      className="mx-4 mb-4 mt-6 cursor-pointer  "
+                      className="mx-4 mb-4 mt-6 cursor-pointer"
                       onClick={() => handleDetalCard(card.id)}
                     >
                       <div className="mb-10 flex justify-between">
                         <div>
-                          <h3 className="mb-3 text-md-medium md:text-2lg-medium">
+                          <h3 className=" mb-3 text-md-medium md:text-2lg-medium">
                             {card.title}
                           </h3>
                           <span className="text-xs-regular text-slate-400 md:text-md-medium">
@@ -108,12 +108,14 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
                           </span>
                         </div>
                         <div className="flex items-center gap-1">
-                          <HeartIcon />
                           <span className="text-xs-regular text-slate-400 md:text-md-medium">
                             {card.likeCount}
                           </span>
                         </div>
                       </div>
+                    </div>
+                    <div className="absolute bottom-[22px] right-[30px]">
+                      <Heart />
                     </div>
                   </article>
                 </li>
