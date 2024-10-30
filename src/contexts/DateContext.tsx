@@ -1,19 +1,13 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import { createContext, useContext, useState, ReactNode } from 'react';
 import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/ko';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 interface DateContextProps {
   date: dayjs.Dayjs;
   setDate: (date: dayjs.Dayjs) => void;
   today: dayjs.Dayjs;
   getCurrentMonth: () => number;
-  toKSTISOString: (date: dayjs.Dayjs) => string;
 }
 
 const DateContext = createContext<DateContextProps | undefined>(undefined);
@@ -29,15 +23,8 @@ export function DateProvider({ children }: { children: ReactNode }) {
     return date.month() + 1;
   };
 
-  // 한국 시간대 ISO 변환
-  const toKSTISOString = (date: dayjs.Dayjs) => {
-    return dayjs(date).tz('Asia/Seoul').format();
-  };
-
   return (
-    <DateContext.Provider
-      value={{ date, setDate, today, getCurrentMonth, toKSTISOString }}
-    >
+    <DateContext.Provider value={{ date, setDate, today, getCurrentMonth }}>
       {children}
     </DateContext.Provider>
   );
