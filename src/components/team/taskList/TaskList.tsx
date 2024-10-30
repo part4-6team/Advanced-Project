@@ -3,6 +3,7 @@ import { useTeamStore } from '@/src/stores/teamStore';
 import Link from 'next/link';
 import TaskBar from './TaskBar';
 import AddTaskListModal from './AddTaskListModal';
+import styles from '../../../styles/scroll.module.css';
 
 export default function TaskList() {
   const {
