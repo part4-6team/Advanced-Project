@@ -1,4 +1,3 @@
-import { useEffect } from 'react';
 import Link from 'next/link';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import TaskCard from '../TaskCard';

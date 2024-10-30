@@ -80,7 +80,6 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
       return postTask(params, data);
     },
     onSuccess: () => {
-      console.log(contextDate);
       onClose();
     },
     onSettled: () => {
@@ -165,12 +164,7 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
         />
       </div>
       {selectedFrequency.label === 'WEEKLY' && (
-        <WeeklySelector
-          onChange={handleWeeklyDaysChange}
-          register={register('weekDays', {
-            required: '요일을 선택해야 합니다.',
-          })}
-        />
+        <WeeklySelector onChange={handleWeeklyDaysChange} />
       )}
       <ScrollTextArea
         label="할 일 메모"

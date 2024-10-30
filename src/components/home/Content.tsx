@@ -13,7 +13,7 @@ export default function Content() {
   const handleRedirect = () => {
     if (user) {
       if (user.id) {
-        router.push(`/myteam`);
+        router.push('/myteam');
       } else {
         router.push('/addteam');
       }

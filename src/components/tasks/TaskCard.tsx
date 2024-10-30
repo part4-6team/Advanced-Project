@@ -11,10 +11,10 @@ import useDropdownModals from '@hooks/useDropdownModals';
 import Image from 'next/image';
 
 import EditDropdown, { editOption } from '@components/team/EditDropdown';
+import Link from 'next/link';
 import EditTaskModal from './UI/EditTaskModal';
 import DeleteTaskModal from './UI/DeleteTaskModal';
 import { TaskSideBar } from './TaskSideBar';
-import Link from 'next/link';
 import CheckBox from './CheckBox';
 
 interface TaskCardProps {

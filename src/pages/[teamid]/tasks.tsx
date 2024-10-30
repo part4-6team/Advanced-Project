@@ -19,11 +19,7 @@ export default function TasksPage() {
     useTaskListStore();
 
   // GET, taskList 및 tasks[]
-  const {
-    data: taskListData,
-    isLoading: taskListLoading,
-    isError: taskListError,
-  } = useQuery({
+  const { data: taskListData } = useQuery({
     queryKey: ['tasks', taskListId, toKSTISOString(date)],
     queryFn: () =>
       getTaskList({
@@ -41,7 +37,7 @@ export default function TasksPage() {
       setTaskListId(taskListData.id);
       setTasks(taskListData.tasks);
     }
-  }, [taskListData]);
+  }, [taskListData, setGroupId, setTaskListId, setTasks]);
 
   // GET, group의 taskLists
   const {
@@ -60,7 +56,7 @@ export default function TasksPage() {
     if (taskListsData) {
       setTaskLists(taskListsData.taskLists);
     }
-  }, [taskListsData]);
+  }, [taskListsData, setTaskLists]);
 
   if (taskListsLoading) return <div>리스트 페이지 로딩 중...</div>;
   if (taskListsError) return <div>리스트 페이지 로딩 에러</div>;

@@ -142,12 +142,12 @@ export const useTaskListStore = create<TaskListStore>((set) => ({
   commentId: 0,
   SelectedCommentId: 0,
 
-  setGroupId: (groupId: number) => set({ groupId: groupId }),
-  setTaskLists: (taskLists) => set({ taskLists: taskLists }),
+  setGroupId: (groupId: number) => set({ groupId }),
+  setTaskLists: (taskLists) => set({ taskLists }),
   setTaskListId: (id: number | undefined) => set({ taskListId: id }),
-  setTasks: (tasks: TaskDto[]) => set({ tasks: tasks }),
+  setTasks: (tasks: TaskDto[]) => set({ tasks }),
   setTask: (task: TaskDto | undefined) => set({ task }),
-  setTaskId: (taskId: number | undefined) => set({ taskId: taskId }),
+  setTaskId: (taskId: number | undefined) => set({ taskId }),
   setTaskCompletionStatus: (taskId, doneAt) => {
     const isDone = doneAt !== null;
     set((state) => ({
@@ -163,6 +163,6 @@ export const useTaskListStore = create<TaskListStore>((set) => ({
   },
   setSidebarOpen: (isOpen) => set({ isSidebarOpen: isOpen }),
   setComments: (comments: CommentDto[]) => set({ comments }),
-  setCommentId: (commentId: number) => set({ commentId: commentId }),
+  setCommentId: (commentId: number) => set({ commentId }),
   setSelectedCommentId: (commentId: number) => set({ taskId: commentId }),
 }));

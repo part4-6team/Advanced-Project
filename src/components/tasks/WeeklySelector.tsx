@@ -12,7 +12,6 @@ const daysOfWeek = [
 ];
 interface WeeklySelectorProps {
   onChange: (selectedWeeklyDays: number[]) => void;
-  register: { name: string; onChange: (value: any) => void };
 }
 
 export default function WeeklySelector({ onChange }: WeeklySelectorProps) {
@@ -22,6 +21,7 @@ export default function WeeklySelector({ onChange }: WeeklySelectorProps) {
     const newSelectedWeeklyDays = selectedWeeklyDays.includes(dayValue)
       ? selectedWeeklyDays.filter((d) => d !== dayValue) // 선택 해제
       : [...selectedWeeklyDays, dayValue]; // 선택 추가
+
     setSelectedWeeklyDays(newSelectedWeeklyDays);
     onChange(newSelectedWeeklyDays);
   };

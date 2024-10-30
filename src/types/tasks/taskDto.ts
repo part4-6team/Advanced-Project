@@ -25,6 +25,21 @@ export interface UserDto {
   id: number;
 }
 
+export interface RecurringDto {
+  id: number;
+  name: string;
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+  startDate: string;
+  frequencyType: string;
+  weekDays: number[];
+  monthDay: string | null;
+  taskListId: number;
+  groupId: number;
+  writerId: number;
+}
+
 export interface TaskDto {
   doneBy: {
     user: null | UserDto;
@@ -42,19 +57,4 @@ export interface TaskDto {
   description: string;
   name: string;
   id: number;
-}
-
-export interface RecurringDto {
-  id: number;
-  name: string;
-  description: string | null;
-  createdAt: string;
-  updatedAt: string;
-  startDate: string;
-  frequencyType: string;
-  weekDays: [];
-  monthDay: string | null;
-  taskListId: number;
-  groupId: number;
-  writerId: number;
 }
