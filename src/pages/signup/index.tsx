@@ -1,6 +1,6 @@
 import Divider from '@components/auth/Divider';
 import GoogleOauthButton from '@components/auth/GoogleOauthButton';
-import KakaoOauthButton from '@components/auth/KakaoOauthButton';
+import KaKaoOauthButton from '@components/auth/KaKaoOauthButton';
 import SignUpForm from '@components/auth/SignUpForm';
 
 export default function SignUp() {
@@ -13,7 +13,7 @@ export default function SignUp() {
           <span className="text-lg-medium text-white">간편 회원가입하기</span>
           <div className="flex gap-4">
             <GoogleOauthButton />
-            <KakaoOauthButton />
+            <KaKaoOauthButton />
           </div>
         </div>
       </div>
