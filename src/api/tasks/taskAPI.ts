@@ -1,5 +1,5 @@
 import type { TaskRequestBody } from '@/src/types/tasks/taskDto';
-import { apiCall } from './apiCall';
+import { apiCall } from '@utils/apiCall';
 
 /**
  * @파라미터

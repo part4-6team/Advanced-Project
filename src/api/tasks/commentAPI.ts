@@ -1,15 +1,15 @@
 import type { CommentRequestBody } from '@/src/types/tasks/commentDto';
-import { apiCall } from './apiCall';
+import { apiCall } from '@utils/apiCall';
 
 export interface CommentUrlParams {
-  taskId: number;
+  taskId: number | undefined;
   commentId?: number;
   updatedComment?: string;
   comment?: string;
 }
 
 // 공통 경로
-const getCommentPath = (taskId: number, commentId?: number) => {
+const getCommentPath = (taskId: number | undefined, commentId?: number) => {
   let path = `tasks/${taskId}/comments`;
   if (commentId) {
     path += `/${commentId}`;
