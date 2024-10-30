@@ -11,8 +11,7 @@ export interface CommentRequestBody {
 // Response
 export interface CommentDto {
   id: number;
-  taskId: number;
-  teamId: string;
+  writer: { image: string | null; nickname: string; id: number };
   content: string;
   createdAt: string;
   updatedAt: string;
