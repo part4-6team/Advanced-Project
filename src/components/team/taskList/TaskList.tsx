@@ -43,17 +43,18 @@ export default function TaskList() {
           아직 할 일 목록이 없습니다.
         </p>
       )}
-      <div className="flex flex-col gap-[10px]">
-        {taskLists.map((taskList) => (
-          <Link href={`/${id}/tasks`}>
+
+      <div className={`max-h-[320px] overflow-y-auto ${styles.taskListScroll}`}>
+        <div className="flex flex-col gap-[10px]">
+          {taskLists.map((taskList) => (
             <TaskBar
               key={taskList.id}
               name={taskList.name}
               tasks={taskList.tasks}
               id={taskList.id}
             />
-          </Link>
-        ))}
+          ))}
+        </div>
       </div>
     </section>
   );
