@@ -92,9 +92,7 @@ export default function SignUpForm() {
       // 비밀번호 재설정 성공 시 알림 모달 열기
       onOpen();
     },
-    onError: (error) => {
-      console.error('비밀번호 재설정 에러:', error);
-    },
+    // 여기에 비밀번호 설정시 에러 모달 넣어야함@@@
   });
 
   // 받은 링크의 토큰을 가지고 비밀번호 재설정하기

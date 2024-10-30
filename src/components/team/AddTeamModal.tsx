@@ -2,7 +2,7 @@ import Button from '@components/@shared/Button';
 import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import ProfileImageInput from '@components/@shared/ProfileImageInput';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postGroupById } from '@/src/api/team/teamAPI';
 import { postImage } from '@/src/api/imageAPI';
@@ -52,6 +52,10 @@ export default function AddTeamModal({ isOpen, onClose }: AddTeamModalProps) {
         router.push(`/${groupId}`); // 해당 그룹 페이지로 리다이렉트
       }
     },
+    onSettled: () => {
+      // 쿼리 무효화 및 리패치
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
     onError: (error) => {
       console.error('그룹 생성 실패:', error);
     },
@@ -67,13 +71,17 @@ export default function AddTeamModal({ isOpen, onClose }: AddTeamModalProps) {
         createGroup({ image: imageUrl, name: teamName });
       }
     },
+    onSettled: () => {
+      // 쿼리 무효화 및 리패치
+      queryClient.invalidateQueries({ queryKey: ['user'] });
+    },
     onError: (error) => {
       console.error('이미지 업로드 실패:', error);
     },
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     if (value.length <= 30) {
       setTeamName(value);
       clearError('teamName');
@@ -94,18 +102,17 @@ export default function AddTeamModal({ isOpen, onClose }: AddTeamModalProps) {
     setImageFile(imgFile);
   };
 
-  useEffect(() => {
-    if (!isOpen) {
-      setTeamName('');
-      clearError('teamName');
-    }
-  }, [isOpen]);
+  const handleClose = () => {
+    setTeamName('');
+    clearError('teamName');
+    onClose();
+  };
 
   return (
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={onClose}
+      onClose={handleClose}
       array="column"
       padding="default"
       bgColor="primary"

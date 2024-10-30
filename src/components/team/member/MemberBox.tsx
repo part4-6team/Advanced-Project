@@ -65,7 +65,10 @@ export default function MemberBox({
             {userEmail}
           </p>
         </div>
-        <div onClick={handleDropdownClick}>
+        <div
+          onClick={handleDropdownClick}
+          className="mr-[-10px] w-[20px] cursor-pointer rounded-full hover:bg-[#ffffff1c]"
+        >
           <ExileDropdown onSelect={handleExileClick} />
         </div>
       </div>

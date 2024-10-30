@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { useTaskListContext } from '@/src/contexts/TaskListContext';
 import type { TaskListDto, TaskDto } from '@/src/types/tasks/TaskListDto';
 
 import TaskCard from '../TaskCard';

@@ -31,7 +31,7 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
 
   // 입력값을 로컬 상태로 업데이트
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
+    const { value } = e.target;
     if (value.length <= 30) {
       setLocalTeamName(value);
       clearError('teamName');
@@ -66,6 +66,7 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
     onSettled: () => {
       // 쿼리 무효화 및 리패치
       queryClient.invalidateQueries({ queryKey: ['group', id] });
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
       console.error('그룹 생성 실패:', error);
@@ -78,9 +79,15 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
     mutationFn: (file: File) => postImage(file),
     onSuccess: (imgUrl: string) => {
       // 이미지 URL을 성공적으로 받으면 그룹 수정 요청
-      if (validateValueOnSubmit('teamName', TeamNames, localTeamName)) {
+      if (
+        validateValueOnSubmit('teamName', TeamNames, localTeamName, teamName)
+      ) {
         editGroup({ groupId: id, image: imgUrl, name: localTeamName });
       }
+    },
+    onSettled: () => {
+      // 쿼리 무효화 및 리패치
+      queryClient.invalidateQueries({ queryKey: ['user'] });
     },
     onError: (error) => {
       console.error('이미지 업로드 실패:', error);
@@ -98,11 +105,14 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
     }
   };
 
-  // 모달이 열릴 때 teamName을 로컬 상태에 설정
+  const handleModalClose = () => {
+    clearError('teamName');
+    onClose();
+  };
+
   useEffect(() => {
     if (isOpen) {
       setLocalTeamName(teamName);
-      clearError('teamName');
     }
   }, [isOpen, teamName]);
 
@@ -110,7 +120,7 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
     <Modal
       isOpen={isOpen}
       isXButton
-      onClose={onClose}
+      onClose={handleModalClose}
       array="column"
       padding="default"
       bgColor="primary"
