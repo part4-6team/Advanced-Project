@@ -1,22 +1,19 @@
-import { useRouter } from 'next/router';
 import { useModal } from '@hooks/useModal';
 import { useTeamStore } from '@/src/stores/teamStore';
 import TaskBar from './TaskBar';
 import AddTaskListModal from './AddTaskListModal';
+import Link from 'next/link';
 
 export default function TaskList() {
-  const router = useRouter();
   const {
     isOpen: addListIsOpen,
     onOpen: addListOpenModal,
     onClose: addListCloseModal,
   } = useModal();
-  const { taskLists, id: teamid } = useTeamStore();
-  const listCount = taskLists.length;
 
-  const handleTaskListClick = (taskListId: number) => {
-    router.push(`/${teamid}/tasks?taskListId=${taskListId}`);
-  };
+  const { taskLists, id } = useTeamStore();
+
+  const listCount = taskLists.length;
 
   return (
     <section>
@@ -36,7 +33,7 @@ export default function TaskList() {
           <AddTaskListModal
             isOpen={addListIsOpen}
             onClose={addListCloseModal}
-            groupId={teamid}
+            groupId={id}
           />
         </div>
       </div>
@@ -45,20 +42,16 @@ export default function TaskList() {
           아직 할 일 목록이 없습니다.
         </p>
       )}
-
       <div className="flex flex-col gap-[10px]">
         {taskLists.map((taskList) => (
-          <div
-            key={taskList.id}
-            onClick={() => handleTaskListClick(taskList.id)}
-          >
+          <Link href={`/${id}/tasks`}>
             <TaskBar
               key={taskList.id}
               name={taskList.name}
               tasks={taskList.tasks}
               id={taskList.id}
             />
-          </div>
+          </Link>
         ))}
       </div>
     </section>
