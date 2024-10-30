@@ -14,17 +14,21 @@ export default function getTimeAgo(dateString: string) {
 
   if (minutes < 1) {
     return '방금 전';
-  } else if (hours < 1) {
-    return `${minutes}분 전`;
-  } else if (days < 1) {
-    return `${hours}시간 전`;
-  } else if (weeks < 1) {
-    return `${days}일 전`;
-  } else if (months < 1) {
-    return `${weeks}주 전`;
-  } else if (years < 1) {
-    return `${months}달 전`;
-  } else {
-    return `${years}년 전`;
   }
+  if (hours < 1) {
+    return `${minutes}분 전`;
+  }
+  if (days < 1) {
+    return `${hours}시간 전`;
+  }
+  if (weeks < 1) {
+    return `${days}일 전`;
+  }
+  if (months < 1) {
+    return `${weeks}주 전`;
+  }
+  if (years < 1) {
+    return `${months}달 전`;
+  }
+  return `${years}년 전`;
 }

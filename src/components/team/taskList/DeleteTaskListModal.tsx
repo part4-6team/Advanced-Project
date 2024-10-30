@@ -32,7 +32,7 @@ export default function DeleteTaskListModal({
 
   // 목록 삭제 Mutation
   const { mutate: deleteList } = useMutation({
-    mutationFn: (id: number) => deleteTaskList(id),
+    mutationFn: (listId: number) => deleteTaskList(listId),
     onSuccess: () => {
       onClose();
     },
@@ -51,6 +51,35 @@ export default function DeleteTaskListModal({
       return;
     }
     deleteList(taskListId);
+
+    // 로컬 스토리지에서 기존 TaskLists 가져오기 (없으면 빈 배열)
+    const existingTaskListsString = localStorage.getItem(`TaskLists_${id}`);
+
+    let existingTaskLists = [];
+    if (existingTaskListsString) {
+      try {
+        existingTaskLists = JSON.parse(existingTaskListsString);
+
+        // JSON 파싱 후 배열인지 확인
+        if (!Array.isArray(existingTaskLists)) {
+          existingTaskLists = []; // 배열이 아닐 경우 빈 배열로 초기화
+        }
+      } catch (error) {
+        console.error(
+          '로컬 스토리지에서 TaskLists를 파싱하는 중 오류 발생:',
+          error
+        );
+        existingTaskLists = []; // 파싱 오류 발생 시 빈 배열로 초기화
+      }
+    }
+
+    // 삭제할 항목의 name을 가진 요소 필터링
+    const updatedTaskLists = existingTaskLists.filter(
+      (task) => task.name !== taskName
+    );
+
+    // 업데이트된 배열을 로컬 스토리지에 저장
+    localStorage.setItem(`TaskLists_${id}`, JSON.stringify(updatedTaskLists));
   };
 
   return (
