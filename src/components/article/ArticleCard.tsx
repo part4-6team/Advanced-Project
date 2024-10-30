@@ -1,5 +1,4 @@
 import Image from 'next/image';
-import ProfileIcon from 'public/icons/profile_large.svg';
 import ArrayDropdown from '@components/article/ArrayDropdown';
 import { useCards } from '@hooks/article/useArticleCard';
 import NetworkError from '@components/@shared/NetworkError';
@@ -29,13 +28,14 @@ interface Card {
 
 export default function ArticleCard({ keyword }: ArticleCardProps) {
   const [orderBy, setorderBy] = useState('recent');
+
   const {
     data: cards,
     isError,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useCards(6, orderBy, keyword || '');
+  } = useCards(10, orderBy, keyword || '');
   const router = useRouter();
 
   const handleDetalCard = (id: number) => {
@@ -102,7 +102,13 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-3">
-                          <ProfileIcon />
+                          <Image
+                            src="/icons/profile_large.svg"
+                            width={32}
+                            height={32}
+                            alt="게시글 이미지"
+                            className="rounded-full"
+                          />
                           <span className="text-xs-medium md:text-md-medium">
                             {card.writer.nickname}
                           </span>
@@ -114,8 +120,8 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
                         </div>
                       </div>
                     </div>
-                    <div className="absolute bottom-[22px] right-[30px]">
-                      <Heart />
+                    <div className="absolute bottom-[18px] right-[30px]">
+                      <Heart articleId={card.id} />
                     </div>
                   </article>
                 </li>

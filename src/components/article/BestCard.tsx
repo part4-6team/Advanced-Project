@@ -123,8 +123,8 @@ export default function BestCard({ keyword }: BestCardProps) {
                   </div>
                 </div>
               </div>
-              <div className="absolute bottom-5 right-7">
-                <Heart />
+              <div className="absolute bottom-[15px] right-[30px]">
+                <Heart articleId={card.id} />
               </div>
             </article>
           </li>

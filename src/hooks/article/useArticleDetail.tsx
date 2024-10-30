@@ -12,7 +12,7 @@ interface FetchCardDetailProps {
 
 export const useDetailCard = ({ articleId }: FetchCardDetailProps) => {
   return useQuery<Article>({
-    queryKey: ['DetailCard'],
+    queryKey: ['DetailCard', articleId],
     queryFn: () => fetchCardDetail({ articleId }),
     enabled: !!articleId,
   });
