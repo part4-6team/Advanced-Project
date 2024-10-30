@@ -59,10 +59,18 @@ export default function GoogleOauth() {
               );
               const { accessToken, refreshToken, user } =
                 postSignInGoogleResponse;
-
               setTokens(accessToken, refreshToken);
               updateUser(user);
-              router.push('/myteam');
+              /**
+               * 간편 로그인 api 호출 응답에 신규 사용자 구분이 없기 때문에
+               * 닉네임 길이로 신규 사용자인지 아닌지 분별
+               * 처음 간편 로그인 시 구글에서 주는 닉네임이 10자 이상의 숫자값이기 때문
+               */
+              if (user.nickname.length > 10) {
+                router.push('/oauth/signup/google');
+              } else {
+                router.push('/myteam');
+              }
             } catch (signInError) {
               console.error('구글 간편 로그인 API 호출 에러:', signInError);
               setErrorMessage('구글 간편 로그인 중 오류가 발생했습니다.');
@@ -84,7 +92,7 @@ export default function GoogleOauth() {
 
   return (
     <div>
-      {loading && <div>구글 로그인 중</div>}
+      {loading && <div>구글 인증 중</div>}
       {errorMessage && <div className="text-status-danger">{errorMessage}</div>}
     </div>
   );

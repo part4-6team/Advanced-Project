@@ -35,8 +35,8 @@ export const postRefreshToken = async (refreshToken: string) => {
 
 // 구글 로그인 API
 export const postSignInGoogle = async (
-  redirectUri: string | undefined,
-  token: string | string[] | undefined,
+  redirectUri: string,
+  token: string | string[],
   state?: string
 ) => {
   const response = await publicAxiosInstance.post('auth/signIn/GOOGLE', {
@@ -49,8 +49,8 @@ export const postSignInGoogle = async (
 
 // 카카오 로그인 API
 export const postSignInKakao = async (
-  redirectUri: string | undefined,
-  token: string | string[] | undefined,
+  redirectUri: string,
+  token: string | string[],
   state?: string
 ) => {
   const response = await publicAxiosInstance.post('auth/signIn/KAKAO', {
