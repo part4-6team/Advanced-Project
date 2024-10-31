@@ -72,7 +72,7 @@ export function TaskSideBar({ isOpen, onClose }: TaskSideBarProps) {
 
       const patchData: TaskRequestBody['patch'] = {
         name: taskData.name,
-        description: taskData.description,
+        description: taskData.description ? taskData.description : '',
         done: !currentTaskStatus,
       };
 

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import CalenderIcon from '@icons/calendar_large.svg';
 import CommentIcon from '@icons/comment.svg';
 import RepeatIcon from '@icons/repeat.svg';
@@ -46,7 +47,7 @@ export default function TaskCard({ task }: TaskCardProps) {
     setTaskId(task.id);
   };
 
-  const isChecked = taskCompletionStatus[task.id]?.done;
+  const isChecked = taskCompletionStatus[task.id]?.done ?? task.doneAt !== null;
 
   return (
     <li className="flex flex-col gap-[10px] rounded-lg bg-background-secondary px-[14px] py-3 text-text-default">
