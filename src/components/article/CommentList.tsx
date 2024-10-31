@@ -3,14 +3,26 @@ import { useCommentCards } from '@hooks/article/useCommentCard';
 import NetworkError from '@components/@shared/NetworkError';
 import { useRouter } from 'next/router';
 import { useInView } from 'react-intersection-observer';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import dayjs from 'dayjs';
+import Dropdown, { Option } from '@components/@shared/Dropdown';
+import { useModal } from '@hooks/useModal';
+import CommentDeletMoal from './CommentDeletModal';
 
 export default function CommentList() {
   const router = useRouter();
   const { articleId } = router.query;
+  const [selectedCommentId, setSelectedCommentId] = useState<string | null>(
+    null
+  );
+
+  const {
+    isOpen: CommentDeleteIsOpen,
+    onOpen: CommentDeleteOpenModal,
+    onClose: CommentDeleteCloseModal,
+  } = useModal();
 
   const {
     data,
@@ -46,6 +58,42 @@ export default function CommentList() {
 
   const comments = data?.pages.flatMap((page) => page.list) || [];
 
+  const handleSelect = (option: Option, commentId: string) => {
+    if (option.label === '삭제하기') {
+      setSelectedCommentId(commentId);
+      CommentDeleteOpenModal();
+    } else {
+      // 여기에 이제 수정하는 기능 들어가야합니다~!
+    }
+  };
+
+  const basic = (commentId: string): Option[] => [
+    {
+      label: '수정하기',
+      component: (
+        <div
+          onClick={() =>
+            handleSelect({ label: '수정하기', component: null }, commentId)
+          }
+        >
+          수정하기
+        </div>
+      ),
+    },
+    {
+      label: '삭제하기',
+      component: (
+        <div
+          onClick={() =>
+            handleSelect({ label: '삭제하기', component: null }, commentId)
+          }
+        >
+          삭제하기
+        </div>
+      ),
+    },
+  ];
+
   return (
     <>
       {comments.map((comment) => (
@@ -58,7 +106,12 @@ export default function CommentList() {
               <span className="break-words text-md-regular text-text-primary md:text-lg-regular">
                 {comment.content}
               </span>
-              <SmallKebabIcon />
+              <Dropdown
+                options={basic(comment.id)}
+                triggerIcon={<SmallKebabIcon />}
+                optionsWrapClass="mt-2 right-0 rounded-[12px] border border-background-tertiary"
+                optionClass="rounded-[12px] md:w-[135px] md:h-[47px] w-[120px] h-[40px] justify-center text-md-regular md:text-lg-regular text-center hover:bg-background-tertiary"
+              />
             </div>
             <div className="flex items-center justify-between">
               <div className="flex items-center">
@@ -78,8 +131,14 @@ export default function CommentList() {
               </div>
             </div>
           </div>
+          <CommentDeletMoal
+            isOpen={CommentDeleteIsOpen}
+            onClose={CommentDeleteCloseModal}
+            commentId={selectedCommentId}
+          />
         </article>
       ))}
+
       <div
         ref={ref}
         className={clsx({

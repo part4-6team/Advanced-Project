@@ -8,7 +8,7 @@ import NetworkError from '@components/@shared/NetworkError';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
 import { useModal } from '@hooks/useModal';
 import CommentForm from './CommentForm';
-import CardDeleteModal from './CommentCardDeletModal';
+import CardDeleteModal from './ArticleCardDeletModal';
 import Heart from './Heart';
 
 export default function DetailCard() {

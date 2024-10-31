@@ -20,3 +20,8 @@ export const fetchCommentCard = async ({
   );
   return response.data;
 };
+
+export const fetchCommentDelete = async (commentId: string | null) => {
+  const response = await authAxiosInstance.delete(`comments/${commentId}`);
+  return response.data;
+};
