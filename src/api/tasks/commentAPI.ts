@@ -2,7 +2,7 @@ import type { CommentRequestBody } from '@/src/types/tasks/commentDto';
 import { apiCall } from '@utils/apiCall';
 
 export interface CommentUrlParams {
-  taskId: number | undefined;
+  taskId?: number;
   commentId?: number;
   updatedComment?: string;
   comment?: string;
