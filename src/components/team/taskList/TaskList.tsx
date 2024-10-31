@@ -218,7 +218,7 @@ export default function TaskList() {
                     onClick={(e) => {
                       e.stopPropagation();
                     }}
-                    className="absolute right-0 top-[20%] m-auto mr-[5px] w-[20px] cursor-pointer rounded-full hover:bg-[#ffffff1c]"
+                    className={`absolute right-0 top-[20%] m-auto mr-[5px] w-[20px] cursor-pointer rounded-full hover:bg-[#ffffff1c] ${isDragging ? 'hidden' : ''}`}
                   >
                     <EditDropdown
                       triggerIcon={moreIcon}
