@@ -9,7 +9,18 @@ import Image from 'next/image';
 import dayjs from 'dayjs';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
 import { useModal } from '@hooks/useModal';
+import { useUserData } from '@hooks/mysetting/useUserData';
 import CommentDeletMoal from './CommentDeletModal';
+import NoAccessModal from './NoAccessModal';
+
+interface Comment {
+  id: string;
+  content: string;
+  writer: {
+    id: number;
+    nickname: string;
+  };
+}
 
 export default function CommentList() {
   const router = useRouter();
@@ -17,6 +28,13 @@ export default function CommentList() {
   const [selectedCommentId, setSelectedCommentId] = useState<string | null>(
     null
   );
+  const { data: UserData } = useUserData();
+
+  const {
+    isOpen: NoAccessModalIsOpen,
+    onClose: NoAccessModalCloseModa,
+    onOpen: NoAccessModalOpenModal,
+  } = useModal();
 
   const {
     isOpen: CommentDeleteIsOpen,
@@ -58,12 +76,18 @@ export default function CommentList() {
 
   const comments = data?.pages.flatMap((page) => page.list) || [];
 
-  const handleSelect = (option: Option, commentId: string) => {
+  const handleSelect = (
+    option: Option,
+    commentId: string,
+    comment: Comment | number
+  ) => {
     if (option.label === '삭제하기') {
-      setSelectedCommentId(commentId);
-      CommentDeleteOpenModal();
-    } else {
-      // 여기에 이제 수정하는 기능 들어가야합니다~!
+      if (UserData?.id === comment) {
+        setSelectedCommentId(commentId);
+        CommentDeleteOpenModal();
+      } else {
+        NoAccessModalOpenModal();
+      }
     }
   };
 
@@ -75,13 +99,17 @@ export default function CommentList() {
     );
   }
 
-  const basic = (commentId: string): Option[] => [
+  const basic = (commentId: string, comment: Comment): Option[] => [
     {
       label: '수정하기',
       component: (
         <div
           onClick={() =>
-            handleSelect({ label: '수정하기', component: null }, commentId)
+            handleSelect(
+              { label: '수정하기', component: null },
+              commentId,
+              comment
+            )
           }
         >
           수정하기
@@ -93,7 +121,11 @@ export default function CommentList() {
       component: (
         <div
           onClick={() =>
-            handleSelect({ label: '삭제하기', component: null }, commentId)
+            handleSelect(
+              { label: '삭제하기', component: null },
+              commentId,
+              comment
+            )
           }
         >
           삭제하기
@@ -115,7 +147,7 @@ export default function CommentList() {
                 {comment.content}
               </span>
               <Dropdown
-                options={basic(comment.id)}
+                options={basic(comment.id, comment.writer.id)}
                 triggerIcon={<SmallKebabIcon />}
                 optionsWrapClass="mt-2 right-0 rounded-[12px] border border-background-tertiary"
                 optionClass="rounded-[12px] md:w-[135px] md:h-[47px] w-[120px] h-[40px] justify-center text-md-regular md:text-lg-regular text-center hover:bg-background-tertiary"
@@ -143,6 +175,10 @@ export default function CommentList() {
             isOpen={CommentDeleteIsOpen}
             onClose={CommentDeleteCloseModal}
             commentId={selectedCommentId}
+          />
+          <NoAccessModal
+            isOpen={NoAccessModalIsOpen}
+            onClose={NoAccessModalCloseModa}
           />
         </article>
       ))}
