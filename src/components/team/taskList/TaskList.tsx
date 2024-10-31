@@ -194,6 +194,7 @@ export default function TaskList() {
           아직 할 일 목록이 없습니다.
         </p>
       )}
+      {/* 드래그 가능한 영역 */}
       <DndContext
         sensors={sensors}
         collisionDetection={closestCenter}
