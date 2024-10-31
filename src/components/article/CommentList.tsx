@@ -67,6 +67,14 @@ export default function CommentList() {
     }
   };
 
+  if (comments.length === 0) {
+    return (
+      <p className="flex h-[30vh] items-center justify-center text-md-medium text-text-default">
+        아직 댓글이 없습니다.
+      </p>
+    );
+  }
+
   const basic = (commentId: string): Option[] => [
     {
       label: '수정하기',
