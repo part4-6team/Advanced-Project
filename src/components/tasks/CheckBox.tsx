@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
 import { patchTask, TaskUrlParams } from '@/src/api/tasks/taskAPI';
@@ -54,7 +53,7 @@ export default function CheckBox({
     const data: TaskRequestBody['patch'] = {
       done: newCheckedState,
       name: taskName,
-      description: taskDescription ? taskDescription : '',
+      description: taskDescription || '',
     };
 
     await patchTaskDone({ params, data });

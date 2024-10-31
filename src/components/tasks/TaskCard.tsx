@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import CalenderIcon from '@icons/calendar_large.svg';
 import CommentIcon from '@icons/comment.svg';
 import RepeatIcon from '@icons/repeat.svg';
