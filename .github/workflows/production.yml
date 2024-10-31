@@ -2,9 +2,7 @@ name: Production
 
 on:
   push:
-    branches:
-      - main
-      - develop
+    branches: [main]
 
 jobs:
   build:
@@ -30,7 +28,7 @@ jobs:
           destination-repository-name: Coworkers
           user-email: ${{ secrets.HYEOKSU_ACCOUNT_EMAIL }}
           commit-message: ${{ github.event.commits[0].message }}
-          target-branch: ${{ github.ref == 'refs/heads/main' && 'main' || 'develop' }}
+          target-branch: main
 
       - name: Test get variable exported by push-to-another-repository
         run: echo $DESTINATION_CLONED_DIRECTORY
