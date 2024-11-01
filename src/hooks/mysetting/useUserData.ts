@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { fetchUserData } from '@/src/api/mysetting/inputAPI';
 import { User } from '@/src/types/mysetting/settingData';
 
-const logoOnlyPages = ['/signin', 'signup', 'addteam', '/'];
+const logoOnlyPages = ['/signin', '/signup', '/addteam', '/'];
 
 export const useUserData = () => {
   const currentPath =

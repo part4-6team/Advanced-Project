@@ -3,6 +3,9 @@ import UserIcon from 'public/icons/user.svg';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useUserData } from '@hooks/mysetting/useUserData';
+import PCLogo from 'public/images/logo_pc.png';
+import Link from 'next/link';
+import Image from 'next/image';
 import NavBarTeam from './NavBar_Team';
 
 export default function NavBar() {
@@ -17,7 +20,7 @@ export default function NavBar() {
 
   useEffect(() => {
     setIsClient(true);
-    const logoOnlyPages = ['/signin', 'signup', 'addteam', '/'];
+    const logoOnlyPages = ['/signin', '/signup', '/addteam', '/'];
     setIsLogoOnlyPage(logoOnlyPages.includes(router.pathname));
   }, [router.pathname]);
 
@@ -84,16 +87,21 @@ export default function NavBar() {
     },
   ];
 
-  if (!data) {
-    // data가 없을 경우 컴포넌트 렌더링을 하지 않음
-    return null;
-  }
-
   return (
     <header className=" flex h-16 items-center justify-center border-b border-border-primary border-opacity-10 bg-background-secondary px-6">
       <nav className="flex h-8 w-[1200px]  items-center justify-between text-text-primary max-xl:w-full max-md:w-full ">
         <div className="flex items-center gap-10 max-md:gap-5">
-          <NavBarTeam data={data} />
+          {isLogoOnlyPage && (
+            <Link href="/">
+              <div className="block max-xl:hidden">
+                <Image src={PCLogo} alt="로고" width={158} height={32} />
+              </div>
+              <div className="hidden max-xl:block">
+                <Image src={PCLogo} alt="로고" width={102} height={20} />
+              </div>
+            </Link>
+          )}
+          {data && <NavBarTeam data={data} />}
         </div>
         {!isLogoOnlyPage && (
           <div>
