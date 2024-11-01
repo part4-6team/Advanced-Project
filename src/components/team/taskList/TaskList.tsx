@@ -149,7 +149,7 @@ export default function TaskList() {
   };
 
   const moreIcon = (
-    <div className="flex w-[20px] items-center">
+    <div className="relative flex w-[20px] items-center">
       <Image
         src="/icons/kebab_large.svg"
         alt="더보기 아이콘"
