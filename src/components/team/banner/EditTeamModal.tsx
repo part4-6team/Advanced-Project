@@ -184,9 +184,16 @@ export default function EditTeamModal({ isOpen, onClose }: EditTeamModalProps) {
             수정하기
           </Button>
         )}
-        <Button size="full" bgColor="white" fontColor="gray" onClick={onClose}>
-          취소
-        </Button>
+        {!isAdmin && (
+          <Button
+            size="full"
+            bgColor="white"
+            fontColor="gray"
+            onClick={onClose}
+          >
+            취소
+          </Button>
+        )}{' '}
       </Modal.Footer>
     </Modal>
   );
