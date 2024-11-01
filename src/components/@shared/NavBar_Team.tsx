@@ -8,8 +8,13 @@ import { useCallback, useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
 import { User } from '@/src/types/mysetting/settingData';
+import {
+  createTeamOption,
+  createMenuOption,
+} from '@components/@shared/createTeamOption';
 import Menu from 'public/icons/menu.svg';
 import Link from 'next/link';
+import { useUserStore } from '@/src/stores/useUserStore';
 import Button from './Button';
 import SideBar from './SideBar';
 import TeamItem from './TeamItem';
@@ -20,19 +25,20 @@ interface Team {
 }
 
 export default function NavBarTeam({ data }: { data: User }) {
-  const [selectedTeam, setSelectedTeam] = useState<Option | null>({
+  const [isLogoOnlyPage, setIsLogoOnlyPage] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [isLeftOpen, setIsLeftOpen] = useState(false);
+  const router = useRouter();
+  const { id, setSelectedTeam } = useTeamStore();
+
+  const defaultButton = {
     label: '팀 메뉴',
     component: (
       <Button bgColor="transparent" border="white" size="full" height={40}>
         + 팀 추가하기
       </Button>
     ),
-  });
-  const [isLogoOnlyPage, setIsLogoOnlyPage] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  const [isLeftOpen, setIsLeftOpen] = useState(false);
-  const router = useRouter();
-  const { id } = useTeamStore();
+  };
 
   const {
     isOpen: addIsOpen,
@@ -40,7 +46,7 @@ export default function NavBarTeam({ data }: { data: User }) {
     onClose: addCloseModal,
   } = useModal();
 
-  const handleTeamSelect = useCallback(
+  const handleTeamRedirectSelect = useCallback(
     (groupId: number) => {
       router.push(`/${groupId}`);
       setIsLeftOpen(false);
@@ -64,41 +70,14 @@ export default function NavBarTeam({ data }: { data: User }) {
   }, [data]); // data가 변경될 때마다 실행
 
   const teams: Option[] = useMemo(() => {
-    return [
-      ...(data?.memberships?.map((membership) => ({
-        label: membership.group.name || '',
-        id: membership.group.id,
-        component: (
-          <div
-            className="flex items-center justify-between overflow-hidden "
-            onClick={() => handleTeamSelect(membership.groupId)}
-          >
-            <div className="flex items-center justify-between gap-3 overflow-hidden text-ellipsis whitespace-nowrap">
-              <div className="v relative h-[30px] w-[30px] shrink-0">
-                <Image
-                  src={membership.group.image}
-                  alt="팀 이미지"
-                  fill
-                  className="rounded-md object-cover"
-                />
-              </div>
-              <p className="overflow-hidden text-ellipsis whitespace-nowrap">
-                {membership.group.name}
-              </p>
-            </div>
-          </div>
-        ),
-      })) || []),
-      {
-        label: '팀 메뉴',
-        component: (
-          <Button bgColor="transparent" border="white" size="full" height={40}>
-            + 팀 추가하기
-          </Button>
-        ),
-      },
-    ];
-  }, [data, handleTeamSelect]);
+    const teamOptions =
+      data?.memberships?.map((membership) =>
+        createTeamOption(membership, handleTeamRedirectSelect)
+      ) || [];
+
+    return [...teamOptions, createMenuOption()];
+  }, [data, handleTeamRedirectSelect]);
+
   // teams 배열을 useEffect로 설정
   useEffect(() => {
     // 현재 ID에 해당하는 팀을 찾습니다.
@@ -108,11 +87,18 @@ export default function NavBarTeam({ data }: { data: User }) {
     if (currentTeam) {
       setSelectedTeam(currentTeam);
     }
-  }, [id, teams]); // teams 배열이 변할 때마다 effect가 실행됩니다.
+  }, [id, teams, setSelectedTeam]); // teams 배열이 변할 때마다 effect가 실행됩니다.
 
   useEffect(() => {
     setIsClient(true);
-    const logoOnlyPages = ['/signin', 'signup', 'addteam', '/'];
+    const logoOnlyPages = [
+      '/signin',
+      '/signup',
+      '/addteam',
+      '/',
+      '/oauth/signup/google',
+      '/oauth/signup/kakao',
+    ];
     setIsLogoOnlyPage(logoOnlyPages.includes(router.pathname));
   }, [router.pathname]);
 
@@ -146,6 +132,19 @@ export default function NavBarTeam({ data }: { data: User }) {
     setIsLeftOpen(false);
   };
 
+  /**
+   * 네비게이션 바의 로고를 클릭 시 랜딩 페이지로 이동은 기존과 동일, Link 태그에서 button 태그로 변경
+   * 간편 로그인 후 닉네임 설정 페이지에서 네비게이션 바의 로고를 클릭 시 간편 로그인 로그아웃
+   * 닉네임이 10자를 초과 시 간편 로그인 신규 유저로 간주 => 10자 이하로 제한
+   */
+  const handleLogoutAndRedirect = () => {
+    const { user, logout } = useUserStore.getState();
+    if (user && user.nickname?.length > 10) {
+      logout();
+    }
+    router.push('/');
+  };
+
   return (
     <>
       <div className="md:hidden">
@@ -169,7 +168,7 @@ export default function NavBarTeam({ data }: { data: User }) {
                   key={team.id}
                   name={team.name}
                   isActive={team.id === Number(id)}
-                  onClick={() => handleTeamSelect(team.id)}
+                  onClick={() => handleTeamRedirectSelect(team.id)}
                 />
               ))}
               <Button
@@ -187,21 +186,21 @@ export default function NavBarTeam({ data }: { data: User }) {
           </nav>
         </SideBar>
       </div>
-      <Link href="/">
+      <button type="button" onClick={handleLogoutAndRedirect}>
         <div className="block max-xl:hidden">
           <Image src={PCLogo} alt="로고" width={158} height={32} />
         </div>
         <div className="hidden max-xl:block">
           <Image src={PCLogo} alt="로고" width={102} height={20} />
         </div>
-      </Link>
+      </button>
       {!isLogoOnlyPage && (
         <>
           <div className="max-md:hidden">
             <Dropdown
               initialOption={teams[0]}
               options={teams}
-              selected={selectedTeam}
+              selected={defaultButton}
               onSelect={handleSelectTeam}
               triggerClass="flex gap-[12px] items-center text-text-primary"
               triggerIcon={<ArrowDown />}

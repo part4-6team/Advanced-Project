@@ -1,76 +1,77 @@
-import { useState, useEffect } from 'react';
-import type { TaskListDto, TaskDto } from '@/src/types/tasks/TaskListDto';
-
+import Link from 'next/link';
+import { useEffect, useCallback } from 'react';
+import { useRouter } from 'next/router';
+import { useTaskListStore } from '@/src/stores/taskListStore';
 import TaskCard from '../TaskCard';
-import { MockData } from '../mockdata';
 
-interface TaskListProps {
-  initialTaskListId?: number;
-}
+export default function TaskList() {
+  const router = useRouter();
+  const { query } = router;
+  const { teamid } = query;
+  const {
+    taskLists,
+    taskListId: currentTaskListId,
+    setTaskListId,
+    tasks,
+    setTasks,
+  } = useTaskListStore();
 
-export default function TaskList({ initialTaskListId = 1 }: TaskListProps) {
-  const [selectedTasks, setSelectedTasks] = useState<TaskDto[]>([]);
-  const [selectedTaskListId, setSelectedTaskListId] = useState<number | null>(
-    null
+  useEffect(() => {
+    if (teamid) {
+      setTaskListId(Number(teamid));
+    }
+  }, [teamid, setTaskListId]);
+
+  // 선택된 taskList의 tasks[]를 가져오는 함수
+  const fetchTasks = useCallback(
+    (taskListId: number | undefined) => {
+      const selectedList = taskLists.find(
+        (taskList) => taskList.id === taskListId
+      );
+      setTasks(selectedList ? selectedList.tasks : []);
+    },
+    [taskLists, setTasks]
   );
 
-  // 컴포넌트가 마운트될 때 또는 initialTaskListId가 변경될 때 해당 taskList 선택
   useEffect(() => {
-    if (initialTaskListId) {
-      const selectedList = MockData.find(
-        (taskList: TaskListDto) => taskList.id === initialTaskListId
-      );
-      if (selectedList) {
-        setSelectedTasks(selectedList.tasks);
-        setSelectedTaskListId(initialTaskListId);
-      }
-    }
-  }, [initialTaskListId]);
+    fetchTasks(currentTaskListId);
+  }, [currentTaskListId, fetchTasks]);
 
-  // 선택된 taskList의 tasks[] 가져오기
-  const handleButtonClick = (taskListId: number) => {
-    if (selectedTaskListId === taskListId) {
-      // 이미 선택된 taskList를 클릭한 경우, 선택 해제
-      setSelectedTasks([]);
-      setSelectedTaskListId(null);
-    } else {
-      // 새로운 taskList를 선택한 경우
-      const selectedList = MockData.find(
-        (taskList: TaskListDto) => taskList.id === taskListId
-      );
-      if (selectedList) {
-        setSelectedTasks(selectedList.tasks);
-        setSelectedTaskListId(taskListId);
-      }
-    }
-  };
+  useEffect(() => {
+    setTasks(tasks);
+  }, [tasks, setTasks]);
 
   return (
     <section className="flex flex-col gap-4">
       <ul className="flex gap-3">
-        {MockData.map((taskList: TaskListDto) => (
+        {taskLists.map((taskList) => (
           <li
             key={taskList.id}
             className={
-              selectedTaskListId === taskList.id
+              currentTaskListId === taskList.id
                 ? 'border-b-[1px] border-b-white text-white'
                 : 'text-text-default'
             }
           >
-            <button
-              type="button"
-              onClick={() => handleButtonClick(taskList.id)}
-              className="pb-1"
-            >
-              {taskList.name}
-            </button>
+            <Link href={{ pathname: `/${taskList.id}/tasks` }}>
+              <button type="button" className="pb-1">
+                {taskList.name}
+              </button>
+            </Link>
           </li>
         ))}
       </ul>
-      <ul className="flex flex-col gap-4">
-        {selectedTasks.length > 0 &&
-          selectedTasks.map((task) => <TaskCard key={task.id} task={task} />)}
-      </ul>
+      {tasks.length > 0 ? (
+        <ul className="flex flex-col gap-4">
+          {tasks.length > 0 &&
+            tasks.map((task) => <TaskCard key={task.id} task={task} />)}
+        </ul>
+      ) : (
+        <div className="text-text-md mt-80 text-center text-text-default sm:mt-48">
+          <p>아직 할 일이 없습니다.</p>
+          <p>할 일을 추가해보세요.</p>
+        </div>
+      )}
     </section>
   );
 }
