@@ -1,23 +1,36 @@
 import Link from 'next/link';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import TaskCard from '../TaskCard';
 
 export default function TaskList() {
+  const router = useRouter();
+  const { query } = router;
+  const { teamid } = query;
   const { taskLists, taskListId, setTaskListId, tasks, setTasks } =
     useTaskListStore();
 
-  // 선택된 taskList의 tasks[] 가져오기
-  const handleButtonClick = (selectedTaskListId: number | undefined) => {
-    if (selectedTaskListId !== taskListId) {
-      const selectedList = taskLists.find(
-        (taskList) => taskList.id === taskListId
-      );
-      if (selectedList) {
-        setTasks(selectedList.tasks);
-        setTaskListId(selectedTaskListId);
-      }
+  // 선택된 taskList의 tasks[]를 가져오는 함수
+  const fetchTasks = (id: number) => {
+    const selectedList = taskLists.find((taskList) => taskList.id === id);
+    if (selectedList) {
+      setTasks(selectedList.tasks);
+    } else {
+      setTasks([]);
     }
   };
+
+  const handleButtonClick = () => {
+    const newTaskListId = Number(teamid);
+    setTaskListId(newTaskListId);
+  };
+
+  useEffect(() => {
+    if (taskListId) {
+      fetchTasks(taskListId);
+    }
+  }, [taskListId, taskLists]);
 
   return (
     <section className="flex flex-col gap-4">
@@ -34,7 +47,7 @@ export default function TaskList() {
             <Link href={{ pathname: `/${taskList.id}/tasks` }}>
               <button
                 type="button"
-                onClick={() => handleButtonClick(taskList.id)}
+                onClick={handleButtonClick}
                 className="pb-1"
               >
                 {taskList.name}
