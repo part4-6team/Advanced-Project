@@ -31,23 +31,28 @@ export default function Calender({
   onDateChange,
   isInput = false,
 }: CalenderProps) {
-  const { date: contextDate, setDate, today } = useDate();
+  const { date: contextDate, setInputDate, setDate, today } = useDate();
   const [selectedDate, setSelectedDate] = useState<Dayjs>(dayjs(contextDate));
   const [displayedMonth, setDisplayedMonth] = useState(dayjs(contextDate));
   const { isMobile } = useViewportSize();
 
   const handleDateChange = (newDate: Date | null) => {
     if (newDate) {
-      const dayjsDate = dayjs(newDate); // Date를 Dayjs로 변환
-      const isBeforeToday = dayjsDate.isBefore(dayjs(), 'day'); // 오늘 이전 날짜 확인
-      // isInput 상태일 때 오늘 이전 날짜는 선택할 수 없도록 처리
+      const dayjsDate = dayjs(newDate);
+      const isBeforeToday = dayjsDate.isBefore(dayjs(), 'day');
       if (isInput && isBeforeToday) {
-        return; // 아무 동작도 하지 않음
+        return;
       }
-      setSelectedDate(dayjsDate); // 선택된 날짜 업데이트
-      setDate(dayjsDate); // 선택된 날짜 Context에 업데이트
+      setSelectedDate(dayjsDate);
+
+      if (isInput) {
+        setInputDate(dayjsDate);
+      } else {
+        setDate(dayjsDate);
+      }
+
       if (onDateChange) {
-        onDateChange(dayjsDate); // 선택된 날짜 부모 컴포넌트에 전달
+        onDateChange(dayjsDate);
       }
       onClose();
     }
