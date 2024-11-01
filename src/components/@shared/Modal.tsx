@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createPortal } from 'react-dom';
 import clsx from 'clsx';
 
@@ -26,6 +26,7 @@ export function Modal({
   ...props
 }: ModalProps) {
   const modalClass = getModalClass({ ...props, isXButton });
+  const [isDragging, setIsDragging] = useState(false);
 
   // 모달 외부 스크롤 막기 + 스크롤바 너비만큼 여백 추가
   useEffect(() => {
@@ -45,17 +46,22 @@ export function Modal({
 
   if (!isOpen) return null;
 
-  // 모달 외부 클릭 시 닫기 처리
-  const handleBackgroundClick = (event: React.MouseEvent) => {
-    if (event.target === event.currentTarget) {
+  // 드래그 시작과 종료를 추적하여 클릭 여부 결정
+  const handleMouseDown = () => setIsDragging(false);
+  const handleMouseMove = () => setIsDragging(true);
+  const handleMouseUp = (event: React.MouseEvent) => {
+    if (!isDragging && event.target === event.currentTarget) {
       onClose?.();
     }
+    setIsDragging(false);
   };
 
   return createPortal(
     <div
       className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-      onClick={handleBackgroundClick}
+      onMouseDown={handleMouseDown}
+      onMouseMove={handleMouseMove}
+      onMouseUp={handleMouseUp}
     >
       <div
         className={`fixed bottom-0 w-full rounded-t-xl md:relative md:w-[375px] md:rounded-xl xl:w-96 ${modalClass}`}
