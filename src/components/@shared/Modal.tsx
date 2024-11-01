@@ -27,12 +27,19 @@ export function Modal({
 }: ModalProps) {
   const modalClass = getModalClass({ ...props, isXButton });
 
-  // 모달 외부 스크롤 막기
+  // 모달 외부 스크롤 막기 + 스크롤바 너비만큼 여백 추가
   useEffect(() => {
-    document.body.style.overflow = isOpen ? 'hidden' : '';
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+      document.body.style.paddingRight = '5px'; // 스크롤바 너비만큼 패딩 추가
+    } else {
+      document.body.style.overflow = '';
+      document.body.style.paddingRight = ''; // 패딩 초기화
+    }
 
     return () => {
       document.body.style.overflow = '';
+      document.body.style.paddingRight = '';
     };
   }, [isOpen]);
 
