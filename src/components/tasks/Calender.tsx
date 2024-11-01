@@ -39,6 +39,11 @@ export default function Calender({
   const handleDateChange = (newDate: Date | null) => {
     if (newDate) {
       const dayjsDate = dayjs(newDate); // Date를 Dayjs로 변환
+      const isBeforeToday = dayjsDate.isBefore(dayjs(), 'day'); // 오늘 이전 날짜 확인
+      // isInput 상태일 때 오늘 이전 날짜는 선택할 수 없도록 처리
+      if (isInput && isBeforeToday) {
+        return; // 아무 동작도 하지 않음
+      }
       setSelectedDate(dayjsDate); // 선택된 날짜 업데이트
       setDate(dayjsDate); // 선택된 날짜 Context에 업데이트
       if (onDateChange) {
@@ -94,6 +99,7 @@ export default function Calender({
         const day = dayjs(date);
         const isDisplayedMonth = day.isSame(displayedMonth, 'month');
         const isToday = day.isSame(today, 'day');
+        const isBeforeToday = day.isBefore(today, 'day');
         const isSelected =
           day.isSame(selectedDate, 'month') &&
           day.date() === selectedDate.date();
@@ -106,6 +112,9 @@ export default function Calender({
         }
         if (isSelected) {
           return styles.selectedDay;
+        }
+        if (isInput && isBeforeToday) {
+          return styles.disabledDay;
         }
         return styles.day;
       }}
