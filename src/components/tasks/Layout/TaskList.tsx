@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import { useRouter } from 'next/router';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import TaskCard from '../TaskCard';
@@ -8,29 +8,38 @@ export default function TaskList() {
   const router = useRouter();
   const { query } = router;
   const { teamid } = query;
-  const { taskLists, taskListId, setTaskListId, tasks, setTasks } =
-    useTaskListStore();
-
-  // 선택된 taskList의 tasks[]를 가져오는 함수
-  const fetchTasks = (id: number) => {
-    const selectedList = taskLists.find((taskList) => taskList.id === id);
-    if (selectedList) {
-      setTasks(selectedList.tasks);
-    } else {
-      setTasks([]);
-    }
-  };
-
-  const handleButtonClick = () => {
-    const newTaskListId = Number(teamid);
-    setTaskListId(newTaskListId);
-  };
+  const {
+    taskLists,
+    taskListId: currentTaskListId,
+    setTaskListId,
+    tasks,
+    setTasks,
+  } = useTaskListStore();
 
   useEffect(() => {
-    if (taskListId) {
-      fetchTasks(taskListId);
+    if (teamid) {
+      setTaskListId(Number(teamid));
     }
-  }, [taskListId, taskLists]);
+  }, [teamid, setTaskListId]);
+
+  // 선택된 taskList의 tasks[]를 가져오는 함수
+  const fetchTasks = useCallback(
+    (taskListId: number | undefined) => {
+      const selectedList = taskLists.find(
+        (taskList) => taskList.id === taskListId
+      );
+      setTasks(selectedList ? selectedList.tasks : []);
+    },
+    [taskLists, setTasks]
+  );
+
+  useEffect(() => {
+    fetchTasks(currentTaskListId);
+  }, [currentTaskListId, fetchTasks]);
+
+  useEffect(() => {
+    setTasks(tasks);
+  }, [tasks, setTasks]);
 
   return (
     <section className="flex flex-col gap-4">
@@ -39,17 +48,13 @@ export default function TaskList() {
           <li
             key={taskList.id}
             className={
-              taskListId === taskList.id
+              currentTaskListId === taskList.id
                 ? 'border-b-[1px] border-b-white text-white'
                 : 'text-text-default'
             }
           >
             <Link href={{ pathname: `/${taskList.id}/tasks` }}>
-              <button
-                type="button"
-                onClick={handleButtonClick}
-                className="pb-1"
-              >
+              <button type="button" className="pb-1">
                 {taskList.name}
               </button>
             </Link>
