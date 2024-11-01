@@ -25,7 +25,7 @@ interface Comment {
 }
 
 export default function CommentList() {
-  const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
+  const [isEditing, setIsEditing] = useState<string | null>(null);
   const [content, setContent] = useState<string>('');
   const router = useRouter();
   const { articleId } = router.query;
@@ -71,6 +71,7 @@ export default function CommentList() {
       },
       {} as { [key: string]: boolean }
     );
+
     setIsEditing(initialEditingState);
   }, [comments]);
 
@@ -94,19 +95,14 @@ export default function CommentList() {
     );
   }
 
-  const handleEdit = (commentId: string) => {
-    setIsEditing((prevState) => ({
-      ...prevState,
-      [commentId]: true,
-    }));
+  const handleEdit = (commentId: string, commentContent: string) => {
+    setIsEditing(commentId);
+    setContent(commentContent);
   };
 
   const handleEditSumit = (commentId: string) => {
     mutation.mutate({ content, commentId });
-    setIsEditing((prevState) => ({
-      ...prevState,
-      [commentId]: false,
-    }));
+    setIsEditing(null);
   };
 
   const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
@@ -116,7 +112,8 @@ export default function CommentList() {
   const handleSelect = (
     option: Option,
     commentId: string,
-    comment: Comment | number
+    comment: Comment | number,
+    commentContent: string
   ) => {
     if (option.label === '삭제하기') {
       if (UserData?.id === comment) {
@@ -126,12 +123,7 @@ export default function CommentList() {
         NoAccessModalOpenModal();
       }
     } else {
-      // mutation.mutate({ content, commentId });
-      setIsEditing((prevState) => ({
-        ...prevState,
-        [commentId]: true,
-      }));
-      handleEdit(commentId);
+      handleEdit(commentId, commentContent);
     }
   };
 
@@ -143,7 +135,11 @@ export default function CommentList() {
     );
   }
 
-  const basic = (commentId: string, comment: Comment): Option[] => [
+  const basic = (
+    commentId: string,
+    comment: Comment,
+    commentContent: string
+  ): Option[] => [
     {
       label: '수정하기',
       component: (
@@ -152,7 +148,8 @@ export default function CommentList() {
             handleSelect(
               { label: '수정하기', component: null },
               commentId,
-              comment
+              comment,
+              commentContent
             )
           }
         >
@@ -168,7 +165,8 @@ export default function CommentList() {
             handleSelect(
               { label: '삭제하기', component: null },
               commentId,
-              comment
+              comment,
+              commentContent
             )
           }
         >
@@ -182,7 +180,7 @@ export default function CommentList() {
     <>
       {comments.map((comment) => (
         <div key={comment.id}>
-          {!isEditing[comment.id] ? (
+          {isEditing !== comment.id ? (
             <article className="mb-4 rounded-xl bg-background-secondary">
               <div className="flex flex-col gap-12 px-6 py-5 ">
                 <div className="flex justify-between">
@@ -190,7 +188,11 @@ export default function CommentList() {
                     {comment.content}
                   </span>
                   <Dropdown
-                    options={basic(comment.id, comment.writer.id)}
+                    options={basic(
+                      comment.id,
+                      comment.writer.id,
+                      comment.content
+                    )}
                     triggerIcon={<SmallKebabIcon />}
                     optionsWrapClass="mt-2 right-0 rounded-[12px] border border-background-tertiary"
                     optionClass="rounded-[12px] md:w-[135px] md:h-[47px] w-[120px] h-[40px] justify-center text-md-regular md:text-lg-regular text-center hover:bg-background-tertiary"
