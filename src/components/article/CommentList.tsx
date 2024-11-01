@@ -3,13 +3,15 @@ import { useCommentCards } from '@hooks/article/useCommentCard';
 import NetworkError from '@components/@shared/NetworkError';
 import { useRouter } from 'next/router';
 import { useInView } from 'react-intersection-observer';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import clsx from 'clsx';
 import Image from 'next/image';
 import dayjs from 'dayjs';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
 import { useModal } from '@hooks/useModal';
 import { useUserData } from '@hooks/mysetting/useUserData';
+import { useCommentEdit } from '@hooks/article/useCommentEdit';
+import styles from '@styles/scroll.module.css';
 import CommentDeletMoal from './CommentDeletModal';
 import NoAccessModal from './NoAccessModal';
 
@@ -23,12 +25,15 @@ interface Comment {
 }
 
 export default function CommentList() {
+  const [isEditing, setIsEditing] = useState<{ [key: string]: boolean }>({});
+  const [content, setContent] = useState<string>('');
   const router = useRouter();
   const { articleId } = router.query;
   const [selectedCommentId, setSelectedCommentId] = useState<string | null>(
     null
   );
   const { data: UserData } = useUserData();
+  const mutation = useCommentEdit();
 
   const {
     isOpen: NoAccessModalIsOpen,
@@ -54,6 +59,21 @@ export default function CommentList() {
     articleId,
   });
 
+  const comments = useMemo(() => {
+    return data?.pages.flatMap((page) => page.list) || [];
+  }, [data]);
+
+  useEffect(() => {
+    const initialEditingState = comments.reduce(
+      (acc, comment) => {
+        acc[comment.id] = false;
+        return acc;
+      },
+      {} as { [key: string]: boolean }
+    );
+    setIsEditing(initialEditingState);
+  }, [comments]);
+
   const { ref, inView } = useInView();
 
   useEffect(() => {
@@ -74,7 +94,24 @@ export default function CommentList() {
     );
   }
 
-  const comments = data?.pages.flatMap((page) => page.list) || [];
+  const handleEdit = (commentId: string) => {
+    setIsEditing((prevState) => ({
+      ...prevState,
+      [commentId]: true,
+    }));
+  };
+
+  const handleEditSumit = (commentId: string) => {
+    mutation.mutate({ content, commentId });
+    setIsEditing((prevState) => ({
+      ...prevState,
+      [commentId]: false,
+    }));
+  };
+
+  const handleTextAreaChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setContent(e.target.value);
+  };
 
   const handleSelect = (
     option: Option,
@@ -88,6 +125,13 @@ export default function CommentList() {
       } else {
         NoAccessModalOpenModal();
       }
+    } else {
+      // mutation.mutate({ content, commentId });
+      setIsEditing((prevState) => ({
+        ...prevState,
+        [commentId]: true,
+      }));
+      handleEdit(commentId);
     }
   };
 
@@ -137,50 +181,89 @@ export default function CommentList() {
   return (
     <>
       {comments.map((comment) => (
-        <article
-          key={comment.id}
-          className="mb-4 rounded-xl bg-background-secondary"
-        >
-          <div className="flex flex-col gap-12 px-6 py-5 ">
-            <div className="flex justify-between">
-              <span className="break-words text-md-regular text-text-primary md:text-lg-regular">
-                {comment.content}
-              </span>
-              <Dropdown
-                options={basic(comment.id, comment.writer.id)}
-                triggerIcon={<SmallKebabIcon />}
-                optionsWrapClass="mt-2 right-0 rounded-[12px] border border-background-tertiary"
-                optionClass="rounded-[12px] md:w-[135px] md:h-[47px] w-[120px] h-[40px] justify-center text-md-regular md:text-lg-regular text-center hover:bg-background-tertiary"
-              />
-            </div>
-            <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <Image
-                  src={comment.writer.image}
-                  width={32}
-                  height={32}
-                  alt="프로필이미지"
-                  className="rounded-full"
-                />
-                <span className="ml-[12px] mr-2 border-r-[1px] border-slate-700/60 pr-2  text-xs-medium text-text-primary md:text-md-medium ">
-                  {comment.writer.nickname}
-                </span>
-                <span className="text-xs-medium text-slate-400 md:text-md-medium">
-                  {dayjs(comment.createdAt).format('YYYY.MM.DD')}
-                </span>
+        <div key={comment.id}>
+          {!isEditing[comment.id] ? (
+            <article className="mb-4 rounded-xl bg-background-secondary">
+              <div className="flex flex-col gap-12 px-6 py-5 ">
+                <div className="flex justify-between">
+                  <span className="break-words text-md-regular text-text-primary md:text-lg-regular">
+                    {comment.content}
+                  </span>
+                  <Dropdown
+                    options={basic(comment.id, comment.writer.id)}
+                    triggerIcon={<SmallKebabIcon />}
+                    optionsWrapClass="mt-2 right-0 rounded-[12px] border border-background-tertiary"
+                    optionClass="rounded-[12px] md:w-[135px] md:h-[47px] w-[120px] h-[40px] justify-center text-md-regular md:text-lg-regular text-center hover:bg-background-tertiary"
+                  />
+                </div>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <Image
+                      src={comment.writer.image}
+                      width={32}
+                      height={32}
+                      alt="프로필이미지"
+                      className="rounded-full"
+                    />
+                    <span className="ml-[12px] mr-2 border-r-[1px] border-slate-700/60 pr-2  text-xs-medium text-text-primary md:text-md-medium ">
+                      {comment.writer.nickname}
+                    </span>
+                    <span className="text-xs-medium text-slate-400 md:text-md-medium">
+                      {dayjs(comment.createdAt).format('YYYY.MM.DD')}
+                    </span>
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-          <CommentDeletMoal
-            isOpen={CommentDeleteIsOpen}
-            onClose={CommentDeleteCloseModal}
-            commentId={selectedCommentId}
-          />
-          <NoAccessModal
-            isOpen={NoAccessModalIsOpen}
-            onClose={NoAccessModalCloseModa}
-          />
-        </article>
+              <CommentDeletMoal
+                isOpen={CommentDeleteIsOpen}
+                onClose={CommentDeleteCloseModal}
+                commentId={selectedCommentId}
+              />
+              <NoAccessModal
+                isOpen={NoAccessModalIsOpen}
+                onClose={NoAccessModalCloseModa}
+              />
+            </article>
+          ) : (
+            <article className="mb-4 h-[148px] rounded-xl bg-background-secondary">
+              <div className="flex flex-col px-6 py-5">
+                <div className="relative h-[63px] w-full overflow-hidden rounded-[12px] bg-background-secondary outline outline-[1px] outline-[#343E4E] focus-within:outline-none focus-within:outline-brand-primary">
+                  <textarea
+                    className={`min-h-[30px] w-full resize-none overflow-auto rounded-[12px] bg-background-secondary p-[15px] text-lg-regular text-text-primary  focus:outline-none 
+            ${styles.textarea}`}
+                    id="texterea"
+                    value={content}
+                    onChange={handleTextAreaChange}
+                  />
+                </div>
+                <div className="mt-2 flex justify-between">
+                  <div className="flex items-center">
+                    <Image
+                      src={comment.writer.image}
+                      width={32}
+                      height={32}
+                      alt="프로필이미지"
+                      className="rounded-full"
+                    />
+                    <span className="ml-[12px] mr-2 border-r-[1px] border-slate-700/60 pr-2  text-xs-medium text-text-primary md:text-md-medium ">
+                      {comment.writer.nickname}
+                    </span>
+                    <span className="text-xs-medium text-slate-400 md:text-md-medium">
+                      {dayjs(comment.createdAt).format('YYYY.MM.DD')}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleEditSumit(comment.id)}
+                    className=" w-16 rounded-xl bg-brand-primary text-md-bold hover:bg-interaction-hover active:bg-interaction-pressed md:h-[38px] md:w-[110px]"
+                  >
+                    수정하기
+                  </button>
+                </div>
+              </div>
+            </article>
+          )}
+        </div>
       ))}
 
       <div

@@ -13,6 +13,7 @@ export const useCommentDelete = () => {
     },
     onSettled: () => {
       queryClient.invalidateQueries({ queryKey: ['CommentCards'] });
+      queryClient.invalidateQueries({ queryKey: ['DetailCard'] });
     },
   });
 };

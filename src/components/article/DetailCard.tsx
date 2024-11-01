@@ -1,6 +1,6 @@
 import LargeKebabIcon from 'public/icons/kebab_large.svg';
 import CommentIcon from 'public/icons/comment.svg';
-import { useDetailCard } from '@hooks/article/useArticleDetail';
+import { useDetailCard } from '@hooks/article/useCommentAdd';
 import { useRouter } from 'next/router';
 import dayjs from 'dayjs';
 import Image from 'next/image';
