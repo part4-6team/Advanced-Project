@@ -14,7 +14,7 @@ import EditDropdown, { editOption } from '@components/team/EditDropdown';
 import Link from 'next/link';
 import EditTaskModal from './UI/EditTaskModal';
 import DeleteTaskModal from './UI/DeleteTaskModal';
-import { TaskSideBar } from './TaskSideBar';
+import { TaskDetails } from './TaskDetails';
 import CheckBox from './CheckBox';
 
 interface TaskCardProps {
@@ -68,7 +68,7 @@ export default function TaskCard({ task }: TaskCardProps) {
               {task.name}
             </h1>
           </Link>
-          <TaskSideBar
+          <TaskDetails
             isOpen={isSidebarOpen}
             onClose={() => setSidebarOpen(false)}
           />
