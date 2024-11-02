@@ -7,13 +7,14 @@ import { useTaskListStore } from '@/src/stores/taskListStore';
 import { postTask, TaskUrlParams } from '@/src/api/tasks/taskAPI';
 import { toKSTISOString } from '@utils/toKSTISOString';
 
+import ToggleIcon from '@icons/toggle.svg';
 import Button from '@components/@shared/Button';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
-import { Input, ScrollTextArea } from '@components/@shared/Input';
 import { TASK_REQUEST_INIT } from '@constants/initValues';
-import ToggleIcon from '@icons/toggle.svg';
 import type { TaskRequestBody } from '@/src/types/tasks/taskDto';
 
+import DescriptionTextArea from './UI/input/DescriptionTextArea';
+import NameInput from './UI/input/NameInput';
 import WeeklySelector from './WeeklySelector';
 import Calender from './Calender';
 
@@ -133,18 +134,10 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-6 ">
-      <Input
+      <NameInput
         label="할 일 제목"
         placeholder="할 일 제목을 입력해주세요."
-        inputProps={{
-          ...register('name', {
-            required: '제목을 입력해야 합니다.',
-            maxLength: {
-              value: 30,
-              message: '제목은 30자 이내로 입력해야 합니다.',
-            },
-          }),
-        }}
+        register={register}
         isError={!!errors.name}
         errorMessage={errors.name?.message}
       />
@@ -172,21 +165,11 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
       {selectedFrequency.label === 'WEEKLY' && (
         <WeeklySelector onChange={handleWeeklyDaysChange} />
       )}
-      <ScrollTextArea
+      <DescriptionTextArea
         label="할 일 메모"
         placeholder="메모를 입력해주세요."
-        textareaProps={{
-          ...register('description', {
-            validate: {
-              maxLength: (value) => {
-                if (value && value.length > 250) {
-                  return '메모 내용은 250자 이내로 입력해야 합니다.';
-                }
-                return true;
-              },
-            },
-          }),
-        }}
+        register={register}
+        registerValue="description"
         isError={!!errors.description}
         errorMessage={errors.description?.message}
       />

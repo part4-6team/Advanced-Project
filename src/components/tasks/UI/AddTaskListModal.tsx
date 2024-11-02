@@ -1,5 +1,4 @@
 import Button from '@components/@shared/Button';
-import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -9,6 +8,7 @@ import { TASKLIST_REQUEST_INIT } from '@constants/initValues';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import { postTaskList, TaskListUrlParams } from '@/src/api/tasks/taskListAPI';
 import type { TaskListRequestBody } from '@/src/types/tasks/taskListDto';
+import NameInput from './input/NameInput';
 
 interface AddTaskListModalProps {
   isOpen: boolean;
@@ -23,9 +23,8 @@ export default function AddTaskListModal({
   const { taskLists, groupId } = useTaskListStore();
   const {
     register,
-    watch,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isValid },
   } = useForm<TaskListRequestBody['post']>({
     mode: 'onChange',
     defaultValues: {
@@ -63,8 +62,6 @@ export default function AddTaskListModal({
   };
 
   // 중복 이름 유효성 검사
-  const nameValue = watch('name');
-
   const isDuplicateName = (name: string) => {
     return taskLists.some((taskList) => taskList.name === name);
   };
@@ -90,28 +87,12 @@ export default function AddTaskListModal({
           </p>
         </Modal.Header>
         <Modal.Content fontArray="left" fontColor="primary">
-          <Input
-            label="목록 이름"
+          <NameInput
             placeholder="목록 이름을 입력해주세요."
-            inputProps={{
-              ...register('name', {
-                required: '이름은 필수 입력 사항입니다.',
-                maxLength: {
-                  value: 30,
-                  message: '이름은 30자 이내로 입력해야 합니다.',
-                },
-                validate: {
-                  isDuplicate: (value) => {
-                    if (isDuplicateName(value)) {
-                      return '이미 존재하는 이름입니다.';
-                    }
-                    return true;
-                  },
-                },
-              }),
-            }}
+            register={register}
             isError={!!errors.name}
             errorMessage={errors.name?.message}
+            isDuplicateName={isDuplicateName}
           />
         </Modal.Content>
       </Modal.Wrapper>
@@ -120,7 +101,7 @@ export default function AddTaskListModal({
           size="full"
           type="submit"
           onClick={handleSubmit(onSubmit)}
-          disabled={!nameValue || !!errors.name}
+          disabled={!isValid}
         >
           만들기
         </Button>
