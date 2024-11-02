@@ -121,7 +121,7 @@ export default function DetailCard() {
         <div className="mr-8 border-r-2 border-r-slate-800 pr-8">
           <div className=" relative  h-[220px] w-[220px] ">
             <Image
-              src={data?.image ? data?.image : '/icons/profile_large.svg'}
+              src={data?.image || '/icons/profile_large.svg'}
               layout="fill"
               alt="게시글 이미지"
               className="rounded-lg"
