@@ -3,6 +3,7 @@ import Image from 'next/image';
 import UserProfileIcon from '@icons/profile_small.svg';
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useForm } from 'react-hook-form';
 import {
   getComments,
   postComment,
@@ -11,18 +12,35 @@ import {
   CommentUrlParams,
 } from '@/src/api/tasks/commentAPI';
 import { useTaskListStore } from '@/src/stores/taskListStore';
+import getSortedDate from '@utils/getSortedDate';
 import getTimeAgo from '@utils/getTimeAgo';
 
-import { AutoTextArea } from '@components/@shared/Input';
+import { AutoTextArea, ScrollTextArea } from '@components/@shared/Input';
 import EditDropdown from '@components/team/EditDropdown';
 import type { CommentRequestBody } from '@/src/types/tasks/commentDto';
 
 export function TaskComments() {
   const queryClient = useQueryClient();
   const [commentInput, setCommentInput] = useState('');
-  const [editingCommentId, setEditingCommentId] = useState<number | null>(null);
-  const [editedCommentContent, setEditedCommentContent] = useState<string>('');
-  const { comments, setComments, taskId, setCommentId } = useTaskListStore();
+  const {
+    comments,
+    setComments,
+    taskId,
+    editingCommentId,
+    setEditingCommentId,
+    setCommentId,
+  } = useTaskListStore();
+  const {
+    register,
+    setValue,
+    getValues,
+    formState: { errors, isValid },
+  } = useForm<CommentRequestBody['patch']>({
+    mode: 'onChange',
+    defaultValues: {
+      content: '',
+    },
+  });
 
   // GET, comments
   const { data: commentsData } = useQuery({
@@ -34,14 +52,14 @@ export function TaskComments() {
     enabled: !!taskId,
   });
 
-  // store
   useEffect(() => {
     if (commentsData) {
-      setComments(commentsData);
+      const sortedComments = getSortedDate(commentsData, 'createdAt');
+      setComments(sortedComments);
     }
   }, [commentsData, setComments]);
 
-  // POST, comment 생성
+  // POST, comment
   const { mutate: createComment } = useMutation({
     mutationFn: async ({
       params,
@@ -64,9 +82,7 @@ export function TaskComments() {
     setCommentInput(e.target.value);
   };
 
-  const handleCommentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
+  const handleCommentSubmit = async () => {
     if (commentInput.trim()) {
       try {
         await createComment({
@@ -112,7 +128,7 @@ export function TaskComments() {
         (comment) => comment.id === commentId
       );
       if (commentToEdit) {
-        setEditedCommentContent(commentToEdit.content);
+        setValue('content', commentToEdit.content);
       }
     }
   };
@@ -136,17 +152,17 @@ export function TaskComments() {
     },
   });
 
-  const handleEditSubmit = async (
-    e: React.FormEvent<HTMLFormElement>,
-    commentId: number
-  ) => {
-    e.preventDefault();
+  const handleEditSubmit = async () => {
+    const content = getValues('content');
+    if (!content) return;
+
     try {
       await editComment({
-        params: { taskId, commentId },
-        data: { content: editedCommentContent },
+        params: { taskId, commentId: editingCommentId },
+        data: { content },
       });
-      setEditingCommentId(null);
+      setEditingCommentId(undefined);
+      setValue('content', '');
     } catch (error) {
       console.error('댓글 수정 오류:', error);
     }
@@ -186,30 +202,40 @@ export function TaskComments() {
               )}
               {editingCommentId === comment.id ? (
                 <form
-                  className="flex gap-3"
-                  onSubmit={(e) => handleEditSubmit(e, comment.id)}
+                  className="flex h-auto w-full gap-3"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    handleEditSubmit();
+                  }}
                 >
-                  <textarea
-                    value={editedCommentContent}
+                  <ScrollTextArea
                     placeholder={comment.content}
-                    onChange={(e) => setEditedCommentContent(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        e.preventDefault();
-                      }
+                    textareaProps={{
+                      ...register('content', {
+                        validate: {
+                          maxLength: (value) => {
+                            if (value && value.length > 250) {
+                              return '댓글 내용은 250자 이내로 입력해야 합니다.';
+                            }
+                            return true;
+                          },
+                        },
+                      }),
                     }}
-                    required
-                    className="h-auto w-full resize-none overflow-hidden rounded-md bg-background-secondary p-3 text-md-medium outline-dashed outline-2 outline-background-tertiary focus:outline-text-default"
+                    isError={!!errors.content}
+                    errorMessage={String(errors.content?.message)}
                   />
                   <button
                     type="submit"
-                    className="my-auto h-9 w-14 rounded-md border-[1px] border-background-tertiary bg-text-default px-2 py-1 text-xs-medium text-white hover:border-brand-primary hover:bg-brand-primary"
+                    disabled={!isValid}
+                    className={`my-auto h-9 w-14 rounded-md border-[1px] border-background-tertiary bg-text-default px-2 py-1 text-xs-medium text-white 
+                      ${!isValid ? '' : 'hover:border-brand-primary hover:bg-brand-primary'}`}
                   >
                     수정
                   </button>
                 </form>
               ) : (
-                <p className="pr-4 text-md-regular">{comment.content}</p>
+                <p className="pr-4 text-md-regular ">{comment.content}</p>
               )}
               <div className="flex">
                 <div className="flex flex-1 items-center gap-4">
