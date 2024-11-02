@@ -22,28 +22,37 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
-  const { taskCompletionStatus, setTaskId, isSidebarOpen, setSidebarOpen } =
-    useTaskListStore();
+  const {
+    taskCompletionStatus,
+    setTaskId,
+    isSidebarOpen,
+    setSidebarOpen,
+    setEditingCommentId,
+  } = useTaskListStore();
   const router = useRouter();
   const { query, pathname } = router;
 
   const params = new URLSearchParams(query as Record<string, string>);
   params.set('taskId', String(task.id));
 
-  // 각 모달의 상태 독립적으로 관리
+  // 수정 및 삭제 모달 상태 전달
   const editModal = useModal();
   const deleteModal = useModal();
 
-  // 드롭다운의 Option 및 모달 상태 전달
   const { handleOptionSelect } = useDropdownModals(editOption, [
     editModal,
     deleteModal,
   ]);
 
-  // 드롭다운 옵션 선택 시 taskId 설정
-  const handleDropdownSelection = (option: any) => {
+  // 이벤트 핸들러
+  const handleSelectDropdown = (option: any) => {
     handleOptionSelect(option);
     setTaskId(task.id);
+  };
+
+  const handleCloseSidebar = () => {
+    setSidebarOpen(false);
+    setEditingCommentId(undefined);
   };
 
   const isChecked = taskCompletionStatus[task.id]?.done ?? task.doneAt !== null;
@@ -68,10 +77,7 @@ export default function TaskCard({ task }: TaskCardProps) {
               {task.name}
             </h1>
           </Link>
-          <TaskDetails
-            isOpen={isSidebarOpen}
-            onClose={() => setSidebarOpen(false)}
-          />
+          <TaskDetails isOpen={isSidebarOpen} onClose={handleCloseSidebar} />
         </div>
         <div className="flex flex-grow justify-end gap-2 md:ml-2 md:justify-between">
           <div className="flex items-center gap-[2px]">
@@ -89,7 +95,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                   className="h-3"
                 />
               }
-              onSelect={handleDropdownSelection}
+              onSelect={handleSelectDropdown}
             />
           )}
           {editModal.isOpen && (
