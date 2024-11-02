@@ -9,12 +9,26 @@ import { Input } from '@components/@shared/Input';
 import Button from '@components/@shared/Button';
 import Image from 'next/image';
 import PasswordInput from './PasswordInput';
+import ShareModal from './ShareModal';
+import { useModal } from '@hooks/useModal';
 
 export default function InputTask() {
   const [profileNickname, setProfileNickname] = useState<string>('');
   const [ProfileImage, setProfileImage] = useState<string | JSX.Element>(
     <ProfileEditIcon />
   );
+
+  const {
+    isOpen: NicknameCompleteIsOpen,
+    onOpen: NicknameCompleteOnOpen,
+    onClose: NicknameCompleteOnClose,
+  } = useModal();
+
+  const {
+    isOpen: ProfileCompleteIsOpen,
+    onOpen: ProfileCompleteOnOpen,
+    onClose: ProfileCompleteOnClose,
+  } = useModal();
 
   const fileInput = useRef<HTMLInputElement | null>(null);
 
@@ -28,12 +42,14 @@ export default function InputTask() {
   const handelImageChange = (imageURL: string) => {
     if (imageURL) {
       mutation.mutate({ image: imageURL });
+      ProfileCompleteOnOpen();
     }
   };
 
   const handelNicknameChangeSubmit = () => {
     if (profileNickname) {
       nicknameMutation.mutate({ nickname: profileNickname });
+      NicknameCompleteOnOpen();
     }
   };
 
@@ -151,6 +167,16 @@ export default function InputTask() {
       </div>
 
       <PasswordInput />
+      <ShareModal
+        isOpen={NicknameCompleteIsOpen}
+        onClose={NicknameCompleteOnClose}
+        ModalTaitle="닉네임 변경 완료"
+      />
+      <ShareModal
+        isOpen={ProfileCompleteIsOpen}
+        onClose={ProfileCompleteOnClose}
+        ModalTaitle="프로필 변경 완료"
+      />
     </main>
   );
 }
