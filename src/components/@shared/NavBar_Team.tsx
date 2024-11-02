@@ -93,8 +93,8 @@ export default function NavBarTeam({ data }: { data: User }) {
     setIsClient(true);
     const logoOnlyPages = [
       '/signin',
-      'signup',
-      'addteam',
+      '/signup',
+      '/addteam',
       '/',
       '/oauth/signup/google',
       '/oauth/signup/kakao',
