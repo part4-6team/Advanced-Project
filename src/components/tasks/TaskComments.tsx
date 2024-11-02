@@ -175,6 +175,7 @@ export function TaskComments() {
                         width={10}
                         height={10}
                         className="h-3"
+                        quality={100}
                       />
                     }
                     onSelect={(option) =>
@@ -212,12 +213,12 @@ export function TaskComments() {
               )}
               <div className="flex">
                 <div className="flex flex-1 items-center gap-4">
-                  {comment.writer && (
+                  {comment.user && (
                     <>
-                      {comment.writer.image ? (
+                      {comment.user.image ? (
                         <Image
                           alt="유저 프로필 이미지"
-                          src={comment.writer.image}
+                          src={comment.user.image}
                           width={32}
                           height={32}
                           className="h-8 w-8 rounded-full"
@@ -226,11 +227,11 @@ export function TaskComments() {
                         <UserProfileIcon />
                       )}
                       <span className="text-md-medium">
-                        {comment.writer.nickname}
+                        {comment.user.nickname}
                       </span>
                     </>
                   )}
-                  {!comment.writer && <UserProfileIcon />}
+                  {!comment.user && <UserProfileIcon />}
                 </div>
                 <span className="my-auto text-md-regular text-text-default">
                   {getTimeAgo(comment.createdAt)}
