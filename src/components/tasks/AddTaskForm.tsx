@@ -137,7 +137,13 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
         label="할 일 제목"
         placeholder="할 일 제목을 입력해주세요."
         inputProps={{
-          ...register('name', { required: '제목은 필수 입력 사항입니다.' }),
+          ...register('name', {
+            required: '제목을 입력해야 합니다.',
+            maxLength: {
+              value: 30,
+              message: '제목은 30자 이내로 입력해야 합니다.',
+            },
+          }),
         }}
         isError={!!errors.name}
         errorMessage={errors.name?.message}
@@ -170,8 +176,19 @@ export default function AddTaskForm({ onClose }: AddTaskFormProps) {
         label="할 일 메모"
         placeholder="메모를 입력해주세요."
         textareaProps={{
-          ...register('description'),
+          ...register('description', {
+            validate: {
+              maxLength: (value) => {
+                if (value && value.length > 250) {
+                  return '메모 내용은 250자 이내로 입력해야 합니다.';
+                }
+                return true;
+              },
+            },
+          }),
         }}
+        isError={!!errors.description}
+        errorMessage={errors.description?.message}
       />
       <Button size="full" type="submit" disabled={!isValid}>
         만들기
