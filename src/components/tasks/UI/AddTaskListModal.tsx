@@ -25,10 +25,7 @@ export default function AddTaskListModal({
     register,
     watch,
     handleSubmit,
-    getValues,
     formState: { errors },
-    setError,
-    clearErrors,
   } = useForm<TaskListRequestBody['post']>({
     mode: 'onChange',
     defaultValues: {
@@ -66,26 +63,11 @@ export default function AddTaskListModal({
   };
 
   // 중복 이름 유효성 검사
-  const handleBlur = () => {
-    const name = getValues('name');
-    const isDuplicate = taskLists.some((taskList) => taskList.name === name);
-
-    if (!name) {
-      setError('name', {
-        type: 'manual',
-        message: '목록 이름은 필수 입력 사항입니다.',
-      });
-    } else if (isDuplicate) {
-      setError('name', {
-        type: 'manual',
-        message: '이미 존재하는 목록 이름입니다.',
-      });
-    } else {
-      clearErrors('name');
-    }
-  };
-
   const nameValue = watch('name');
+
+  const isDuplicateName = (name: string) => {
+    return taskLists.some((taskList) => taskList.name === name);
+  };
 
   return (
     <Modal
@@ -113,14 +95,24 @@ export default function AddTaskListModal({
             placeholder="목록 이름을 입력해주세요."
             inputProps={{
               ...register('name', {
-                required: '목록 이름은 필수 입력 사항입니다.',
-                onBlur: handleBlur,
+                required: '이름은 필수 입력 사항입니다.',
+                maxLength: {
+                  value: 30,
+                  message: '이름은 30자 이내로 입력해야 합니다.',
+                },
+                validate: {
+                  isDuplicate: (value) => {
+                    if (isDuplicateName(value)) {
+                      return '이미 존재하는 이름입니다.';
+                    }
+                    return true;
+                  },
+                },
               }),
             }}
+            isError={!!errors.name}
+            errorMessage={errors.name?.message}
           />
-          {errors.name && (
-            <p className="pt-2 text-sm text-red-500">{errors.name.message}</p>
-          )}
         </Modal.Content>
       </Modal.Wrapper>
       <Modal.Footer>
