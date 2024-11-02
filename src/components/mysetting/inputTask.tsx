@@ -32,7 +32,7 @@ export default function InputTask() {
 
   const fileInput = useRef<HTMLInputElement | null>(null);
 
-  const { data, isLoading, isError } = useUserData();
+  const { data } = useUserData();
   const mutation = useProfileChange();
   const nicknameMutation = useNicknameChange();
 
@@ -91,14 +91,6 @@ export default function InputTask() {
       setProfileNickname(data.nickname);
     }
   }, [data]);
-
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (isError) {
-    return <NetworkError />;
-  }
 
   const handleNicknameChang = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
