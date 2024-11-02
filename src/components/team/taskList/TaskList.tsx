@@ -20,9 +20,9 @@ import {
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { patchTaskListOrder } from '@/src/api/tasks/taskListAPI';
 import Image from 'next/image';
+import styles from '@styles/scroll.module.css';
 import TaskBar from './TaskBar';
 import AddTaskListModal from './AddTaskListModal';
-import styles from '../../../styles/scroll.module.css';
 import EditDropdown from '../EditDropdown';
 import EditTaskListModal from './EditTaskListModal';
 import DeleteTaskListModal from './DeleteTaskListModal';
