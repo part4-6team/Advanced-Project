@@ -81,9 +81,14 @@ export default function InputTask() {
           className="h-16 w-16 rounded-full object-cover"
         />
       );
-      setProfileNickname(data.nickname);
     } else {
       setProfileImage(<ProfileEditIcon />);
+    }
+  }, [data]);
+
+  useEffect(() => {
+    if (data) {
+      setProfileNickname(data.nickname);
     }
   }, [data]);
 
