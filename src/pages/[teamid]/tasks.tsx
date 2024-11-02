@@ -62,7 +62,7 @@ export default function TasksPage() {
   if (taskListsError) return <div>리스트 페이지 로딩 에러</div>;
 
   return (
-    <main className="flex flex-col gap-6 px-4 pt-6 text-left md:px-6 xl:mx-auto xl:max-w-[1200px] xl:px-0 xl:pt-10">
+    <main className="flex flex-col gap-6 px-4 py-6 text-left md:px-6 xl:mx-auto xl:max-w-[1200px] xl:px-0 xl:pt-10">
       <TaskDate />
       <TaskList />
       <AddTaskButton />
