@@ -64,7 +64,7 @@ export default function GetUserDetailModal({
                 className="rounded-[16px] object-cover "
               />
             </div>
-            <div className="flex-grow md:w-[180px] md:flex-grow-0">
+            <div className="w-[60%] flex-grow md:w-[180px] md:flex-grow-0">
               <p className="flex items-center gap-[2px] break-words text-lg-medium">
                 {role === 'ADMIN' && (
                   <Image
