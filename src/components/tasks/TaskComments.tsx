@@ -15,9 +15,10 @@ import { useTaskListStore } from '@/src/stores/taskListStore';
 import getSortedDate from '@utils/getSortedDate';
 import getTimeAgo from '@utils/getTimeAgo';
 
-import { AutoTextArea, ScrollTextArea } from '@components/@shared/Input';
+import { AutoTextArea } from '@components/@shared/Input';
 import EditDropdown from '@components/team/EditDropdown';
 import type { CommentRequestBody } from '@/src/types/tasks/commentDto';
+import DescriptionTextArea from './UI/input/DescriptionTextArea';
 
 export function TaskComments() {
   const queryClient = useQueryClient();
@@ -202,37 +203,36 @@ export function TaskComments() {
               )}
               {editingCommentId === comment.id ? (
                 <form
-                  className="flex h-auto w-full gap-3"
+                  className="flex w-full gap-3"
                   onSubmit={(e) => {
                     e.preventDefault();
                     handleEditSubmit();
                   }}
                 >
-                  <ScrollTextArea
+                  <DescriptionTextArea
                     placeholder={comment.content}
-                    textareaProps={{
-                      ...register('content', {
-                        validate: {
-                          maxLength: (value) => {
-                            if (value && value.length > 250) {
-                              return '댓글 내용은 250자 이내로 입력해야 합니다.';
-                            }
-                            return true;
-                          },
-                        },
-                      }),
-                    }}
+                    register={register}
+                    registerValue="content"
                     isError={!!errors.content}
                     errorMessage={String(errors.content?.message)}
                   />
-                  <button
-                    type="submit"
-                    disabled={!isValid}
-                    className={`my-auto h-9 w-14 rounded-md border-[1px] border-background-tertiary bg-text-default px-2 py-1 text-xs-medium text-white 
-                      ${!isValid ? '' : 'hover:border-brand-primary hover:bg-brand-primary'}`}
-                  >
-                    수정
-                  </button>
+                  <div className="mb-auto mt-3 flex flex-col gap-2">
+                    <button
+                      type="button"
+                      onClick={() => setEditingCommentId(undefined)}
+                      className="my-auto h-9 w-14 rounded-md border-[1px] border-background-tertiary bg-text-default px-2 py-1 text-xs-medium text-white hover:border-status-danger hover:bg-status-danger"
+                    >
+                      취소
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={!isValid}
+                      className={`my-auto h-9 w-14 rounded-md border-[1px] px-2 py-1 text-xs-medium text-white 
+                      ${!isValid ? 'border-background-tertiary bg-text-default ' : 'border-brand-primary bg-brand-primary  hover:bg-brand-secondary'}`}
+                    >
+                      수정
+                    </button>
+                  </div>
                 </form>
               ) : (
                 <p className="pr-4 text-md-regular ">{comment.content}</p>
