@@ -1,11 +1,10 @@
 import Link from 'next/link';
-import Image from 'next/image';
 
 import { useEffect, useCallback, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useTaskListStore } from '@/src/stores/taskListStore';
-import ICON_PATHS from '@constants/iconPaths';
 import TaskCard from '../TaskCard';
+import ListPagination from '../UI/ListPagination';
 
 export default function TaskList() {
   const router = useRouter();
@@ -41,7 +40,7 @@ export default function TaskList() {
     setTasks(tasks);
   }, [tasks, setTasks]);
 
-  // 화면 크기에 따라 li 너비 결정
+  // 화면 크기에 따라 li 너비를 결정하는 함수
   const getItemWidth = () => {
     const width = window.innerWidth;
     if (width < 768) {
@@ -135,44 +134,12 @@ export default function TaskList() {
           </li>
         ))}
       </ul>
-      <div className="mb-4 flex justify-between">
-        <button
-          type="button"
-          onClick={handlePrevPage}
-          disabled={currentPage === 1}
-          className={`flex items-center gap-1 text-md-regular ${
-            currentPage === 1 ? 'text-text-default' : 'text-brand-primary'
-          }`}
-        >
-          <Image
-            alt="왼쪽 화살표 아이콘"
-            src={ICON_PATHS.ARROW_LEFT}
-            width={12}
-            height={12}
-            className="mx-auto"
-          />
-          <span>이전 목록</span>
-        </button>
-        <button
-          type="button"
-          onClick={handleNextPage}
-          disabled={currentPage === totalPages}
-          className={`flex items-center gap-1 text-md-regular ${
-            currentPage === totalPages
-              ? 'text-text-default'
-              : 'text-brand-primary'
-          }`}
-        >
-          <span>다음 목록</span>
-          <Image
-            alt="오른쪽 화살표 아이콘"
-            src={ICON_PATHS.ARROW_RIGHT}
-            width={12}
-            height={12}
-            className="mx-auto"
-          />
-        </button>
-      </div>
+      <ListPagination
+        currentPage={currentPage}
+        totalPages={totalPages}
+        onNextPage={handleNextPage}
+        onPrevPage={handlePrevPage}
+      />
       {tasks.length > 0 ? (
         <ul className="flex flex-col gap-4">
           {tasks.length > 0 &&
