@@ -1,24 +1,39 @@
 import ProfileEditIcon from 'public/icons/profile_edit.svg';
 import { useEffect, useRef, useState } from 'react';
 import { useUserData } from '@hooks/mysetting/useUserData';
-import NetworkError from '@components/@shared/NetworkError';
 import { useProfileChange } from '@hooks/mysetting/useProfileChange';
 import { useImageURL } from '@hooks/mysetting/useImageURL';
 import { useNicknameChange } from '@hooks/mysetting/useNicknameChange';
 import { Input } from '@components/@shared/Input';
+import clsx from 'clsx';
 import Button from '@components/@shared/Button';
 import Image from 'next/image';
+import { useModal } from '@hooks/useModal';
 import PasswordInput from './PasswordInput';
+import ShareModal from './ShareModal';
 
 export default function InputTask() {
   const [profileNickname, setProfileNickname] = useState<string>('');
   const [ProfileImage, setProfileImage] = useState<string | JSX.Element>(
     <ProfileEditIcon />
   );
+  const [isError, setIsError] = useState<boolean>(false);
+
+  const {
+    isOpen: NicknameCompleteIsOpen,
+    onOpen: NicknameCompleteOnOpen,
+    onClose: NicknameCompleteOnClose,
+  } = useModal();
+
+  const {
+    isOpen: ProfileCompleteIsOpen,
+    onOpen: ProfileCompleteOnOpen,
+    onClose: ProfileCompleteOnClose,
+  } = useModal();
 
   const fileInput = useRef<HTMLInputElement | null>(null);
 
-  const { data, isLoading, isError } = useUserData();
+  const { data } = useUserData();
   const mutation = useProfileChange();
   const nicknameMutation = useNicknameChange();
 
@@ -28,12 +43,14 @@ export default function InputTask() {
   const handelImageChange = (imageURL: string) => {
     if (imageURL) {
       mutation.mutate({ image: imageURL });
+      ProfileCompleteOnOpen();
     }
   };
 
   const handelNicknameChangeSubmit = () => {
     if (profileNickname) {
       nicknameMutation.mutate({ nickname: profileNickname });
+      NicknameCompleteOnOpen();
     }
   };
 
@@ -65,23 +82,21 @@ export default function InputTask() {
           className="h-16 w-16 rounded-full object-cover"
         />
       );
-      setProfileNickname(data.nickname);
     } else {
       setProfileImage(<ProfileEditIcon />);
     }
   }, [data]);
 
-  if (isLoading) {
-    return <p>Loading...</p>;
-  }
-
-  if (isError) {
-    return <NetworkError />;
-  }
+  useEffect(() => {
+    if (data) {
+      setProfileNickname(data.nickname);
+    }
+  }, [data]);
 
   const handleNicknameChang = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setProfileNickname(value);
+    setIsError(value.length > 10);
   };
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,8 +152,15 @@ export default function InputTask() {
             onChange: handleNicknameChang,
             value: profileNickname,
           }}
+          isError={isError}
+          errorMessage="이름은 10글자 내외입니다."
         />
-        <div className="absolute bottom-[13px] right-3">
+        <div
+          className={clsx('absolute bottom-[16px] right-3', {
+            hidden: isError === true,
+            block: isError === false,
+          })}
+        >
           <Button
             onClick={handelNicknameChangeSubmit}
             fontSize="14"
@@ -151,6 +173,16 @@ export default function InputTask() {
       </div>
 
       <PasswordInput />
+      <ShareModal
+        isOpen={NicknameCompleteIsOpen}
+        onClose={NicknameCompleteOnClose}
+        ModalTaitle="닉네임 변경 완료"
+      />
+      <ShareModal
+        isOpen={ProfileCompleteIsOpen}
+        onClose={ProfileCompleteOnClose}
+        ModalTaitle="프로필 변경 완료"
+      />
     </main>
   );
 }
