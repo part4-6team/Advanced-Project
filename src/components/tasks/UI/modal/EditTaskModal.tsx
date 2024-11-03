@@ -7,8 +7,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useForm } from 'react-hook-form';
 import { TASK_REQUEST_INIT } from '@constants/initValues';
 import type { TaskRequestBody } from '@/src/types/tasks/taskDto';
-import NameInput from './input/NameInput';
-import DescriptionTextArea from './input/DescriptionTextArea';
+import NameInput from '../input/NameInput';
+import DescriptionTextArea from '../input/DescriptionTextArea';
 
 interface EditTaskModal {
   isOpen: boolean;

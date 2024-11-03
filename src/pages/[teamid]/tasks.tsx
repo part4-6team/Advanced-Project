@@ -5,7 +5,7 @@ import { useTaskListStore } from '@/src/stores/taskListStore';
 import { getTaskLists, getTaskList } from '@/src/api/tasks/taskListAPI';
 import TaskDate from '@components/tasks/Layout/TaskDate';
 import TaskList from '@components/tasks/Layout/TaskList';
-import AddTaskButton from '@components/tasks/UI/AddTaskButton';
+import AddTaskButton from '@components/tasks/UI/button/AddTaskButton';
 import { toKSTISOString } from '@utils/toKSTISOString';
 
 export default function TasksPage() {
