@@ -12,10 +12,10 @@ import Image from 'next/image';
 
 import EditDropdown, { editOption } from '@components/team/EditDropdown';
 import Link from 'next/link';
-import EditTaskModal from './UI/EditTaskModal';
-import DeleteTaskModal from './UI/DeleteTaskModal';
+import EditTaskModal from './UI/modal/EditTaskModal';
+import DeleteTaskModal from './UI/modal/DeleteTaskModal';
 import { TaskDetails } from './TaskDetails';
-import CheckBox from './CheckBox';
+import CheckBox from './UI/CheckBox';
 
 interface TaskCardProps {
   task: TaskDto;

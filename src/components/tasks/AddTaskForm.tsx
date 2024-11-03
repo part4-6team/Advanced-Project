@@ -15,8 +15,8 @@ import type { TaskRequestBody } from '@/src/types/tasks/taskDto';
 
 import DescriptionTextArea from './UI/input/DescriptionTextArea';
 import NameInput from './UI/input/NameInput';
-import WeeklySelector from './WeeklySelector';
-import Calender from './Calender';
+import WeeklySelector from './UI/WeeklySelector';
+import Calender from './UI/Calender';
 
 interface AddTaskFormProps {
   onClose: () => void;
