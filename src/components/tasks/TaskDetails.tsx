@@ -26,7 +26,8 @@ interface TaskDetailsProps {
 
 export function TaskDetails({ isOpen, onClose }: TaskDetailsProps) {
   const router = useRouter();
-  const { taskId } = router.query;
+  const { query } = router;
+  const { taskId } = query;
   const { date } = useDate();
   const {
     taskCompletionStatus,
@@ -49,6 +50,7 @@ export function TaskDetails({ isOpen, onClose }: TaskDetailsProps) {
         date: toKSTISOString(date),
       }),
     enabled: !!taskId && !!date,
+    staleTime: Infinity,
   });
 
   // store

@@ -7,26 +7,14 @@ import TaskCard from '../TaskCard';
 export default function TaskList() {
   const router = useRouter();
   const { query } = router;
-  const { teamid } = query;
-  const {
-    taskLists,
-    taskListId: currentTaskListId,
-    setTaskListId,
-    tasks,
-    setTasks,
-  } = useTaskListStore();
-
-  useEffect(() => {
-    if (teamid) {
-      setTaskListId(Number(teamid));
-    }
-  }, [teamid, setTaskListId]);
+  const { teamid, taskListId } = query;
+  const { taskLists, setTaskListId, tasks, setTasks } = useTaskListStore();
 
   // 선택된 taskList의 tasks[]를 가져오는 함수
   const fetchTasks = useCallback(
-    (taskListId: number | undefined) => {
+    (queryTaskListId: number | undefined) => {
       const selectedList = taskLists.find(
-        (taskList) => taskList.id === taskListId
+        (taskList) => taskList.id === queryTaskListId
       );
       setTasks(selectedList ? selectedList.tasks : []);
     },
@@ -34,8 +22,13 @@ export default function TaskList() {
   );
 
   useEffect(() => {
-    fetchTasks(currentTaskListId);
-  }, [currentTaskListId, fetchTasks]);
+    if (taskListId) {
+      setTaskListId(Number(taskListId));
+      fetchTasks(Number(taskListId));
+    } else if (teamid) {
+      setTaskListId(Number(teamid));
+    }
+  }, [taskListId, teamid, setTaskListId, fetchTasks]);
 
   useEffect(() => {
     setTasks(tasks);
@@ -48,12 +41,18 @@ export default function TaskList() {
           <li
             key={taskList.id}
             className={
-              currentTaskListId === taskList.id
+              Number(taskListId) === taskList.id ||
+              (taskListId === undefined && Number(teamid) === taskList.id)
                 ? 'border-b-[1px] border-b-white text-white'
                 : 'text-text-default'
             }
           >
-            <Link href={{ pathname: `/${taskList.id}/tasks` }}>
+            <Link
+              href={{
+                pathname: `/${teamid}/tasks`,
+                query: { taskListId: taskList.id },
+              }}
+            >
               <button type="button" className="pb-1">
                 {taskList.name}
               </button>

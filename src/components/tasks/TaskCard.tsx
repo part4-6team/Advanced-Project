@@ -22,37 +22,39 @@ interface TaskCardProps {
 }
 
 export default function TaskCard({ task }: TaskCardProps) {
-  const {
-    taskCompletionStatus,
-    setTaskId,
-    isSidebarOpen,
-    setSidebarOpen,
-    setEditingCommentId,
-  } = useTaskListStore();
+  const { taskCompletionStatus, setTaskId, isSidebarOpen, setSidebarOpen } =
+    useTaskListStore();
   const router = useRouter();
-  const { query, pathname } = router;
+  const { query } = router;
+  const { teamid, taskListId } = query;
 
-  const params = new URLSearchParams(query as Record<string, string>);
-  params.set('taskId', String(task.id));
-
-  // 수정 및 삭제 모달 상태 전달
+  // 각 모달의 상태 독립적으로 관리
   const editModal = useModal();
   const deleteModal = useModal();
 
+  // 드롭다운 핸들러
   const { handleOptionSelect } = useDropdownModals(editOption, [
     editModal,
     deleteModal,
   ]);
 
-  // 이벤트 핸들러
-  const handleSelectDropdown = (option: any) => {
+  const handleDropdownSelection = (option: any) => {
     handleOptionSelect(option);
     setTaskId(task.id);
   };
 
-  const handleCloseSidebar = () => {
+  // 사이드바 핸들러
+  const handleCloseTaskDetails = () => {
     setSidebarOpen(false);
-    setEditingCommentId(undefined);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { taskId, teamid: teamIdFromQuery, ...restQuery } = query;
+    router.push({
+      pathname: `/${teamid}/tasks`,
+      query: {
+        ...restQuery,
+        taskListId,
+      },
+    });
   };
 
   const isChecked = taskCompletionStatus[task.id]?.done ?? task.doneAt !== null;
@@ -68,7 +70,10 @@ export default function TaskCard({ task }: TaskCardProps) {
             doneAt={task.doneAt}
           />
           <Link
-            href={`${pathname}?${params.toString()}`}
+            href={{
+              pathname: `/${teamid}/tasks`,
+              query: { taskListId, taskId: task.id },
+            }}
             onClick={() => setSidebarOpen(!isSidebarOpen)}
           >
             <h1
@@ -77,7 +82,10 @@ export default function TaskCard({ task }: TaskCardProps) {
               {task.name}
             </h1>
           </Link>
-          <TaskDetails isOpen={isSidebarOpen} onClose={handleCloseSidebar} />
+          <TaskDetails
+            isOpen={isSidebarOpen}
+            onClose={handleCloseTaskDetails}
+          />
         </div>
         <div className="flex flex-grow justify-end gap-2 md:ml-2 md:justify-between">
           <div className="flex items-center gap-[2px]">
@@ -95,7 +103,7 @@ export default function TaskCard({ task }: TaskCardProps) {
                   className="h-3"
                 />
               }
-              onSelect={handleSelectDropdown}
+              onSelect={handleDropdownSelection}
             />
           )}
           {editModal.isOpen && (
