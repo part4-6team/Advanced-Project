@@ -1,4 +1,3 @@
-import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { useDate } from '@/src/contexts/DateContext';
 import { useQuery } from '@tanstack/react-query';
@@ -10,13 +9,15 @@ import AddTaskButton from '@components/tasks/UI/AddTaskButton';
 import { toKSTISOString } from '@utils/toKSTISOString';
 
 export default function TasksPage() {
-  const router = useRouter();
-  const { teamid } = router.query;
   const { date } = useDate();
-  const taskListId = parseInt(teamid as string, 10) || undefined;
-
-  const { groupId, setTasks, setGroupId, setTaskLists, setTaskListId } =
-    useTaskListStore();
+  const {
+    groupId,
+    taskListId,
+    setTasks,
+    setGroupId,
+    setTaskLists,
+    setTaskListId,
+  } = useTaskListStore();
 
   // GET, taskList 및 tasks[]
   const { data: taskListData } = useQuery({
@@ -27,7 +28,8 @@ export default function TasksPage() {
         date: toKSTISOString(date),
       }),
     enabled: !!taskListId && !!date,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
   // store, taskListData
@@ -48,7 +50,8 @@ export default function TasksPage() {
     queryKey: ['tasks', groupId],
     queryFn: () => getTaskLists({ groupId }),
     enabled: !!groupId,
-    refetchOnWindowFocus: true,
+    refetchOnWindowFocus: false,
+    staleTime: Infinity,
   });
 
   // store, taskListsData

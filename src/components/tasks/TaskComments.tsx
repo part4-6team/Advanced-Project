@@ -51,6 +51,7 @@ export function TaskComments() {
         taskId,
       }),
     enabled: !!taskId,
+    staleTime: Infinity,
   });
 
   useEffect(() => {
