@@ -76,6 +76,8 @@
 
 .isErrorScroll::-webkit-scrollbar-track {
   background: transparent;
+}
+
 /* 모바일 전용 스크롤바 스타일 */
 @media (max-width: 768px) {
   .taskListScroll::-webkit-scrollbar {
