@@ -119,7 +119,7 @@ export default function DetailCard() {
       </header>
       <div className="flex">
         <div className="mr-8 border-r-2 border-r-slate-800 pr-8">
-          <div className=" relative  h-[220px] w-[220px] ">
+          <div className=" relative h-[220px] w-[220px] ">
             <Image
               src={data?.image || '/icons/profile_large.svg'}
               layout="fill"
@@ -128,9 +128,11 @@ export default function DetailCard() {
             />
           </div>
         </div>
-        <p className="break-words text-md-medium text-text-secondary md:text-lg-medium">
-          {data?.content}
-        </p>
+        <div className="w-full">
+          <p className="w-full break-all text-md-medium text-text-secondary md:text-lg-medium">
+            {data?.content}
+          </p>
+        </div>
       </div>
       <div className="flex flex-col justify-between">
         <CommentForm articleId={Number(articleId)} />
