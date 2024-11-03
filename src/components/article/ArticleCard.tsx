@@ -28,7 +28,7 @@ interface Card {
 
 export default function ArticleCard({ keyword }: ArticleCardProps) {
   const [orderBy, setorderBy] = useState('recent');
-
+  const { query } = useRouter();
   const {
     data: cards,
     isError,
@@ -38,12 +38,24 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
   } = useCards(10, orderBy, keyword || '');
   const router = useRouter();
 
+  useEffect(() => {
+    if (query.orderBy) {
+      setorderBy(query.orderBy as string);
+    } else {
+      setorderBy('recent');
+    }
+  }, [query.orderBy]);
+
   const handleDetalCard = (id: number) => {
     router.push(`article/${id}`);
   };
 
   const handleSelect = (value: string) => {
     setorderBy(value);
+    router.push({
+      pathname: router.pathname,
+      query: { ...query, orderBy: value },
+    });
   };
 
   const { ref, inView } = useInView();
