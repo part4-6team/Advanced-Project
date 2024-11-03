@@ -15,7 +15,7 @@ export default function ListPagination({
   onPrevPage,
 }: PaginationProps) {
   return (
-    <div className="mt-4 flex justify-between">
+    <div className="mb-4 flex justify-between">
       <button
         type="button"
         onClick={onPrevPage}

@@ -114,7 +114,7 @@ export default function TaskList() {
         {sliceTaskLists.map((taskList) => (
           <li
             key={taskList.id}
-            className={`max-w-[250px] overflow-hidden text-ellipsis whitespace-nowrap text-center  ${
+            className={`max-w-[250px] text-center  ${
               Number(taskListId) === taskList.id ||
               (taskListId === undefined && Number(teamid) === taskList.id)
                 ? 'border-b-[1px] border-b-white text-white'
@@ -127,7 +127,10 @@ export default function TaskList() {
                 query: { taskListId: taskList.id },
               }}
             >
-              <button type="button" className="pb-1">
+              <button
+                type="button"
+                className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap pb-1"
+              >
                 {taskList.name}
               </button>
             </Link>
