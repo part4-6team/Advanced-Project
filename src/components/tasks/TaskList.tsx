@@ -4,8 +4,8 @@ import { useEffect, useCallback, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import getResponsiveValue from '@utils/getResponsiveValue';
-import TaskCard from '../TaskCard';
-import ListPagination from '../UI/ListPagination';
+import TaskCard from './TaskCard';
+import ListPagination from './UI/ListPagination';
 
 export default function TaskList() {
   const router = useRouter();

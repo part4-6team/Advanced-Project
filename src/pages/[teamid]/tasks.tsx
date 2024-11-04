@@ -4,8 +4,8 @@ import { useQuery } from '@tanstack/react-query';
 import { useRouter } from 'next/router';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import { getTaskLists, getTaskList } from '@/src/api/tasks/taskListAPI';
-import TaskDate from '@components/tasks/Layout/TaskDate';
-import TaskList from '@components/tasks/Layout/TaskList';
+import TaskDate from '@components/tasks/TaskDate';
+import TaskList from '@components/tasks/TaskList';
 import AddTaskButton from '@components/tasks/UI/button/AddTaskButton';
 import { toKSTISOString } from '@utils/toKSTISOString';
 
