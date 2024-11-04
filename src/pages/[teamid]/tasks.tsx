@@ -26,11 +26,7 @@ export default function TasksPage() {
   } = useTaskListStore();
 
   // GET, taskList 및 tasks[]
-  const {
-    data: taskListData,
-    isLoading: taskListLoading,
-    isError: taskListError,
-  } = useQuery({
+  const { data: taskListData, isError: taskListError } = useQuery({
     queryKey: ['tasks', taskListId, toKSTISOString(date)],
     queryFn: () =>
       getTaskList({
@@ -83,7 +79,7 @@ export default function TasksPage() {
   return (
     <main className="flex flex-col gap-6 px-4 py-6 text-left md:px-6 xl:mx-auto xl:max-w-[1200px] xl:px-0 xl:pt-10">
       <TaskDate />
-      <TaskList isLoading={taskListLoading} />
+      <TaskList />
       <AddTaskButton />
     </main>
   );
