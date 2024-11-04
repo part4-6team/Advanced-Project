@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import { useDate } from '@/src/contexts/DateContext';
 import { useQuery } from '@tanstack/react-query';
+import { useRouter } from 'next/router';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import { getTaskLists, getTaskList } from '@/src/api/tasks/taskListAPI';
 import TaskDate from '@components/tasks/Layout/TaskDate';
@@ -10,6 +11,9 @@ import { toKSTISOString } from '@utils/toKSTISOString';
 
 export default function TasksPage() {
   const { date } = useDate();
+  const router = useRouter();
+  const { query } = router;
+  const { teamid } = query;
   const {
     groupId,
     taskListId,
@@ -47,7 +51,7 @@ export default function TasksPage() {
     isLoading: taskListsLoading,
     isError: taskListsError,
   } = useQuery({
-    queryKey: ['tasks', groupId],
+    queryKey: ['tasks', groupId, teamid],
     queryFn: () => getTaskLists({ groupId }),
     enabled: !!groupId,
     refetchOnWindowFocus: false,
