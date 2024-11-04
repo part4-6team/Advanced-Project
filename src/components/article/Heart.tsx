@@ -31,13 +31,13 @@ export default function Heart({ articleId }: HeartProps) {
       setLikedPost(true);
       // 필요시 쿼리 무효화나 업데이트 처리
       queryClient.invalidateQueries({
-        queryKey: ['articleCard'],
+        queryKey: ['articleCard', articleId],
       });
       queryClient.invalidateQueries({
-        queryKey: ['bestcard'],
+        queryKey: ['bestcard', articleId],
       });
       queryClient.invalidateQueries({
-        queryKey: ['DetailCard'],
+        queryKey: ['DetailCard', articleId],
       });
     },
   });
@@ -49,13 +49,13 @@ export default function Heart({ articleId }: HeartProps) {
       setLikedPost(false);
       // 필요시 쿼리 무효화나 업데이트 처리
       queryClient.invalidateQueries({
-        queryKey: ['articleCard'],
+        queryKey: ['articleCard', articleId],
       });
       queryClient.invalidateQueries({
-        queryKey: ['bestcard'],
+        queryKey: ['bestcard', articleId],
       });
       queryClient.invalidateQueries({
-        queryKey: ['DetailCard'],
+        queryKey: ['DetailCard', articleId],
       });
     },
   });
