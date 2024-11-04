@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import ArrayDropdown from '@components/article/ArrayDropdown';
 import { useCards } from '@hooks/article/useArticleCard';
-import NetworkError from '@components/@shared/NetworkError';
 import { useInView } from 'react-intersection-observer';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
-import Heart from './Heart';
+import HeartIcon from 'public/icons/heart.svg';
+import LoadingSpinner from '@components/@shared/LoadingSpinner';
+import UserNotFound from '@components/@shared/UserNotFound';
 
 interface ArticleCardProps {
   keyword: string;
@@ -31,6 +32,7 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
   const { query } = useRouter();
   const {
     data: cards,
+    isLoading,
     isError,
     fetchNextPage,
     hasNextPage,
@@ -66,13 +68,8 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isError) {
-    return (
-      <div>
-        <NetworkError />
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingSpinner />;
+  if (isError) return <UserNotFound />;
 
   return (
     <>
@@ -88,7 +85,7 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
             <ul className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               {page.map((card: Card) => (
                 <li key={card.id}>
-                  <article className="relative h-[178px] w-full rounded-xl border border-background-tertiary bg-background-secondary">
+                  <article className=" h-[178px] w-full rounded-xl border border-background-tertiary bg-background-secondary">
                     <div
                       className="mx-4 mb-4 mt-6 cursor-pointer"
                       onClick={() => handleDetalCard(card.id)}
@@ -126,14 +123,12 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
                           </span>
                         </div>
                         <div className="flex items-center gap-1">
+                          <HeartIcon />
                           <span className="text-xs-regular text-slate-400 md:text-md-medium">
                             {card.likeCount}
                           </span>
                         </div>
                       </div>
-                    </div>
-                    <div className="absolute bottom-[18px] right-[30px]">
-                      <Heart articleId={card.id} />
                     </div>
                   </article>
                 </li>
