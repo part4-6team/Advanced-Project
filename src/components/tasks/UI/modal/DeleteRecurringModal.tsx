@@ -2,33 +2,37 @@ import Image from 'next/image';
 import Button from '@components/@shared/Button';
 import { Modal } from '@components/@shared/Modal';
 
-import { deleteTask, TaskUrlParams } from '@/src/api/tasks/taskAPI';
+import { deleteRecurringTask, TaskUrlParams } from '@/src/api/tasks/taskAPI';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-interface DeleteTaskModalProps {
+interface DeleteRecurringModalProps {
   isOpen: boolean;
   onClose: () => void;
   taskName: string;
+  taskRecurringId: number;
 }
 
-export default function DeleteTaskModal({
+export default function DeleteRecurringModal({
   isOpen,
   onClose,
   taskName,
-}: DeleteTaskModalProps) {
+  taskRecurringId,
+}: DeleteRecurringModalProps) {
   const queryClient = useQueryClient();
-  const { taskListId, taskId } = useTaskListStore();
+  const { taskListId } = useTaskListStore();
 
-  const { mutate: removeTask } = useMutation({
+  const { mutate: removeRecurring } = useMutation({
     mutationFn: async ({ params }: { params: TaskUrlParams }) => {
-      return deleteTask(params);
+      return deleteRecurringTask(params);
     },
     onSuccess: () => {
       onClose();
     },
     onSettled: () => {
-      queryClient.invalidateQueries({ queryKey: ['tasks', taskListId] });
+      queryClient.invalidateQueries({
+        queryKey: ['tasks', taskListId],
+      });
     },
     onError: (error) => {
       console.error('patchTask 실패:', error);
@@ -37,7 +41,7 @@ export default function DeleteTaskModal({
 
   const handleClick = async () => {
     try {
-      await removeTask({ params: { taskId } });
+      await removeRecurring({ params: { recurringId: taskRecurringId } });
     } catch (error) {
       console.error('removeTask 에러:', error);
     }
@@ -68,11 +72,11 @@ export default function DeleteTaskModal({
           />
           <p className="leading-normal">
             &apos;{taskName}&apos; <br />
-            삭제하시겠어요?
+            일괄 삭제하시겠어요?
           </p>
         </Modal.Header>
         <Modal.Content fontColor="secondary" fontSize="14" fontArray="center">
-          <p>지금 선택된 할 일 카드만 삭제됩니다.</p>
+          <p>반복적으로 생성된 할 일 카드가 모두 삭제됩니다.</p>
         </Modal.Content>
       </Modal.Wrapper>
       <Modal.Footer>
