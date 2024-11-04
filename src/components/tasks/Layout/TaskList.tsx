@@ -103,7 +103,7 @@ export default function TaskList() {
         {sliceTaskLists.map((taskList) => (
           <li
             key={taskList.id}
-            className={`max-w-[250px] text-center  ${
+            className={`max-w-[250px] overflow-hidden text-center ${
               Number(taskListId) === taskList.id ||
               (taskListId === undefined && Number(teamid) === taskList.id)
                 ? 'border-b-[1px] border-b-white text-white'
