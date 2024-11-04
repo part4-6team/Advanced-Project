@@ -71,12 +71,14 @@ export default function DeleteRecurringModal({
             height={24}
           />
           <p className="leading-normal">
-            &apos;{taskName}&apos; <br />
-            일괄 삭제하시겠어요?
+            &apos;{taskName}&apos; <br />할 일을 일괄 삭제하시겠어요?
           </p>
         </Modal.Header>
         <Modal.Content fontColor="secondary" fontSize="14" fontArray="center">
-          <p>반복적으로 생성된 할 일 카드가 모두 삭제됩니다.</p>
+          <p className="flex flex-col gap-1">
+            반복 일정으로 인해 생성된
+            <span> 모든 할 일 카드가 삭제됩니다.</span>
+          </p>
         </Modal.Content>
       </Modal.Wrapper>
       <Modal.Footer>

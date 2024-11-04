@@ -67,8 +67,7 @@ export default function DeleteTaskModal({
             height={24}
           />
           <p className="leading-normal">
-            &apos;{taskName}&apos; <br />
-            삭제하시겠어요?
+            &apos;{taskName}&apos; <br />할 일을 삭제하시겠어요?
           </p>
         </Modal.Header>
         <Modal.Content fontColor="secondary" fontSize="14" fontArray="center">
