@@ -7,6 +7,7 @@ const ICON_PATHS = {
   REPAIR_PC: '/icons/repair_pc.svg',
   PROFILE: '/icons/profile_small.svg',
   ALERT: '/icons/alert.svg',
+  PLUS: '/icons/plus.svg',
   X: '/icons/x.svg',
 };
 
