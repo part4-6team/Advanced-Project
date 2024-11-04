@@ -125,9 +125,9 @@ export default function DetailCard() {
           </div>
         </div>
       </header>
-      <div className="flex">
-        <div className="mr-8 border-r-2 border-r-slate-800 pr-8">
-          <div className=" relative h-[220px] w-[220px] ">
+      <div className="flex flex-col">
+        <div className="mb-4 flex justify-center md:justify-start">
+          <div className=" relative h-[200px] w-[200px] md:h-[240px] md:w-[240px] ">
             <Image
               src={data?.image || '/icons/profile_large.svg'}
               layout="fill"
