@@ -3,6 +3,7 @@ import Link from 'next/link';
 import { useEffect, useCallback, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useTaskListStore } from '@/src/stores/taskListStore';
+import getResponsiveValue from '@utils/getResponsiveValue';
 import TaskCard from '../TaskCard';
 import ListPagination from '../UI/ListPagination';
 
@@ -40,23 +41,11 @@ export default function TaskList() {
     setTasks(tasks);
   }, [tasks, setTasks]);
 
-  // 화면 크기에 따라 li 너비를 결정하는 함수
-  const getItemWidth = () => {
-    const width = window.innerWidth;
-    if (width < 768) {
-      return 150; // 모바일
-    }
-    if (width < 1240) {
-      return 200; // 태블릿
-    }
-    return 250; // PC
-  };
-
   // 페이지당 항목 수 계산
   const updateItemsPerPage = useCallback(() => {
     if (ulRef.current) {
       const containerWidth = ulRef.current.getBoundingClientRect().width;
-      const itemWidth = getItemWidth();
+      const itemWidth = getResponsiveValue(150, 200, 250);
       const newItemsPerPage = Math.floor(containerWidth / itemWidth);
       setItemsPerPage(newItemsPerPage);
       setCurrentPage((prevPage) =>
