@@ -17,11 +17,11 @@ export default function AddTaskListButton() {
       >
         <Image
           alt="왼쪽 화살표 아이콘"
-          src={ICON_PATHS.PLUS}
+          src={ICON_PATHS.PLUS_GREEN}
           width={16}
           height={16}
           quality={100}
-          className="rounded-full bg-brand-primary p-[2px]"
+          className="bg-b rounded-full bg-background-secondary p-[2px]"
         />
         <span className="my-auto text-md-regular text-brand-primary">
           {isMobile ? '목록 추가' : '새로운 목록 추가하기'}
