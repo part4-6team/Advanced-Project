@@ -6,15 +6,18 @@ import { useUserData } from '@hooks/mysetting/useUserData';
 import PCLogo from 'public/images/logo_pc.png';
 import Link from 'next/link';
 import Image from 'next/image';
+import { useUserStore } from '@/src/stores/useUserStore';
 import NavBarTeam from './NavBar_Team';
 
 export default function NavBar() {
   const router = useRouter();
+  const { logout } = useUserStore();
   const [isLogoOnlyPage, setIsLogoOnlyPage] = useState(false);
   const [isClient, setIsClient] = useState(false);
   const { data } = useUserData();
   const handleLogout = () => {
-    localStorage.removeItem('userStorage');
+    // localStorage.removeItem('userStorage');
+    logout();
     router.push('/signin');
   };
 
