@@ -3,7 +3,7 @@ import UserIcon from 'public/icons/user.svg';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useUserData } from '@hooks/mysetting/useUserData';
-import PCLogo from 'public/images/logo_pc.png';
+import PCLogo from 'public/images/donut_logo3.png';
 import Link from 'next/link';
 import Image from 'next/image';
 import NavBarTeam from './NavBar_Team';
