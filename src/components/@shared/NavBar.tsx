@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useUserData } from '@hooks/mysetting/useUserData';
 import clsx from 'clsx';
-import PCLogo from 'public/images/logo_pc.png';
+import PCLogo from 'public/images/donut_logo3.png';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useUserStore } from '@/src/stores/useUserStore';
