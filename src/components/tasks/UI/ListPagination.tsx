@@ -1,5 +1,6 @@
 import ICON_PATHS from '@constants/iconPaths';
 import Image from 'next/image';
+import TextButtonMotion from '@components/@shared/animation/TextButtonMotion';
 
 interface PaginationProps {
   currentPage: number;
@@ -24,14 +25,16 @@ export default function ListPagination({
           currentPage === 1 ? 'text-text-default' : 'text-brand-primary'
         }`}
       >
-        <Image
-          alt="왼쪽 화살표 아이콘"
-          src={ICON_PATHS.ARROW_LEFT}
-          width={12}
-          height={12}
-          className="mx-auto"
-        />
-        <span>이전 목록</span>
+        <TextButtonMotion className="flex gap-2">
+          <Image
+            alt="왼쪽 화살표 아이콘"
+            src={ICON_PATHS.ARROW_LEFT}
+            width={12}
+            height={12}
+            className="m-auto"
+          />
+          <span>이전 목록</span>
+        </TextButtonMotion>
       </button>
       <button
         type="button"
@@ -43,14 +46,16 @@ export default function ListPagination({
             : 'text-brand-primary'
         }`}
       >
-        <span>다음 목록</span>
-        <Image
-          alt="오른쪽 화살표 아이콘"
-          src={ICON_PATHS.ARROW_RIGHT}
-          width={12}
-          height={12}
-          className="mx-auto"
-        />
+        <TextButtonMotion className="flex gap-2">
+          <span>다음 목록</span>
+          <Image
+            alt="오른쪽 화살표 아이콘"
+            src={ICON_PATHS.ARROW_RIGHT}
+            width={12}
+            height={12}
+            className="m-auto"
+          />
+        </TextButtonMotion>
       </button>
     </div>
   );

@@ -6,6 +6,8 @@ import ProfileIcon from '@icons/profile_small.svg';
 import AlertIcon from '@icons/alert.svg';
 import XIcon from '@icons/x.svg';
 
+import IconButtonMotion from './animation/IconButtonMotion';
+
 import { getModalClass, ModalClassProps } from '@utils/getModalClass';
 
 interface ModalProps extends ModalClassProps {
@@ -74,7 +76,9 @@ export function Modal({
             className="absolute right-4 top-4 flex justify-end"
             onClick={onClose}
           >
-            <XIcon />
+            <IconButtonMotion>
+              <XIcon />
+            </IconButtonMotion>
           </button>
         )}
         {children}

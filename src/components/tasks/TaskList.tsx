@@ -1,9 +1,9 @@
 import Link from 'next/link';
-
 import { useEffect, useCallback, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import getResponsiveValue from '@utils/getResponsiveValue';
+import TextButtonMotion from '@components/@shared/animation/TextButtonMotion';
 import TaskCard from './TaskCard';
 import ListPagination from './UI/ListPagination';
 
@@ -42,18 +42,17 @@ export default function TaskList() {
 
   useEffect(() => {
     if (taskListId) {
-      setTaskListId(Number(taskListId));
-      fetchTasks(Number(taskListId));
-      getInitPage(Number(taskListId));
+      const id = Number(taskListId);
+      setTaskListId(id);
+      fetchTasks(id);
+      getInitPage(id);
     } else if (teamid) {
-      setTaskListId(Number(teamid));
-      getInitPage(Number(teamid));
+      const id = Number(teamid);
+      setTaskListId(id);
+      fetchTasks(id);
+      getInitPage(id);
     }
   }, [getInitPage, taskListId, teamid, setTaskListId, fetchTasks, taskLists]);
-
-  useEffect(() => {
-    setTasks(tasks);
-  }, [tasks, setTasks]);
 
   // 페이지당 항목 수 계산
   const updateItemsPerPage = useCallback(() => {
@@ -71,7 +70,7 @@ export default function TaskList() {
   // ResizeObserver를 사용하여 넓이 측정
   useEffect(() => {
     const observer = new ResizeObserver(() => {
-      updateItemsPerPage();
+      // updateItemsPerPage();
     });
 
     const currentUlRef = ulRef.current;
@@ -88,7 +87,7 @@ export default function TaskList() {
 
   // 페이지 변경 시 재계산
   useEffect(() => {
-    updateItemsPerPage();
+    updateItemsPerPage(); // 문제 발생, 초기 date의 할 일이 리렌더링됨
   }, [currentPage, updateItemsPerPage]);
 
   const totalPages = Math.ceil(taskLists.length / itemsPerPage);
@@ -130,12 +129,14 @@ export default function TaskList() {
                 query: { taskListId: taskList.id },
               }}
             >
-              <button
-                type="button"
-                className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap pb-1"
-              >
-                {taskList.name}
-              </button>
+              <TextButtonMotion>
+                <button
+                  type="button"
+                  className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap pb-1"
+                >
+                  {taskList.name}
+                </button>
+              </TextButtonMotion>
             </Link>
           </li>
         ))}

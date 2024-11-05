@@ -5,6 +5,7 @@ import ActiveCheckBoxIcon from '@icons/checkbox_active.svg';
 import InActiveCheckBoxIcon from '@icons/checkbox_inactive.svg';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import type { TaskRequestBody } from '@/src/types/tasks/taskDto';
+import IconButtonMotion from '@components/@shared/animation/IconButtonMotion';
 
 interface CheckBoxProps {
   taskId: number;
@@ -60,8 +61,10 @@ export default function CheckBox({
   };
 
   return (
-    <button type="button" onClick={handleClick}>
-      {isChecked ? <ActiveCheckBoxIcon /> : <InActiveCheckBoxIcon />}
-    </button>
+    <IconButtonMotion>
+      <button type="button" onClick={handleClick}>
+        {isChecked ? <ActiveCheckBoxIcon /> : <InActiveCheckBoxIcon />}
+      </button>
+    </IconButtonMotion>
   );
 }

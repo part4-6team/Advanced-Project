@@ -1,6 +1,7 @@
 import Image from 'next/image';
 import { useDate } from '@/src/contexts/DateContext';
 import dayjs from 'dayjs';
+import IconButtonMotion from '@components/@shared/animation/IconButtonMotion';
 
 import ICON_PATHS from '@constants/iconPaths';
 
@@ -21,32 +22,36 @@ export default function DatePagination() {
 
   return (
     <div className="my-auto flex items-center gap-1">
-      <button
-        type="button"
-        className="h-4 w-4 rounded-full bg-background-secondary"
-        onClick={handlePrevDate}
-      >
-        <Image
-          alt="왼쪽 화살표 아이콘"
-          src={ICON_PATHS.ARROW_LEFT}
-          width={12}
-          height={12}
-          className="mx-auto"
-        />
-      </button>
-      <button
-        type="button"
-        className="h-4 w-4 rounded-full bg-background-secondary"
-        onClick={handleNextDate}
-      >
-        <Image
-          alt="오른쪽 화살표 아이콘"
-          src={ICON_PATHS.ARROW_RIGHT}
-          width={12}
-          height={12}
-          className="mx-auto"
-        />
-      </button>
+      <IconButtonMotion>
+        <button
+          type="button"
+          className="h-4 w-4 rounded-full bg-background-secondary"
+          onClick={handlePrevDate}
+        >
+          <Image
+            alt="왼쪽 화살표 아이콘"
+            src={ICON_PATHS.ARROW_LEFT}
+            width={12}
+            height={12}
+            className="mx-auto"
+          />
+        </button>
+      </IconButtonMotion>
+      <IconButtonMotion>
+        <button
+          type="button"
+          className="h-4 w-4 rounded-full bg-background-secondary"
+          onClick={handleNextDate}
+        >
+          <Image
+            alt="오른쪽 화살표 아이콘"
+            src={ICON_PATHS.ARROW_RIGHT}
+            width={12}
+            height={12}
+            className="mx-auto"
+          />
+        </button>
+      </IconButtonMotion>
     </div>
   );
 }

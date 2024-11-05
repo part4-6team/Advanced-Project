@@ -34,7 +34,6 @@ export default function TasksPage() {
         date: toKSTISOString(date),
       }),
     enabled: !!taskListId && !!date,
-    refetchOnWindowFocus: false,
     staleTime: Infinity,
   });
 

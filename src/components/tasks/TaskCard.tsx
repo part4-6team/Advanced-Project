@@ -4,6 +4,7 @@ import RepeatIcon from '@icons/repeat.svg';
 import type { TaskDto } from '@/src/types/tasks/taskDto';
 
 import { formatTaskCardDate } from '@utils/getFormattedDate';
+import IconButtonMotion from '@components/@shared/animation/IconButtonMotion';
 import { useRouter } from 'next/router';
 import { useModal } from '@hooks/useModal';
 import { useTaskListStore } from '@/src/stores/taskListStore';
@@ -19,6 +20,7 @@ import DeleteTaskModal from './UI/modal/DeleteTaskModal';
 import DeleteRecurringModal from './UI/modal/DeleteRecurringModal';
 import { TaskDetails } from './TaskDetails';
 import CheckBox from './UI/CheckBox';
+import ListMotion from '@components/@shared/animation/ListMotion';
 
 interface TaskCardProps {
   task: TaskDto;
@@ -65,7 +67,7 @@ export default function TaskCard({ task }: TaskCardProps) {
   const isChecked = taskCompletionStatus[task.id]?.done ?? task.doneAt !== null;
 
   return (
-    <li className="flex flex-col gap-[10px] rounded-lg bg-background-secondary px-[14px] py-3 text-text-default">
+    <ListMotion className="flex flex-col gap-[10px] rounded-lg bg-background-secondary px-[14px] py-3 text-text-default">
       <div className="flex">
         <div className="flex gap-2">
           <CheckBox
@@ -98,18 +100,20 @@ export default function TaskCard({ task }: TaskCardProps) {
             <span>{task.commentCount}</span>
           </div>
           {!isSidebarOpen && (
-            <TaskEditDropdown
-              triggerIcon={
-                <Image
-                  src="/icons/kebab_large.svg"
-                  alt="더보기 아이콘"
-                  width={10}
-                  height={10}
-                  className="h-3"
-                />
-              }
-              onSelect={handleDropdownSelection}
-            />
+            <IconButtonMotion>
+              <TaskEditDropdown
+                triggerIcon={
+                  <Image
+                    src="/icons/kebab_large.svg"
+                    alt="더보기 아이콘"
+                    width={10}
+                    height={10}
+                    className="h-3"
+                  />
+                }
+                onSelect={handleDropdownSelection}
+              />
+            </IconButtonMotion>
           )}
           {editModal.isOpen && (
             <EditTaskModal
@@ -142,6 +146,6 @@ export default function TaskCard({ task }: TaskCardProps) {
         <RepeatIcon />
         <span>{task.frequency}</span>
       </div>
-    </li>
+    </ListMotion>
   );
 }
