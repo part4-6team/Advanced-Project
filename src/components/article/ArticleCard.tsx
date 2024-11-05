@@ -1,13 +1,15 @@
 import Image from 'next/image';
 import ArrayDropdown from '@components/article/ArrayDropdown';
 import { useCards } from '@hooks/article/useArticleCard';
-import NetworkError from '@components/@shared/NetworkError';
 import { useInView } from 'react-intersection-observer';
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import HeartIcon from 'public/icons/heart.svg';
+import LoadingSpinner from '@components/@shared/LoadingSpinner';
+import UserNotFound from '@components/@shared/UserNotFound';
+import { motion } from 'framer-motion';
 
 interface ArticleCardProps {
   keyword: string;
@@ -31,6 +33,7 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
   const { query } = useRouter();
   const {
     data: cards,
+    isLoading,
     isError,
     fetchNextPage,
     hasNextPage,
@@ -66,13 +69,8 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isError) {
-    return (
-      <div>
-        <NetworkError />
-      </div>
-    );
-  }
+  if (isLoading) return <LoadingSpinner />;
+  if (isError) return <UserNotFound />;
 
   return (
     <>
@@ -88,52 +86,54 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
             <ul className="grid grid-cols-1 gap-4 xl:grid-cols-2">
               {page.map((card: Card) => (
                 <li key={card.id}>
-                  <article className=" h-[178px] w-full rounded-xl border border-background-tertiary bg-background-secondary">
-                    <div
-                      className="mx-4 mb-4 mt-6 cursor-pointer"
-                      onClick={() => handleDetalCard(card.id)}
-                    >
-                      <div className=" mb-10 flex justify-between">
-                        <div className="flex-1 overflow-hidden pr-4">
-                          <h3 className="mb-3 max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-md-medium md:text-2lg-medium">
-                            {card.title}
-                          </h3>
-                          <span className="text-xs-regular text-slate-400 md:text-md-medium">
-                            {dayjs(card.createdAt).format('YYYY.MM.DD')}
-                          </span>
+                  <motion.div whileHover={{ scale: 1.03 }}>
+                    <article className=" h-[178px] w-full rounded-xl border border-background-tertiary bg-background-secondary">
+                      <div
+                        className="mx-4 mb-4 mt-6 cursor-pointer"
+                        onClick={() => handleDetalCard(card.id)}
+                      >
+                        <div className=" mb-10 flex justify-between">
+                          <div className="flex-1 overflow-hidden pr-4">
+                            <h3 className="mb-3 max-w-full overflow-hidden text-ellipsis whitespace-nowrap text-md-medium md:text-2lg-medium">
+                              {card.title}
+                            </h3>
+                            <span className="text-xs-regular text-slate-400 md:text-md-medium">
+                              {dayjs(card.createdAt).format('YYYY.MM.DD')}
+                            </span>
+                          </div>
+                          <div className="h-16 w-16 flex-none rounded-lg">
+                            <Image
+                              src={card.image}
+                              width={64}
+                              height={64}
+                              alt="게시글 이미지"
+                              className="rounded-lg"
+                            />
+                          </div>
                         </div>
-                        <div className="h-16 w-16 flex-none rounded-lg">
-                          <Image
-                            src={card.image}
-                            width={64}
-                            height={64}
-                            alt="게시글 이미지"
-                            className="rounded-lg"
-                          />
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <Image
+                              src="/icons/profile_large.svg"
+                              width={32}
+                              height={32}
+                              alt="게시글 이미지"
+                              className="rounded-full"
+                            />
+                            <span className="text-xs-medium md:text-md-medium">
+                              {card.writer.nickname}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-1">
+                            <HeartIcon />
+                            <span className="text-xs-regular text-slate-400 md:text-md-medium">
+                              {card.likeCount}
+                            </span>
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <Image
-                            src="/icons/profile_large.svg"
-                            width={32}
-                            height={32}
-                            alt="게시글 이미지"
-                            className="rounded-full"
-                          />
-                          <span className="text-xs-medium md:text-md-medium">
-                            {card.writer.nickname}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <HeartIcon />
-                          <span className="text-xs-regular text-slate-400 md:text-md-medium">
-                            {card.likeCount}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </article>
+                    </article>
+                  </motion.div>
                 </li>
               ))}
             </ul>
