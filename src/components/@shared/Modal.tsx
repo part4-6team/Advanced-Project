@@ -6,9 +6,9 @@ import ProfileIcon from '@icons/profile_small.svg';
 import AlertIcon from '@icons/alert.svg';
 import XIcon from '@icons/x.svg';
 
-import IconButtonMotion from './animation/IconButtonMotion';
-
 import { getModalClass, ModalClassProps } from '@utils/getModalClass';
+
+import IconButtonMotion from './animation/IconButtonMotion';
 
 interface ModalProps extends ModalClassProps {
   isOpen?: boolean;

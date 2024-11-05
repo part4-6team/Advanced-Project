@@ -11,6 +11,7 @@ import { useTaskListStore } from '@/src/stores/taskListStore';
 import useDropdownModals from '@hooks/useDropdownModals';
 import Image from 'next/image';
 
+import ListMotion from '@components/@shared/animation/ListMotion';
 import TaskEditDropdown, {
   editOption,
 } from '@components/tasks/UI/TaskEditDropdown';
@@ -20,7 +21,6 @@ import DeleteTaskModal from './UI/modal/DeleteTaskModal';
 import DeleteRecurringModal from './UI/modal/DeleteRecurringModal';
 import { TaskDetails } from './TaskDetails';
 import CheckBox from './UI/CheckBox';
-import ListMotion from '@components/@shared/animation/ListMotion';
 
 interface TaskCardProps {
   task: TaskDto;
