@@ -3,7 +3,8 @@ import UserIcon from 'public/icons/user.svg';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { useUserData } from '@hooks/mysetting/useUserData';
-import PCLogo from 'public/images/donut_logo3.png';
+import clsx from 'clsx';
+import PCLogo from 'public/images/logo_pc.png';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useUserStore } from '@/src/stores/useUserStore';
@@ -118,7 +119,12 @@ export default function NavBar() {
             <Dropdown
               options={basic}
               triggerIcon={
-                <div className="flex items-center gap-2">
+                <div
+                  className={clsx({
+                    'flex items-center gap-2': data,
+                    hidden: !data,
+                  })}
+                >
                   <UserIcon />
                   <span className="max-xl:hidden">
                     {data?.nickname || '이름'}
