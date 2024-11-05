@@ -112,8 +112,8 @@ export default function TaskBar({ name, tasks, id, isDragging }: TaskBarProps) {
               ) : (
                 <CircleGraph
                   backgroundColor="#ffffff"
-                  gradientColorStart="#ff6f91"
-                  gradientColorEnd="#ff6f91"
+                  gradientColorStart="#FF5580"
+                  gradientColorEnd="#FF5580"
                   radius={6}
                   percentage={doneRate}
                   strokeWidth={3}

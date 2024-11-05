@@ -33,9 +33,9 @@ export default function Report() {
         <div className="relative flex items-center gap-[20px]">
           <div className="hidden md:block">
             <CircleGraph
-              backgroundColor="#334155"
-              gradientColorStart="#ff6f91"
-              gradientColorEnd="#fdfd53"
+              backgroundColor="#2C2C2C"
+              gradientColorStart="#FF5580"
+              gradientColorEnd="#FFAA80"
               radius={60}
               percentage={doneRate}
               strokeWidth={30}
@@ -43,9 +43,9 @@ export default function Report() {
           </div>
           <div className="ml-[5px] md:hidden">
             <CircleGraph
-              backgroundColor="#0d0c13"
-              gradientColorStart="#ff6f91"
-              gradientColorEnd="#fdfd53"
+              backgroundColor="#2C2C2C"
+              gradientColorStart="#FF5580"
+              gradientColorEnd="#FFAA80"
               radius={50}
               percentage={doneRate}
               strokeWidth={25}
