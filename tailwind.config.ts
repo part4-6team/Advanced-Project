@@ -11,7 +11,7 @@ const config: Config = {
         '40': '40px',
       },
       backgroundImage: {
-        'brand-gradient': 'linear-gradient(#10B981, #A3E635)', // brand.gradient 정의된 값
+        'brand-gradient': 'linear-gradient(#ff6f91, #fdfd53)', // brand.gradient 정의된 값
       },
       fontFamily: {
         sans: ['Pretendard', 'sans-serif'],
@@ -49,9 +49,9 @@ const config: Config = {
       },
       colors: {
         brand: {
-          primary: '#10B981',
+          primary: '#ff6f91',
           secondary: '#34D399',
-          tertiary: '#A3E635',
+          tertiary: '#fdfd53',
         },
         point: {
           purple: '#A855F7',
@@ -64,14 +64,14 @@ const config: Config = {
         },
         background: {
           primary: '#0F172A',
-          secondary: '#1E293B',
-          tertiary: '#334155',
+          secondary: '#1e1e1e',
+          tertiary: '#121212',
           inverse: '#FFFFFF',
         },
         interaction: {
           inactive: '#94A3B8',
-          hover: '#059669',
-          pressed: '#047857',
+          hover: '#FF658C',
+          pressed: '#FF3C6D',
           focus: '#10B981',
         },
         border: {

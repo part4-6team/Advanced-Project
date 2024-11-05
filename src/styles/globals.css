@@ -4,7 +4,7 @@
 
 @layer utilities {
   .bg-background-primary {
-    @apply bg-[#0F172A];
+    @apply bg-[#121212];
   }
 }
 
@@ -18,7 +18,7 @@ body::-webkit-scrollbar {
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: #10b981; /* 스크롤바 색상 */
+  background-color: #d8dbda; /* 스크롤바 색상 */
   border-radius: 10px; /* 둥글게 만들기 */
 }
 

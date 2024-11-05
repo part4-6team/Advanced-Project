@@ -30,12 +30,12 @@ export default function Report() {
     <section className="w-full">
       <p className="my-[20px] text-lg-medium">리포트</p>
       <div className="flex h-[217px] items-center justify-between gap-[15px] rounded-[12px] bg-background-secondary pr-[10px] md:gap-[30px] md:px-[24px]">
-        <div className="flex items-center gap-[20px]">
+        <div className="relative flex items-center gap-[20px]">
           <div className="hidden md:block">
             <CircleGraph
               backgroundColor="#334155"
-              gradientColorStart="#10B981"
-              gradientColorEnd="#A3E635"
+              gradientColorStart="#ff6f91"
+              gradientColorEnd="#fdfd53"
               radius={60}
               percentage={doneRate}
               strokeWidth={30}
@@ -43,9 +43,9 @@ export default function Report() {
           </div>
           <div className="ml-[5px] md:hidden">
             <CircleGraph
-              backgroundColor="#334155"
-              gradientColorStart="#10B981"
-              gradientColorEnd="#A3E635"
+              backgroundColor="#0d0c13"
+              gradientColorStart="#ff6f91"
+              gradientColorEnd="#fdfd53"
               radius={50}
               percentage={doneRate}
               strokeWidth={25}
@@ -54,6 +54,11 @@ export default function Report() {
               additionalTextColor="#ffffff"
             />
           </div>
+          {doneRate === 100 && (
+            <div className="absolute left-[10px] h-[140px] w-[140px] md:h-[160px] md:w-[160px]">
+              <Image fill src="/images/graph_done.png" alt="100% 아이콘" />
+            </div>
+          )}
           <div className="hidden md:block md:text-md-medium">
             <p>오늘의</p>
             <p>진행상황</p>
