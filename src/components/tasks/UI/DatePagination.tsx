@@ -1,7 +1,7 @@
 import Image from 'next/image';
 import { useDate } from '@/src/contexts/DateContext';
 import dayjs from 'dayjs';
-import IconButtonMotion from '@components/@shared/animation/IconButtonMotion';
+import IconSparkleMotion from '@components/@shared/animation/IconSparkleMotion';
 
 import ICON_PATHS from '@constants/iconPaths';
 
@@ -21,37 +21,29 @@ export default function DatePagination() {
   };
 
   return (
-    <div className="my-auto flex items-center gap-1">
-      <IconButtonMotion>
-        <button
-          type="button"
-          className="h-4 w-4 rounded-full bg-background-secondary"
-          onClick={handlePrevDate}
-        >
+    <div className="mx-auto  flex items-center gap-1">
+      <button type="button" className="" onClick={handlePrevDate}>
+        <IconSparkleMotion>
           <Image
             alt="왼쪽 화살표 아이콘"
             src={ICON_PATHS.ARROW_LEFT}
             width={12}
             height={12}
-            className="mx-auto"
+            className="h-4 w-4 rounded-full bg-background-secondary p-[2px]"
           />
-        </button>
-      </IconButtonMotion>
-      <IconButtonMotion>
-        <button
-          type="button"
-          className="h-4 w-4 rounded-full bg-background-secondary"
-          onClick={handleNextDate}
-        >
+        </IconSparkleMotion>
+      </button>
+      <button type="button" onClick={handleNextDate}>
+        <IconSparkleMotion>
           <Image
             alt="오른쪽 화살표 아이콘"
             src={ICON_PATHS.ARROW_RIGHT}
             width={12}
             height={12}
-            className="mx-auto"
+            className="h-4 w-4 rounded-full bg-background-secondary p-[2px]"
           />
-        </button>
-      </IconButtonMotion>
+        </IconSparkleMotion>
+      </button>
     </div>
   );
 }
