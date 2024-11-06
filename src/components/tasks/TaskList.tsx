@@ -6,6 +6,7 @@ import getResponsiveValue from '@utils/getResponsiveValue';
 import TextButtonMotion from '@components/@shared/animation/TextButtonMotion';
 import TaskCard from './TaskCard';
 import ListPagination from './UI/ListPagination';
+import ListMotion from '@components/@shared/animation/ListMotion';
 
 export default function TaskList() {
   const router = useRouter();
@@ -52,7 +53,7 @@ export default function TaskList() {
       fetchTasks(id);
       getInitPage(id);
     }
-  }, [getInitPage, taskListId, teamid, setTaskListId, fetchTasks, taskLists]);
+  }, [taskListId, teamid, setTaskListId, taskLists]);
 
   // 페이지당 항목 수 계산
   const updateItemsPerPage = useCallback(() => {
@@ -70,7 +71,7 @@ export default function TaskList() {
   // ResizeObserver를 사용하여 넓이 측정
   useEffect(() => {
     const observer = new ResizeObserver(() => {
-      // updateItemsPerPage();
+      updateItemsPerPage();
     });
 
     const currentUlRef = ulRef.current;
@@ -87,7 +88,7 @@ export default function TaskList() {
 
   // 페이지 변경 시 재계산
   useEffect(() => {
-    updateItemsPerPage(); // 문제 발생, 초기 date의 할 일이 리렌더링됨
+    updateItemsPerPage();
   }, [currentPage, updateItemsPerPage]);
 
   const totalPages = Math.ceil(taskLists.length / itemsPerPage);
@@ -148,10 +149,12 @@ export default function TaskList() {
         onPrevPage={handlePrevPage}
       />
       {tasks.length > 0 ? (
-        <ul className="flex flex-col gap-4">
+        <ListMotion className="flex flex-col gap-4">
           {tasks.length > 0 &&
-            tasks.map((task) => <TaskCard key={task.id} task={task} />)}
-        </ul>
+            tasks.map((task, index) => (
+              <TaskCard key={task.id} index={index} task={task} />
+            ))}
+        </ListMotion>
       ) : (
         <div className="text-text-md mt-80 text-center text-text-default sm:mt-48">
           <p>아직 할 일이 없습니다.</p>

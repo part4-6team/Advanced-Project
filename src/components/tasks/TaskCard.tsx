@@ -11,7 +11,7 @@ import { useTaskListStore } from '@/src/stores/taskListStore';
 import useDropdownModals from '@hooks/useDropdownModals';
 import Image from 'next/image';
 
-import ListMotion from '@components/@shared/animation/ListMotion';
+import CardMotion from '@components/@shared/animation/CardMotion';
 import TaskEditDropdown, {
   editOption,
 } from '@components/tasks/UI/TaskEditDropdown';
@@ -24,9 +24,10 @@ import CheckBox from './UI/CheckBox';
 
 interface TaskCardProps {
   task: TaskDto;
+  index: number;
 }
 
-export default function TaskCard({ task }: TaskCardProps) {
+export default function TaskCard({ task, index }: TaskCardProps) {
   const { taskCompletionStatus, setTaskId, isSidebarOpen, setSidebarOpen } =
     useTaskListStore();
   const router = useRouter();
@@ -67,7 +68,8 @@ export default function TaskCard({ task }: TaskCardProps) {
   const isChecked = taskCompletionStatus[task.id]?.done ?? task.doneAt !== null;
 
   return (
-    <ListMotion
+    <CardMotion
+      index={index}
       isOpen={isSidebarOpen}
       className="flex flex-col gap-[10px] rounded-lg bg-background-secondary px-[14px] py-3 text-text-default"
     >
@@ -153,6 +155,6 @@ export default function TaskCard({ task }: TaskCardProps) {
         <RepeatIcon />
         <span>{task.frequency}</span>
       </div>
-    </ListMotion>
+    </CardMotion>
   );
 }
