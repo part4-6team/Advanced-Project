@@ -67,7 +67,10 @@ export default function TaskCard({ task }: TaskCardProps) {
   const isChecked = taskCompletionStatus[task.id]?.done ?? task.doneAt !== null;
 
   return (
-    <ListMotion className="flex flex-col gap-[10px] rounded-lg bg-background-secondary px-[14px] py-3 text-text-default">
+    <ListMotion
+      isOpen={isSidebarOpen}
+      className="flex flex-col gap-[10px] rounded-lg bg-background-secondary px-[14px] py-3 text-text-default"
+    >
       <div className="flex">
         <div className="flex gap-2">
           <CheckBox
@@ -89,10 +92,14 @@ export default function TaskCard({ task }: TaskCardProps) {
               {task.name}
             </h1>
           </Link>
-          <TaskDetails
-            isOpen={isSidebarOpen}
-            onClose={handleCloseTaskDetails}
-          />
+          {isSidebarOpen && (
+            <div>
+              <TaskDetails
+                isOpen={isSidebarOpen}
+                onClose={handleCloseTaskDetails}
+              />
+            </div>
+          )}
         </div>
         <div className="flex flex-grow justify-end gap-2 md:ml-2 md:justify-between">
           <div className="flex items-center gap-[2px]">
