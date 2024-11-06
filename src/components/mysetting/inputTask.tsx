@@ -7,6 +7,7 @@ import { useNicknameChange } from '@hooks/mysetting/useNicknameChange';
 import { Input } from '@components/@shared/Input';
 import clsx from 'clsx';
 import Button from '@components/@shared/Button';
+import getRandomDonut from '@utils/getRandomDonut';
 import Image from 'next/image';
 import { useModal } from '@hooks/useModal';
 import Dropdown, { Option } from '@components/@shared/Dropdown';
@@ -130,14 +131,14 @@ export default function InputTask() {
     if (fileInput.current) {
       fileInput.current.value = ''; // 파일 입력 필드 값 초기화
     }
-    handleDefaultImageChange(''); // 기본 이미지로 설정
+    handleDefaultImageChange(getRandomDonut()); // 기본 이미지로 설정
   };
 
   const basic: Option[] = [
     {
+      label: '프로필 이미지 변경',
       component: (
-        <button
-          type="button"
+        <div
           onClick={() => {
             if (fileInput.current) {
               fileInput.current.click();
@@ -145,13 +146,13 @@ export default function InputTask() {
           }}
         >
           프로필 변경
-        </button>
+        </div>
       ),
     },
     {
+      label: '기본 이미지 변경',
       component: (
-        <button
-          type="button"
+        <div
           onClick={() => {
             if (fileInput.current) {
               resetToDefaultImage();
@@ -159,7 +160,7 @@ export default function InputTask() {
           }}
         >
           기본 이미지
-        </button>
+        </div>
       ),
     },
   ];
