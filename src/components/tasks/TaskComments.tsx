@@ -181,7 +181,7 @@ export function TaskComments() {
       />
       {comments.length > 0 ? (
         <ul className="mt-6 flex flex-col gap-4 text-text-primary">
-          {comments.map((comment, index) => (
+          {comments.map((comment) => (
             <li key={comment.id} className="relative flex flex-col gap-4">
               {/* 드롭다운, 수정 모드일 경우 렌더링 X */}
               {editingCommentId !== comment.id && (

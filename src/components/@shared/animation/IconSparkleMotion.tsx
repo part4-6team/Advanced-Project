@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useState, ReactNode } from 'react';
 import { motion } from 'framer-motion';
-import { ReactNode } from 'react';
 import styles from '@styles/carAnimation.module.css';
 
 interface IconSparkleMotionProps {
@@ -25,8 +24,8 @@ export default function IconSparkleMotion({
         },
       }}
       className={`${isHovered ? styles.sparkle : ''} ${className}`}
-      onMouseEnter={() => setIsHovered(true)} // 마우스가 버튼 위에 있을 때
-      onMouseLeave={() => setIsHovered(false)} // 마우스가 버튼에서 나갔을 때
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {children}
     </motion.div>

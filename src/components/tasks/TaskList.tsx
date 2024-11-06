@@ -52,6 +52,7 @@ export default function TaskList() {
       fetchTasks(id);
       getInitPage(id);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [taskListId, teamid, setTaskListId, taskLists]);
 
   // 페이지당 항목 수 계산
