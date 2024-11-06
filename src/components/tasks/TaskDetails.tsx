@@ -17,6 +17,7 @@ import {
 import type { TaskRequestBody } from '@/src/types/tasks/taskDto';
 import FadeInMotion from '@components/@shared/animation/FadeInMotion';
 
+import DonutLoadingSpinner from '@components/@shared/DonutLoadingSpinner';
 import SideBar from '@components/@shared/SideBar';
 import { TaskComments } from './TaskComments';
 
@@ -39,11 +40,7 @@ export function TaskDetails({ isOpen, onClose }: TaskDetailsProps) {
   } = useTaskListStore();
 
   // GET, task
-  const {
-    data: taskData,
-    isLoading: taskLoading,
-    isError: taskError,
-  } = useQuery({
+  const { data: taskData, isLoading: taskLoading } = useQuery({
     queryKey: ['tasks', taskId, toKSTISOString(date)],
     queryFn: () =>
       getTask({
@@ -106,12 +103,9 @@ export function TaskDetails({ isOpen, onClose }: TaskDetailsProps) {
       }
       clickEvent={handleCompleteClick}
     >
-      {taskLoading && <p className="mx-5 mt-14">Loading...</p>}
-      {taskError && (
-        <p className="mx-5 mt-14">세부 정보를 불러오지 못했습니다.</p>
-      )}
+      {taskLoading && <DonutLoadingSpinner className="my-52" />}
 
-      {task ? (
+      {!taskLoading && task ? (
         <FadeInMotion>
           <section className="mx-5 flex flex-col gap-4">
             <h1 className="text-xl-bold text-text-primary">{task.name}</h1>
@@ -150,7 +144,7 @@ export function TaskDetails({ isOpen, onClose }: TaskDetailsProps) {
           <TaskComments />
         </FadeInMotion>
       ) : (
-        <p className="mx-5 mt-14">세부 정보가 없습니다.</p>
+        <p className="mx-5 mt-14" />
       )}
     </SideBar>
   );
