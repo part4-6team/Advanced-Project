@@ -16,6 +16,12 @@ export default function TextButtonMotion({
       whileHover={
         !disabled ? { WebkitBackgroundClip: 'text', scale: 1.05 } : {}
       }
+      whileTap={{
+        scale: 0.92,
+        transition: {
+          duration: 0.1,
+        },
+      }}
       transition={{ duration: 0.2 }}
       className={`${className} ${disabled ? 'cursor-not-allowed opacity-30' : ''}`}
     >

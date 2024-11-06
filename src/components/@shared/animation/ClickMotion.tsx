@@ -1,23 +1,20 @@
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
 
-interface IconButtonMotionProps {
+interface ClickMotionProps {
   children: ReactNode;
   className?: string;
 }
 
-export default function IconButtonMotion({
-  children,
-  className,
-}: IconButtonMotionProps) {
+export default function ClickMotion({ children, className }: ClickMotionProps) {
   return (
     <motion.div
-      whileHover={{ scale: 1.13 }}
+      whileHover={{ scale: 1 }}
       transition={{ duration: 0.2 }}
       whileTap={{
-        scale: 1,
+        scale: 0.85,
         transition: {
-          duration: 0.15,
+          duration: 0.1,
         },
       }}
       className={className}

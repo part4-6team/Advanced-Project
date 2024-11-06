@@ -1,23 +1,23 @@
 import { motion } from 'framer-motion';
 import { ReactNode } from 'react';
 
-interface ListMotionProps {
+interface SlideDownMotionProps {
   children: ReactNode;
   className?: string;
 }
 
-function ListMotion({ children, className }: ListMotionProps) {
+function SlideDownMotion({ children, className }: SlideDownMotionProps) {
   return (
-    <motion.ul
+    <motion.div
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      transition={{ duration: 0.28 }}
+      transition={{ duration: 0.2 }}
       className={className}
     >
       {children}
-    </motion.ul>
+    </motion.div>
   );
 }
 
-export default ListMotion;
+export default SlideDownMotion;
