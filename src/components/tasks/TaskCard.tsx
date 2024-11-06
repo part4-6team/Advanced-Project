@@ -4,7 +4,6 @@ import RepeatIcon from '@icons/repeat.svg';
 import type { TaskDto } from '@/src/types/tasks/taskDto';
 
 import { formatTaskCardDate } from '@utils/getFormattedDate';
-import IconButtonMotion from '@components/@shared/animation/IconButtonMotion';
 import { useRouter } from 'next/router';
 import { useModal } from '@hooks/useModal';
 import { useTaskListStore } from '@/src/stores/taskListStore';
@@ -12,6 +11,7 @@ import useDropdownModals from '@hooks/useDropdownModals';
 import Image from 'next/image';
 
 import CardMotion from '@components/@shared/animation/CardMotion';
+import ClickMotion from '@components/@shared/animation/ClickMotion';
 import TaskEditDropdown, {
   editOption,
 } from '@components/tasks/UI/TaskEditDropdown';
@@ -70,11 +70,10 @@ export default function TaskCard({ task, index }: TaskCardProps) {
   return (
     <CardMotion
       index={index}
-      isOpen={isSidebarOpen}
       className="flex flex-col gap-[10px] rounded-lg bg-background-secondary px-[14px] py-3 text-text-default"
     >
-      <div className="flex">
-        <div className="flex gap-2">
+      <div className="flex items-center">
+        <div className="flex items-center">
           <CheckBox
             taskId={task.id}
             taskName={task.name}
@@ -89,7 +88,7 @@ export default function TaskCard({ task, index }: TaskCardProps) {
             onClick={() => setSidebarOpen(!isSidebarOpen)}
           >
             <h1
-              className={`text-text-primary ${isChecked ? 'line-through' : ''}`}
+              className={`ml-1 text-text-primary hover:text-text-secondary ${isChecked ? 'line-through' : ''}`}
             >
               {task.name}
             </h1>
@@ -103,13 +102,15 @@ export default function TaskCard({ task, index }: TaskCardProps) {
             </div>
           )}
         </div>
-        <div className="flex flex-grow justify-end gap-2 md:ml-2 md:justify-between">
+        <div className="flex flex-grow justify-end gap-2 md:ml-2 md:flex-shrink md:justify-between">
           <div className="flex items-center gap-[2px]">
             <CommentIcon />
-            <span>{task.commentCount}</span>
+            <span className="text-md-medium text-text-tertiary">
+              {task.commentCount}
+            </span>
           </div>
           {!isSidebarOpen && (
-            <IconButtonMotion>
+            <ClickMotion>
               <TaskEditDropdown
                 triggerIcon={
                   <Image
@@ -122,7 +123,7 @@ export default function TaskCard({ task, index }: TaskCardProps) {
                 }
                 onSelect={handleDropdownSelection}
               />
-            </IconButtonMotion>
+            </ClickMotion>
           )}
           {editModal.isOpen && (
             <EditTaskModal

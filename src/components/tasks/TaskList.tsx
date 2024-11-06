@@ -6,7 +6,6 @@ import getResponsiveValue from '@utils/getResponsiveValue';
 import TextButtonMotion from '@components/@shared/animation/TextButtonMotion';
 import TaskCard from './TaskCard';
 import ListPagination from './UI/ListPagination';
-import ListMotion from '@components/@shared/animation/ListMotion';
 
 export default function TaskList() {
   const router = useRouter();
@@ -117,10 +116,10 @@ export default function TaskList() {
         {sliceTaskLists.map((taskList) => (
           <li
             key={taskList.id}
-            className={`max-w-[250px] overflow-hidden text-center ${
+            className={`max-w-[250px] overflow-hidden pt-1 text-center ${
               Number(taskListId) === taskList.id ||
               (taskListId === undefined && Number(teamid) === taskList.id)
-                ? 'border-b-[1px] border-b-white text-white'
+                ? 'rounded-full border-b-[6px] border-b-amber-950  bg-brand-secondary bg-opacity-30 px-2  text-white'
                 : 'text-text-default'
             }`}
           >
@@ -149,12 +148,12 @@ export default function TaskList() {
         onPrevPage={handlePrevPage}
       />
       {tasks.length > 0 ? (
-        <ListMotion className="flex flex-col gap-4">
+        <ul className="flex flex-col gap-4">
           {tasks.length > 0 &&
             tasks.map((task, index) => (
               <TaskCard key={task.id} index={index} task={task} />
             ))}
-        </ListMotion>
+        </ul>
       ) : (
         <div className="text-text-md mt-80 text-center text-text-default sm:mt-48">
           <p>아직 할 일이 없습니다.</p>
