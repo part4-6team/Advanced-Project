@@ -28,17 +28,14 @@ export default function TaskList() {
     [taskLists, setTasks]
   );
 
-  const getInitPage = useCallback(
-    (queryTaskListId: any) => {
-      const selectedIndex = taskLists.findIndex(
-        (taskList) => taskList.id === queryTaskListId
-      );
+  const getInitPage = (queryTaskListId: any) => {
+    const selectedIndex = taskLists.findIndex(
+      (taskList) => taskList.id === queryTaskListId
+    );
 
-      const newPage = Math.floor(selectedIndex / itemsPerPage) + 1;
-      setCurrentPage(newPage);
-    },
-    [taskLists, itemsPerPage, setCurrentPage]
-  );
+    const newPage = Math.floor(selectedIndex / itemsPerPage) + 1;
+    setCurrentPage(newPage);
+  };
 
   useEffect(() => {
     if (taskListId) {
