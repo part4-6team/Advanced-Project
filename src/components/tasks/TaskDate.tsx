@@ -3,7 +3,6 @@ import { formatTaskListDate } from '@utils/getFormattedDate';
 import { useDate } from '@/src/contexts/DateContext';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import BounceTextMotion from '@components/@shared/animation/BounceTextMotion';
-import FadeInMotion from '@components/@shared/animation/FadeInMotion';
 import SlideInMotion from '@components/@shared/animation/SlideInMotion';
 import DatePagination from './UI/DatePagination';
 import CalenderButton from './UI/button/CalenderButton';
@@ -32,7 +31,7 @@ export default function TaskDate() {
             text={selectedTaskListName}
             key={taskListAnimateKey}
             className="inline text-brand-primary"
-          ></BounceTextMotion>{' '}
+          />{' '}
           ]{' '}
         </span>
         할 일 목록
