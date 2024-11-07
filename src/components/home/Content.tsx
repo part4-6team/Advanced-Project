@@ -31,9 +31,9 @@ export default function Content() {
           지금 시작하기
         </Button>
       </div>
-      <div className="gradient-border flex w-full flex-col rounded-40 px-[54px] shadow-[0_0_12px_2px_rgba(255,255,255,0.5)] md:px-[81px] xl:px-[174px] ">
+      <div className="gradient-border flex h-[500px] w-full overflow-hidden rounded-40 bg-slate-950 px-[54px] shadow-[0_0_12px_2px_rgba(255,255,255,0.5)] md:h-[400px] md:px-[81px] xl:px-[174px]">
         <div className="mx-auto flex flex-col items-center md:w-full md:flex-row md:justify-around">
-          <div className="flex-start my-12 flex w-full flex-col gap-4 md:order-2 md:w-40 xl:w-52">
+          <div className="my-12 flex w-full flex-col gap-4 md:w-40 xl:w-52">
             <Image
               alt="폴더 랜딩아이콘"
               src={ICON_PATHS.LANDING_FOLDER}
@@ -50,20 +50,23 @@ export default function Content() {
             src={IMAGE_PATHS.LANDING_TEAM}
             width={291}
             height={338}
-            className="md:order-1 md:pt-[81px]"
+            className="md:relative md:bottom-[-300px] md:order-1 md:pt-[81px]"
           />
         </div>
       </div>
-      <div className="flex w-full rounded-40 border-[1px] border-[rgba(248,250,252,0.1)] bg-background-secondary px-[54px] md:px-[81px] xl:px-[174px]">
-        <div className="mx-auto flex flex-col items-center md:w-full md:flex-row md:justify-around">
-          <Image
-            alt="멤버 초대 기능 랜딩이미지"
-            src={IMAGE_PATHS.LANDING_INVITE}
-            width={291}
-            height={338}
-            className="md:order-2 md:pb-[81px]"
-          />
-          <div className="flex-start my-12 flex w-full flex-col gap-4 md:order-1 md:w-40 md:items-end xl:w-52">
+      <div className="relative flex h-[500px] w-full overflow-hidden rounded-40 border-[1px] border-[rgba(248,250,252,0.1)] bg-background-secondary px-[54px] md:h-[400px] md:px-[81px] xl:px-[174px]">
+        <div className="mx-auto flex flex-col md:w-full md:flex-row md:justify-around">
+          <div className="relative top-[-50%] h-[740px] w-[280px]">
+            <Image
+              alt="멤버 초대 기능 랜딩이미지"
+              src={IMAGE_PATHS.LANDING_INVITE}
+              width={291}
+              height={756}
+              quality={100}
+              className="mx-auto object-cover md:top-[-10%] md:order-2"
+            />
+          </div>
+          <div className="flex-start relative bottom-[40%] flex w-full flex-col gap-4 md:static md:order-1 md:my-auto md:w-40 md:items-end xl:w-52">
             <Image
               alt="이메일 랜딩아이콘"
               src={ICON_PATHS.LANDING_EMAIL}
@@ -77,16 +80,9 @@ export default function Content() {
           </div>
         </div>
       </div>
-      <div className="flex w-full rounded-40 bg-slate-950 px-[54px] md:px-[81px] xl:px-[174px]">
+      <div className="flex h-[500px] w-full overflow-hidden rounded-40 bg-slate-950 px-[54px] md:h-[400px] md:px-[81px] xl:px-[174px]">
         <div className="mx-auto flex flex-col items-center md:w-full md:flex-row md:justify-around">
-          <Image
-            alt="투두 기능 랜딩이미지"
-            src={IMAGE_PATHS.LANDING_TODO}
-            width={291}
-            height={338}
-            className="md:pb-[81px]"
-          />
-          <div className="flex-start my-12 flex w-full flex-col gap-4 md:w-40 xl:w-52">
+          <div className="my-12 flex w-full flex-col gap-4 md:w-40 xl:w-52">
             <Image
               alt="이메일 체크아이콘"
               src={ICON_PATHS.LANDING_CHECK}
@@ -98,6 +94,13 @@ export default function Content() {
               할 일도 간편하게 <span> 체크해요 </span>
             </h2>
           </div>
+          <Image
+            alt="투두 기능 랜딩이미지"
+            src={IMAGE_PATHS.LANDING_TODO}
+            width={291}
+            height={338}
+            className="md:relative md:top-[-150px] md:pb-[81px]"
+          />
         </div>
       </div>
     </section>
