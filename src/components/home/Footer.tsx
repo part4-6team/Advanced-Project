@@ -17,7 +17,7 @@ export default function Footer() {
   });
 
   return (
-    <footer className="relative h-[640px] w-full md:h-[940px] xl:h-[1080px]">
+    <footer className="relative mx-auto h-[640px] w-full px-[60px] md:h-[940px] xl:h-[1080px] xl:w-[1080px]">
       <div className="mt-[100px] flex w-full flex-col items-center gap-4 text-center text-text-primary md:gap-6">
         <h3 className="text-2xl-semibold md:text-4xl-semibold">
           지금 바로 시작해보세요
@@ -29,14 +29,14 @@ export default function Footer() {
           </span>
         </p>
       </div>
-      <div className="relative mx-10 h-[400px]">
+      <div className="relative mx-auto h-[400px] w-full xl:w-[90%]">
         <Image
           src={src}
           alt="하단 배너 협업이미지"
           fill
           className="object-contain"
         />
-        <div className="h-100 absolute top-[210px] flex w-[70%] justify-center">
+        <div className="absolute top-[210px] flex w-[70%] justify-center xl:top-[200px] xl:w-[650px]">
           <div className="relative h-full w-full flex-grow">
             <Image
               alt="도넛1"
