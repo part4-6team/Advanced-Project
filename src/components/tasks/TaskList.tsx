@@ -28,29 +28,34 @@ export default function TaskList() {
     [taskLists, setTasks]
   );
 
-  const getInitPage = (queryTaskListId: any) => {
-    const selectedIndex = taskLists.findIndex(
-      (taskList) => taskList.id === queryTaskListId
-    );
+  const getInitPage = (queryTaskListId: number | undefined) => {
+    if (queryTaskListId !== undefined && itemsPerPage > 0) {
+      const selectedIndex = taskLists.findIndex(
+        (taskList) => taskList.id === queryTaskListId
+      );
 
-    const newPage = Math.floor(selectedIndex / itemsPerPage) + 1;
-    setCurrentPage(newPage);
+      if (selectedIndex !== -1) {
+        const newPage = Math.floor(selectedIndex / itemsPerPage) + 1;
+        setCurrentPage(newPage);
+      }
+    }
   };
 
   useEffect(() => {
+    let id: number | undefined;
+
     if (taskListId) {
-      const id = Number(taskListId);
+      id = Number(taskListId);
       setTaskListId(id);
       fetchTasks(id);
-      getInitPage(id);
     } else if (teamid) {
-      const id = Number(teamid);
+      id = Number(teamid);
       setTaskListId(id);
       fetchTasks(id);
       getInitPage(id);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [taskListId, teamid, setTaskListId, taskLists]);
+  }, [taskListId, teamid, setTaskListId, fetchTasks]);
 
   // 페이지당 항목 수 계산
   const updateItemsPerPage = useCallback(() => {
