@@ -2,7 +2,6 @@ import Image from 'next/image';
 
 import useResponsiveImageDetails from '@hooks/useResponsiveImageDetails';
 import IMAGE_PATHS from '@constants/imagePaths';
-import ICON_PATHS from '@constants/iconPaths';
 
 export default function Banner() {
   const { src, width, height } = useResponsiveImageDetails({
@@ -24,33 +23,27 @@ export default function Banner() {
   });
 
   return (
-    <section className="relative w-full">
-      <Image
-        src={src}
-        alt="상단 배너 기차이미지"
-        layout="responsive"
-        width={width}
-        height={height}
-        className="w-full"
-        quality={100}
-      />
-      <div className="absolute top-[55px] flex w-full flex-col items-center gap-1 text-center md:top-[100px] md:gap-2 xl:top-[84px] xl:gap-5">
-        <div className="flex h-full items-center gap-1 md:gap-4 xl:gap-6">
-          <h1 className="text-xl-semibold text-teal-50 md:text-4xl-semibold xl:text-5xl-semibold">
-            팀워크로 빚은 아이디어의 도넛
-          </h1>
+    <section className="relative h-[600px] w-full bg-[url('/images/landing_background.png')] bg-cover bg-center bg-no-repeat md:h-[600px] xl:mx-auto xl:w-[1200px]">
+      <div className="mt-[100px] flex flex-col items-center gap-1 md:top-[100px] md:gap-2 xl:top-[84px] xl:gap-5">
+        <div className="relative mx-auto mt-[10px] h-[36px] w-[300px] md:h-[56px] md:w-[500px]">
           <Image
-            alt="작업 도구 아이콘"
-            src={ICON_PATHS.REPAIR_PC}
-            width={56}
-            height={56}
-            className="h-7 w-7 md:h-12 md:w-12 xl:h-14 xl:w-14"
+            alt="배너 메인 멘트"
+            src="/images/landing_ment.png"
+            fill
             quality={100}
           />
         </div>
-        <h1 className="gradient-text-brand text-3xl-semibold md:text-5xl-semibold xl:h-40 xl:text-[64px]">
-          DO&apos;NUT
-        </h1>
+        <div className="relative mt-[10px] h-[36px] w-[120px] md:h-[56px] md:w-[200px]">
+          <Image alt="배너 로고" src="/images/landing_banner_logo.png" fill />
+        </div>
+        <Image
+          src={src}
+          alt="상단 배너 기차이미지"
+          layout="responsive"
+          width={width}
+          height={height}
+          className="w-full"
+        />
       </div>
     </section>
   );
