@@ -8,6 +8,8 @@ const IMAGE_PATHS = {
   LANDING_TEAM: '/images/landing_team.png',
   LANDING_INVITE: '/images/landing_invite.png',
   LANDING_TODO: '/images/landing_todo.png',
+  TASKCARD: '/images/taskcard.png',
+  DONUT_STRAWBERRY2: '/images/strawberry2.png',
 };
 
 export default IMAGE_PATHS;
