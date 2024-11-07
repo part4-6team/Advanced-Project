@@ -28,7 +28,7 @@ export default function TaskList() {
       setTasks(selectedList ? selectedList.tasks : []);
       setSelectedTaskListName(selectedList ? selectedList.name : '');
     },
-    [taskLists, setTasks]
+    [taskLists, setTasks, setSelectedTaskListName]
   );
 
   const getInitPage = (queryTaskListId: number | undefined) => {
