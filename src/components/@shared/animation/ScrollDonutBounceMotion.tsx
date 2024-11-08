@@ -1,0 +1,91 @@
+import { motion } from 'framer-motion';
+import { useEffect, useState } from 'react';
+import { ReactNode } from 'react';
+
+interface ScrollDonutBounceMotionProps {
+  children: ReactNode;
+  className?: string;
+  delay?: number;
+}
+
+export default function ScrollDonutBounceMotion({
+  children,
+  className,
+  delay,
+}: ScrollDonutBounceMotionProps) {
+  const [isVisible, setVisible] = useState(false);
+  const [showBubble, setShowBubble] = useState(false);
+
+  const handleScroll = () => {
+    const rect = document
+      .getElementById('bounce-section')
+      ?.getBoundingClientRect();
+    if (rect && rect.top < window.innerHeight && rect.bottom >= 0) {
+      setVisible(true);
+    }
+  };
+
+  const handleClick = () => {
+    setShowBubble(true);
+    setTimeout(() => {
+      setShowBubble(false);
+    }, 2000);
+  };
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  const variants = {
+    hidden: {
+      opacity: 0,
+      y: 80,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 3,
+        duration: 1.7,
+        delay: delay,
+      },
+    },
+  };
+
+  return (
+    <motion.div
+      id="bounce-section"
+      initial="hidden"
+      animate={isVisible ? 'visible' : 'hidden'}
+      variants={variants}
+      className={`${className} cursor-pointer`}
+      whileHover={{
+        scale: 1.1,
+        transition: {
+          type: 'spring',
+          stiffness: 300,
+          damping: 10,
+        },
+      }}
+      onClick={handleClick}
+    >
+      {children}
+      {showBubble && (
+        <motion.div
+          className="absolute left-1/2 rounded-md border-[2px] border-text-secondary bg-background-primary px-4 py-2 text-xl-semibold text-text-primary shadow-md"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.5 }}
+        >
+          Hi !
+        </motion.div>
+      )}
+    </motion.div>
+  );
+}
