@@ -92,7 +92,7 @@ export default function ScrollDonutBounceMotion({
       {children}
       {showBubble && (
         <motion.div
-          className="absolute left-1/3 rounded-md border-[2px] border-text-secondary bg-background-primary px-4 py-2 text-xl-semibold text-text-primary shadow-md"
+          className="absolute left-1/3 rounded-md border-[2px] border-text-secondary bg-background-primary px-2 py-2 text-xl-semibold text-xs-medium text-text-primary shadow-md md:px-4 md:text-md-medium xl:text-xl-medium"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
