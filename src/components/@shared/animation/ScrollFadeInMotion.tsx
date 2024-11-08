@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { ReactNode } from 'react';
+import { useEffect, useState, ReactNode } from 'react';
 
 interface ScrollFadeInMotionProps {
   children: ReactNode;
@@ -43,7 +42,7 @@ export default function ScrollFadeInMotion({
       x: '0%',
       transition: {
         duration: 1.5,
-        delay: delay,
+        delay,
       },
     },
   };
