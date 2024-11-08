@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
-import { ReactNode } from 'react';
+import { useEffect, useState, ReactNode } from 'react';
 
 interface ScrollDonutBounceMotionProps {
   children: ReactNode;
@@ -8,11 +7,22 @@ interface ScrollDonutBounceMotionProps {
   delay?: number;
 }
 
+const greetings = [
+  '안녕?😗',
+  'Hello!',
+  'Hi!',
+  '반가워~🖐️',
+  '시작해봐!',
+  'XD',
+  '🍩👍',
+];
+
 export default function ScrollDonutBounceMotion({
   children,
   className,
   delay,
 }: ScrollDonutBounceMotionProps) {
+  const [greeting, setGreeting] = useState('Hi!');
   const [isVisible, setVisible] = useState(false);
   const [showBubble, setShowBubble] = useState(false);
 
@@ -26,10 +36,15 @@ export default function ScrollDonutBounceMotion({
   };
 
   const handleClick = () => {
-    setShowBubble(true);
-    setTimeout(() => {
-      setShowBubble(false);
-    }, 2000);
+    if (!showBubble) {
+      const randomGreeting =
+        greetings[Math.floor(Math.random() * greetings.length)];
+      setGreeting(randomGreeting);
+      setShowBubble(true);
+      setTimeout(() => {
+        setShowBubble(false);
+      }, 2000);
+    }
   };
 
   useEffect(() => {
@@ -52,7 +67,7 @@ export default function ScrollDonutBounceMotion({
         stiffness: 100,
         damping: 3,
         duration: 1.7,
-        delay: delay,
+        delay,
       },
     },
   };
@@ -77,13 +92,13 @@ export default function ScrollDonutBounceMotion({
       {children}
       {showBubble && (
         <motion.div
-          className="absolute left-1/2 rounded-md border-[2px] border-text-secondary bg-background-primary px-4 py-2 text-xl-semibold text-text-primary shadow-md"
+          className="absolute left-1/3 rounded-md border-[2px] border-text-secondary bg-background-primary px-4 py-2 text-xl-semibold text-text-primary shadow-md"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
         >
-          Hi !
+          {greeting}
         </motion.div>
       )}
     </motion.div>
