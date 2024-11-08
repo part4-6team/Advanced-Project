@@ -7,29 +7,21 @@ import { useNicknameChange } from '@hooks/mysetting/useNicknameChange';
 import { Input } from '@components/@shared/Input';
 import clsx from 'clsx';
 import Button from '@components/@shared/Button';
+import getRandomDonut from '@utils/getRandomDonut';
 import Image from 'next/image';
-import { useModal } from '@hooks/useModal';
+import Dropdown, { Option } from '@components/@shared/Dropdown';
+import Snackbar from '@components/article/Snackbar';
+import SuccessIcon from 'public/icons/successicon.svg';
 import PasswordInput from './PasswordInput';
-import ShareModal from './ShareModal';
 
 export default function InputTask() {
+  const [imagenackBar, setImageSnackbar] = useState(false);
+  const [nickNamesnackBar, setNickNameSnackbar] = useState(false);
   const [profileNickname, setProfileNickname] = useState<string>('');
   const [ProfileImage, setProfileImage] = useState<string | JSX.Element>(
     <ProfileEditIcon />
   );
   const [isError, setIsError] = useState<boolean>(false);
-
-  const {
-    isOpen: NicknameCompleteIsOpen,
-    onOpen: NicknameCompleteOnOpen,
-    onClose: NicknameCompleteOnClose,
-  } = useModal();
-
-  const {
-    isOpen: ProfileCompleteIsOpen,
-    onOpen: ProfileCompleteOnOpen,
-    onClose: ProfileCompleteOnClose,
-  } = useModal();
 
   const fileInput = useRef<HTMLInputElement | null>(null);
 
@@ -39,18 +31,36 @@ export default function InputTask() {
 
   const mutationImage = useImageURL();
 
+  const handleImageClickSnackbar = () => {
+    setImageSnackbar(true);
+    setTimeout(() => {
+      setImageSnackbar(false);
+    }, 2000);
+  };
+
   // 프로필 업데이트 하는 핸들러 (PETCH)
   const handelImageChange = (imageURL: string) => {
     if (imageURL) {
       mutation.mutate({ image: imageURL });
-      ProfileCompleteOnOpen();
+      handleImageClickSnackbar();
     }
+  };
+
+  const handleDefaultImageChange = (Default: string | null) => {
+    mutation.mutate({ image: Default });
+  };
+
+  const handleClickSnackbar = () => {
+    setNickNameSnackbar(true);
+    setTimeout(() => {
+      setNickNameSnackbar(false);
+    }, 2000);
   };
 
   const handelNicknameChangeSubmit = () => {
     if (profileNickname) {
       nicknameMutation.mutate({ nickname: profileNickname });
-      NicknameCompleteOnOpen();
+      handleClickSnackbar();
     }
   };
 
@@ -121,6 +131,45 @@ export default function InputTask() {
     }
   };
 
+  const resetToDefaultImage = () => {
+    if (fileInput.current) {
+      fileInput.current.value = ''; // 파일 입력 필드 값 초기화
+    }
+    handleDefaultImageChange(getRandomDonut()); // 기본 이미지로 설정
+    handleImageClickSnackbar();
+  };
+
+  const basic: Option[] = [
+    {
+      label: '프로필 이미지 변경',
+      component: (
+        <div
+          onClick={() => {
+            if (fileInput.current) {
+              fileInput.current.click();
+            }
+          }}
+        >
+          프로필 변경
+        </div>
+      ),
+    },
+    {
+      label: '기본 이미지 변경',
+      component: (
+        <div
+          onClick={() => {
+            if (fileInput.current) {
+              resetToDefaultImage();
+            }
+          }}
+        >
+          기본 이미지
+        </div>
+      ),
+    },
+  ];
+
   return (
     <main className="mx-6 flex max-w-[792px] flex-col gap-6">
       <div>
@@ -130,20 +179,18 @@ export default function InputTask() {
           style={{ display: 'none' }}
           onChange={onChange}
         />
-        <button
-          type="button"
-          onClick={() => {
-            if (fileInput.current) {
-              fileInput.current.click();
-            }
-          }}
-          className="relative rounded-full"
-        >
-          {ProfileImage}
-          <div className="absolute bottom-[-2px] right-[-2px] h-[25px] w-[25px]">
+        <div className="relative inline-block rounded-full">
+          <Dropdown
+            options={basic}
+            triggerIcon={ProfileImage}
+            optionsWrapClass="mt-2 right-0 rounded-[12px] border border-background-tertiary"
+            optionClass="rounded-[12px] md:w-[135px] md:h-[47px] w-[120px] h-[40px] justify-center text-md-regular md:text-lg-regular text-center hover:bg-background-tertiary"
+          />
+
+          <div className="absolute bottom-[-2px] right-[-2px] mb-[6.5px] h-[25px] w-[25px]">
             <Image src="/icons/button_edit.svg" alt="수정 버튼 아이콘" fill />
           </div>
-        </button>
+        </div>
       </div>
       <div className="relative flex w-full flex-col">
         <Input
@@ -173,16 +220,20 @@ export default function InputTask() {
       </div>
 
       <PasswordInput />
-      <ShareModal
-        isOpen={NicknameCompleteIsOpen}
-        onClose={NicknameCompleteOnClose}
-        ModalTaitle="닉네임 변경 완료"
-      />
-      <ShareModal
-        isOpen={ProfileCompleteIsOpen}
-        onClose={ProfileCompleteOnClose}
-        ModalTaitle="프로필 변경 완료"
-      />
+      {nickNamesnackBar && (
+        <Snackbar
+          icon={<SuccessIcon />}
+          message="닉네임 변경 완료"
+          type="success"
+        />
+      )}
+      {imagenackBar && (
+        <Snackbar
+          icon={<SuccessIcon />}
+          message="프로필 변경 완료"
+          type="success"
+        />
+      )}
     </main>
   );
 }

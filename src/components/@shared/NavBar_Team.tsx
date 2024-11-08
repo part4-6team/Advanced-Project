@@ -34,7 +34,7 @@ export default function NavBarTeam({ data }: { data: User }) {
   const defaultButton = {
     label: '팀 메뉴',
     component: (
-      <Button bgColor="transparent" border="white" size="full" height={40}>
+      <Button size="full" height={40}>
         + 팀 추가하기
       </Button>
     ),
@@ -119,7 +119,7 @@ export default function NavBarTeam({ data }: { data: User }) {
       setSelectedTeam({
         label: '팀 메뉴',
         component: (
-          <Button bgColor="transparent" border="white" size="full" height={40}>
+          <Button size="full" height={40}>
             + 팀 추가하기
           </Button>
         ),
@@ -173,12 +173,12 @@ export default function NavBarTeam({ data }: { data: User }) {
               ))}
               <Button
                 bgColor="transparent"
-                border="white"
+                border="green"
                 size="full"
                 height={40}
                 fontSize="14"
                 onClick={handleAddTeam}
-                className="mt-[10px]"
+                className="mt-[10px] "
               >
                 + 팀 추가하기
               </Button>
@@ -205,7 +205,7 @@ export default function NavBarTeam({ data }: { data: User }) {
               triggerClass="flex gap-[12px] items-center text-text-primary"
               triggerIcon={<ArrowDown />}
               optionsWrapClass="mt-[30px] flex p-[16px] rounded-[12px]"
-              optionClass="px[8px] py-[7px] rounded-[8px] w-[186px] h-[46px] hover:bg-background-tertiary"
+              optionClass="px[8px] py-[7px] rounded-[8px] w-[186px] h-[46px]"
             />
             <AddTeamModal isOpen={addIsOpen} onClose={addCloseModal} />
           </div>

@@ -1,17 +1,19 @@
 import Link from 'next/link';
-
 import { useEffect, useCallback, useState, useRef } from 'react';
 import { useRouter } from 'next/router';
 import { useTaskListStore } from '@/src/stores/taskListStore';
 import getResponsiveValue from '@utils/getResponsiveValue';
+import TextButtonMotion from '@components/@shared/animation/TextButtonMotion';
 import TaskCard from './TaskCard';
+import NoTaskCard from './UI/NoTaskCard';
 import ListPagination from './UI/ListPagination';
 
 export default function TaskList() {
   const router = useRouter();
   const { query } = router;
   const { teamid, taskListId } = query;
-  const { taskLists, setTaskListId, tasks, setTasks } = useTaskListStore();
+  const { setSelectedTaskListName, taskLists, setTaskListId, tasks, setTasks } =
+    useTaskListStore();
 
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(0);
@@ -24,36 +26,39 @@ export default function TaskList() {
         (taskList) => taskList.id === queryTaskListId
       );
       setTasks(selectedList ? selectedList.tasks : []);
+      setSelectedTaskListName(selectedList ? selectedList.name : '');
     },
-    [taskLists, setTasks]
+    [taskLists, setTasks, setSelectedTaskListName]
   );
 
-  const getInitPage = useCallback(
-    (queryTaskListId: any) => {
+  const getInitPage = (queryTaskListId: number | undefined) => {
+    if (queryTaskListId !== undefined && itemsPerPage > 0) {
       const selectedIndex = taskLists.findIndex(
         (taskList) => taskList.id === queryTaskListId
       );
 
-      const newPage = Math.floor(selectedIndex / itemsPerPage) + 1;
-      setCurrentPage(newPage);
-    },
-    [taskLists, itemsPerPage, setCurrentPage]
-  );
-
-  useEffect(() => {
-    if (taskListId) {
-      setTaskListId(Number(taskListId));
-      fetchTasks(Number(taskListId));
-      getInitPage(Number(taskListId));
-    } else if (teamid) {
-      setTaskListId(Number(teamid));
-      getInitPage(Number(teamid));
+      if (selectedIndex !== -1) {
+        const newPage = Math.floor(selectedIndex / itemsPerPage) + 1;
+        setCurrentPage(newPage);
+      }
     }
-  }, [getInitPage, taskListId, teamid, setTaskListId, fetchTasks, taskLists]);
+  };
 
   useEffect(() => {
-    setTasks(tasks);
-  }, [tasks, setTasks]);
+    let id: number | undefined;
+
+    if (taskListId) {
+      id = Number(taskListId);
+      setTaskListId(id);
+      fetchTasks(id);
+    } else if (teamid) {
+      id = Number(teamid);
+      setTaskListId(id);
+      fetchTasks(id);
+      getInitPage(id);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [taskListId, teamid, setTaskListId, fetchTasks]);
 
   // 페이지당 항목 수 계산
   const updateItemsPerPage = useCallback(() => {
@@ -117,10 +122,10 @@ export default function TaskList() {
         {sliceTaskLists.map((taskList) => (
           <li
             key={taskList.id}
-            className={`max-w-[250px] overflow-hidden text-center ${
+            className={`max-w-[250px] overflow-hidden pt-1 text-center ${
               Number(taskListId) === taskList.id ||
               (taskListId === undefined && Number(teamid) === taskList.id)
-                ? 'border-b-[1px] border-b-white text-white'
+                ? 'rounded-full border-b-[6px] border-b-amber-950  bg-brand-secondary bg-opacity-30 px-2  text-white'
                 : 'text-text-default'
             }`}
           >
@@ -130,12 +135,14 @@ export default function TaskList() {
                 query: { taskListId: taskList.id },
               }}
             >
-              <button
-                type="button"
-                className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap pb-1"
-              >
-                {taskList.name}
-              </button>
+              <TextButtonMotion>
+                <button
+                  type="button"
+                  className="block max-w-full overflow-hidden text-ellipsis whitespace-nowrap pb-1"
+                >
+                  {taskList.name}
+                </button>
+              </TextButtonMotion>
             </Link>
           </li>
         ))}
@@ -149,13 +156,12 @@ export default function TaskList() {
       {tasks.length > 0 ? (
         <ul className="flex flex-col gap-4">
           {tasks.length > 0 &&
-            tasks.map((task) => <TaskCard key={task.id} task={task} />)}
+            tasks.map((task, index) => (
+              <TaskCard key={task.id} index={index} task={task} />
+            ))}
         </ul>
       ) : (
-        <div className="text-text-md mt-80 text-center text-text-default sm:mt-48">
-          <p>아직 할 일이 없습니다.</p>
-          <p>할 일을 추가해보세요.</p>
-        </div>
+        <NoTaskCard />
       )}
     </section>
   );

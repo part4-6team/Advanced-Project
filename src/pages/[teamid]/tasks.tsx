@@ -19,6 +19,7 @@ export default function TasksPage() {
   const {
     groupId,
     taskListId,
+    taskId,
     setTasks,
     setGroupId,
     setTaskLists,
@@ -27,14 +28,13 @@ export default function TasksPage() {
 
   // GET, taskList 및 tasks[]
   const { data: taskListData, isError: taskListError } = useQuery({
-    queryKey: ['tasks', taskListId, toKSTISOString(date)],
+    queryKey: ['tasks', taskListId, taskId, toKSTISOString(date)],
     queryFn: () =>
       getTaskList({
         id: taskListId,
         date: toKSTISOString(date),
       }),
     enabled: !!taskListId && !!date,
-    refetchOnWindowFocus: false,
     staleTime: Infinity,
   });
 
@@ -77,7 +77,7 @@ export default function TasksPage() {
   }
 
   return (
-    <main className="flex flex-col gap-6 px-4 py-6 text-left md:px-6 xl:mx-auto xl:max-w-[1200px] xl:px-0 xl:pt-10">
+    <main className="flex flex-col gap-6 px-4 py-10 text-left md:px-6 xl:mx-auto xl:max-w-[1200px] xl:px-0 xl:pt-12">
       <TaskDate />
       <TaskList />
       <AddTaskButton />
