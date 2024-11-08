@@ -50,7 +50,7 @@ export default function Banner() {
   };
 
   return (
-    <section className="border-b-4 border-brand-secondary shadow-[0_8px_32px_-4px_rgba(255,85,128,1)] hover:border-brand-secondary hover:shadow-brand-secondary">
+    <section className="border-b-4 border-brand-secondary shadow-[0_8px_32px_2px_rgba(255,85,128,1)] hover:border-brand-secondary hover:shadow-brand-secondary">
       <div className="bg-brw-full relative -mt-24 h-[600px] md:-mt-10 md:h-[600px] xl:mx-auto xl:mt-0 xl:w-[1200px]">
         <div className="mt-[100px] flex h-full flex-col items-center justify-evenly md:top-[100px] md:gap-2 xl:top-[84px] xl:gap-5">
           <SlideInMotion

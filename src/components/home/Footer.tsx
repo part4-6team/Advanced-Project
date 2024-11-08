@@ -18,7 +18,7 @@ export default function Footer() {
   });
 
   return (
-    <footer className="relative mx-auto h-[640px] w-full px-[60px] md:h-[940px] xl:h-[1080px] xl:w-[1080px]">
+    <footer className="relative mx-auto h-[500px] w-full px-[60px] md:h-[740px] xl:h-[780px] xl:w-[1080px]">
       <div className="mt-40 flex w-full flex-col items-center gap-4 text-center text-text-primary md:gap-6">
         <h3 className="text-2xl-semibold md:text-4xl-semibold">
           지금 바로 시작해보세요
