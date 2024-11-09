@@ -46,6 +46,7 @@ export default function EmailInvitationModal({
     onSuccess: () => {
       onClose();
       setEmailValue('');
+      SetIcon(<SuccessIcon />);
       showSnackbar('멤버 초대 성공!', 'success');
     },
     onSettled: () => {
@@ -56,6 +57,8 @@ export default function EmailInvitationModal({
       if (error.response?.data?.message === '유저가 존재하지 않습니다.') {
         setIsError(true);
         setErrorMessage('존재하지 않는 유저입니다.');
+        SetIcon(<FailIcon />);
+        showSnackbar('멤버 초대 실패', 'error');
       } else {
         SetIcon(<FailIcon />);
         showSnackbar('멤버 초대 실패', 'error');
@@ -74,6 +77,8 @@ export default function EmailInvitationModal({
     if (isAlreadyMember) {
       setIsError(true);
       setErrorMessage('이미 그룹에 소속된 유저입니다.');
+      SetIcon(<FailIcon />);
+      showSnackbar('멤버 초대 실패', 'error');
     }
     if (teamToken && emailValue !== '') {
       inviteMemberByEmail.mutate({ userEmail: emailValue, token: teamToken });
@@ -81,9 +86,9 @@ export default function EmailInvitationModal({
   };
 
   const handleClose = () => {
+    onClose();
     setEmailValue('');
     setIsError(false);
-    onClose();
   };
 
   return (
