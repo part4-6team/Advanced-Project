@@ -15,8 +15,8 @@ import SuccessIcon from 'public/icons/successicon.svg';
 import PasswordInput from './PasswordInput';
 
 export default function InputTask() {
-  const [imagenackBar, setImageSnackbar] = useState(false);
-  const [nickNamesnackBar, setNickNameSnackbar] = useState(false);
+  const [imageSnackBar, setImageSnackbar] = useState(false);
+  const [nickNameSnackBar, setNickNameSnackbar] = useState(false);
   const [profileNickname, setProfileNickname] = useState<string>('');
   const [ProfileImage, setProfileImage] = useState<string | JSX.Element>(
     <ProfileEditIcon />
@@ -38,7 +38,7 @@ export default function InputTask() {
     }, 2000);
   };
 
-  // 프로필 업데이트 하는 핸들러 (PETCH)
+  // 프로필 업데이트 하는 핸들러 (PATCH)
   const handelImageChange = (imageURL: string) => {
     if (imageURL) {
       mutation.mutate({ image: imageURL });
@@ -103,7 +103,7 @@ export default function InputTask() {
     }
   }, [data]);
 
-  const handleNicknameChang = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNicknameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value } = e.target;
     setProfileNickname(value);
     setIsError(value.length > 10);
@@ -196,7 +196,7 @@ export default function InputTask() {
         <Input
           label="이름"
           inputProps={{
-            onChange: handleNicknameChang,
+            onChange: handleNicknameChange,
             value: profileNickname,
           }}
           isError={isError}
@@ -220,14 +220,14 @@ export default function InputTask() {
       </div>
 
       <PasswordInput />
-      {nickNamesnackBar && (
+      {nickNameSnackBar && (
         <Snackbar
           icon={<SuccessIcon />}
           message="닉네임 변경 완료"
           type="success"
         />
       )}
-      {imagenackBar && (
+      {imageSnackBar && (
         <Snackbar
           icon={<SuccessIcon />}
           message="프로필 변경 완료"
