@@ -13,7 +13,7 @@ function CardMotion({ children, className, index }: CardMotionProps) {
       initial={{ opacity: 0, y: -20 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 20 }}
-      whileHover={{ marginLeft: '12px' }}
+      whileHover={{ scale: 1.012 }}
       transition={{ duration: 0.2, delay: index * 0.1 }}
       className={className}
     >
