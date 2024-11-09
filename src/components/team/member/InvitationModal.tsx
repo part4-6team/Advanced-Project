@@ -59,12 +59,12 @@ export default function InvitationModal({
               onClick={HowToModalOpen}
               className="mt-[25px] w-fit cursor-pointer rounded-lg px-2 text-sm-semibold text-brand-primary underline hover:bg-[#eeeeee12]"
             >
-              <div className="flex gap-[2px]">
+              <div className="flex items-center gap-[2px]">
                 <Image
                   src="/icons/question.svg"
                   alt="물음표 아이콘"
-                  width={15}
-                  height={15}
+                  width={13}
+                  height={13}
                   quality={100}
                   className="rounded-[16px] object-contain"
                 />
