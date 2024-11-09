@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useUserStore } from '@/src/stores/useUserStore';
 import NavBarTeam from './NavBar_Team';
+import TextButtonMotion from './animation/TextButtonMotion';
 
 export default function NavBar() {
   const router = useRouter();
@@ -133,9 +134,11 @@ export default function NavBar() {
                       className="rounded-lg"
                     />
                   </div>
-                  <span className="max-xl:hidden">
-                    {data?.nickname || '이름'}
-                  </span>
+                  <TextButtonMotion>
+                    <span className="max-xl:hidden">
+                      {data?.nickname || '이름'}
+                    </span>
+                  </TextButtonMotion>
                 </div>
               }
               optionsWrapClass="mt-2 right-0 rounded-[12px] border border-background-tertiary"
