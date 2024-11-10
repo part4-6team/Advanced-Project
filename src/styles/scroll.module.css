@@ -77,3 +77,16 @@
 .isErrorScroll::-webkit-scrollbar-track {
   background: transparent;
 }
+
+.ContributionsScroll::-webkit-scrollbar {
+  height: 5px; /* 스크롤바 너비 */
+}
+
+.ContributionsScroll::-webkit-scrollbar-thumb {
+  background-color: #e0e0e0; /* 스크롤바 색상 */
+  border-radius: 10px; /* 둥글게 만들기 */
+}
+
+.ContributionsScroll::-webkit-scrollbar-track {
+  background: transparent; /* 스크롤바 트랙 색상 */
+}
