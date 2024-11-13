@@ -1,8 +1,9 @@
 import { useModal } from '@hooks/useModal';
 import Image from 'next/image';
+import { useQueryClient } from '@tanstack/react-query';
 import GetUserDetailModal from './GetUserDetailModal';
 import ExileDropdown from './ExileDropdown';
-import ExileUserModal from './ExileUserModal';
+import ExileUserModal, { UserData } from './ExileUserModal';
 
 export interface MemberProps {
   role: string;
@@ -25,6 +26,14 @@ export default function MemberBox({
     onOpen: deleteOpenModal,
     onClose: deleteCloseModal,
   } = useModal();
+
+  const queryClient = useQueryClient();
+
+  // 'user' 키로 캐싱된 유저 데이터 가져오기
+  const userData = queryClient.getQueryData<UserData>(['user']);
+
+  // 본인인가?
+  const isSelf = userData && userData.id === userId;
 
   const handleDropdownClick = (e: React.MouseEvent) => {
     e.stopPropagation(); // 클릭 이벤트 전파 방지
@@ -69,7 +78,7 @@ export default function MemberBox({
           onClick={handleDropdownClick}
           className="mr-[-10px] w-[20px] cursor-pointer rounded-full hover:bg-[#ffffff1c]"
         >
-          <ExileDropdown onSelect={handleExileClick} />
+          <ExileDropdown onSelect={handleExileClick} isSelf={isSelf} />
         </div>
       </div>
       <GetUserDetailModal
@@ -85,6 +94,8 @@ export default function MemberBox({
         onClose={deleteCloseModal}
         memberName={userName}
         userId={userId}
+        role={role}
+        isSelf={isSelf}
       />
     </>
   );
