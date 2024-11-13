@@ -1,4 +1,5 @@
 import getTimeAgo from '@utils/getTimeAgo';
+import Image from 'next/image';
 import Link from 'next/link';
 
 interface TeamBoxProps {
@@ -20,11 +21,14 @@ export default function TeamBox({
     <div className="w-full">
       <Link href={`/${groupId}`}>
         <div className="flex w-full grid-cols-[100px_1fr] gap-[10px] rounded-[12px] bg-background-secondary px-[10px] py-[20px] hover:brightness-110 md:gap-[20px] md:p-[20px] ">
-          <img
-            src={image}
-            alt="팀 프로필 이미지"
-            className="h-[40px] w-[40px] rounded-[12px] object-cover md:h-[64px] md:w-[64px]"
-          />
+          <div className="relative h-[40px] w-[40px] shrink-0 rounded-[12px] md:h-[64px] md:w-[64px]">
+            <Image
+              src={image}
+              alt="팀 프로필 이미지"
+              fill
+              className="rounded-[12px] object-cover"
+            />
+          </div>
           <div className="flex flex-col justify-between overflow-hidden md:my-[5px]">
             <p className="mr-[10px] overflow-hidden text-ellipsis whitespace-nowrap text-md-bold md:text-lg-bold">
               {teamName}
