@@ -108,7 +108,7 @@ export default function BestCard({ keyword }: BestCardProps) {
                           width={64}
                           height={64}
                           alt="게시글 이미지"
-                          className="rounded-lg"
+                          className="h-16 w-16 rounded-lg"
                         />
                       </div>
                     </div>
@@ -120,7 +120,7 @@ export default function BestCard({ keyword }: BestCardProps) {
                         width={32}
                         height={32}
                         alt="게시글 이미지"
-                        className="rounded-full"
+                        className="h-8 w-8 rounded-full"
                       />
                       <span className="text-xs-medium md:text-md-medium">
                         {card.writer.nickname}
