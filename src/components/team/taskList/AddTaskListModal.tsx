@@ -4,8 +4,8 @@ import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import useTaskListStorage from '@hooks/taskList/useTaskListStorage';
-import { TeamStore } from '@/src/stores/teamStore';
+import useTaskListStorage from '@hooks/team/useTaskListStorage';
+import { TeamStore } from '@/src/stores/useTeamStore';
 import { useValidation } from '@hooks/useValidation';
 import { tagColors } from './tagColors';
 

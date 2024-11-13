@@ -1,6 +1,6 @@
 import { useModal } from '@hooks/useModal';
 import { Option } from '@components/@shared/Dropdown';
-import { useTeamStore } from '@/src/stores/teamStore';
+import { useTeamStore } from '@/src/stores/useTeamStore';
 import Image from 'next/image';
 import EditDropdown from '../EditDropdown';
 import EditTeamModal from './EditTeamModal';

@@ -1,10 +1,10 @@
 import { deleteTaskList } from '@/src/api/tasks/taskListAPI';
-import { useTeamStore } from '@/src/stores/teamStore';
+import { useTeamStore } from '@/src/stores/useTeamStore';
 import Button from '@components/@shared/Button';
 import { Modal } from '@components/@shared/Modal';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Image from 'next/image';
-import useTaskListStorage from '@hooks/taskList/useTaskListStorage';
+import useTaskListStorage from '@hooks/team/useTaskListStorage';
 import { UserData } from '../member/ExileUserModal';
 
 interface DeleteTaskListModalProps {

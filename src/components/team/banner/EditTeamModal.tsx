@@ -1,6 +1,6 @@
 import { postImage } from '@/src/api/imageAPI';
 import { patchGroupById } from '@/src/api/team/teamAPI';
-import { useTeamStore } from '@/src/stores/teamStore';
+import { useTeamStore } from '@/src/stores/useTeamStore';
 import Image from 'next/image';
 import Button from '@components/@shared/Button';
 import { Input } from '@components/@shared/Input';

@@ -1,12 +1,12 @@
 import { patchTaskList } from '@/src/api/tasks/taskListAPI';
-import { TeamStore, useTeamStore } from '@/src/stores/teamStore';
+import { TeamStore, useTeamStore } from '@/src/stores/useTeamStore';
 import Button from '@components/@shared/Button';
 import { Input } from '@components/@shared/Input';
 import { Modal } from '@components/@shared/Modal';
 import { useValidation } from '@hooks/useValidation';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import useTaskListStorage from '@hooks/taskList/useTaskListStorage';
+import useTaskListStorage from '@hooks/team/useTaskListStorage';
 import { tagColors } from './tagColors';
 
 interface EditTaskListModalProps {

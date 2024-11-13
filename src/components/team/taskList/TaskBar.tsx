@@ -1,4 +1,4 @@
-import { TaskProps, useTeamStore } from '@/src/stores/teamStore';
+import { TaskProps, useTeamStore } from '@/src/stores/useTeamStore';
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useEffect, useState } from 'react';
