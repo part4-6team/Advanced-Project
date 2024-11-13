@@ -7,10 +7,10 @@ import { useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { useRouter } from 'next/router';
 import HeartIcon from 'public/icons/heart.svg';
-import LoadingSpinner from '@components/@shared/LoadingSpinner';
 import UserNotFound from '@components/@shared/UserNotFound';
 import { motion } from 'framer-motion';
 import ArticleLoadingSpinner from 'public/icons/articleLoadingSpinner.svg';
+import ArticleSkeletonUI from './Skeleton.tsx/ArticleSkeletonUI';
 
 interface ArticleCardProps {
   keyword: string;
@@ -70,7 +70,7 @@ export default function ArticleCard({ keyword }: ArticleCardProps) {
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
-  if (isLoading) return <LoadingSpinner />;
+  if (isLoading) return <ArticleSkeletonUI />;
   if (isError) return <UserNotFound />;
 
   return (

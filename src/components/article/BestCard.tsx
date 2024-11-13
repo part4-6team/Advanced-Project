@@ -10,6 +10,7 @@ import TextButtonMotion from '@components/@shared/animation/TextButtonMotion';
 import { motion } from 'framer-motion';
 import { useRouter } from 'next/router';
 import Heart from './Heart';
+import BestSkeletonUI from './Skeleton.tsx/BestSkeletonUI';
 
 interface BestCardProps {
   keyword: string;
@@ -17,7 +18,11 @@ interface BestCardProps {
 
 export default function BestCard({ keyword }: BestCardProps) {
   const [pageSize, setPageSize] = useState(0);
-  const { data: cards, isError } = useCard(1, pageSize, 'like', keyword || '');
+  const {
+    data: cards,
+    isError,
+    isLoading,
+  } = useCard(1, pageSize, 'like', keyword || '');
   const { isMobile, isTablet, isPC } = useViewportSize();
   const router = useRouter();
 
@@ -37,11 +42,11 @@ export default function BestCard({ keyword }: BestCardProps) {
 
   // 에러 상태 처리
   if (isError) {
-    return (
-      <div>
-        <NetworkError />
-      </div>
-    );
+    return <NetworkError />;
+  }
+  // 스켈레톤 ui 추가
+  if (isLoading) {
+    return <BestSkeletonUI />;
   }
 
   const handleLodaMore = () => {
