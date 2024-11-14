@@ -1,4 +1,5 @@
 // 게시글 메인 페이지
+import SlideInMotion from '@components/@shared/animation/SlideInMotion';
 import Button from '@components/@shared/Button';
 import { SearchInput } from '@components/@shared/Input';
 import ArticleCard from '@components/article/ArticleCard';
@@ -39,16 +40,20 @@ export default function ArticlePage() {
 
   return (
     <div className="mx-4 mt-8 max-w-[1200px] xl:mx-auto">
-      <header className="mb-6">
-        <h1 className="mb-6 text-2lg-bold md:text-2xl-bold">자유 게시판</h1>
-        <SearchInput
-          placeholder="검색어를 입력해주세요"
-          inputProps={{
-            onChange: handleChange,
-            onKeyDown: handleKeyDown,
-            value,
-          }}
-        />
+      <header className="mb-10">
+        <h1 className="mb-6 text-2lg-bold text-brand-primary md:text-2xl-bold md:text-text-primary">
+          커뮤니티
+        </h1>
+        <SlideInMotion>
+          <SearchInput
+            placeholder="검색어를 입력해주세요"
+            inputProps={{
+              onChange: handleChange,
+              onKeyDown: handleKeyDown,
+              value,
+            }}
+          />
+        </SlideInMotion>
       </header>
       <main>
         <BestCard keyword={searchTerm} />
